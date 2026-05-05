@@ -1,4 +1,6 @@
 ---
+import LaunchNotifyForm from "@/components/LaunchNotifyForm.astro";
+
 const coupleNames = "Jane and Jeremiah";
 const rsvpDeadlineLabel = "October 1, 2026";
 const locationTeaser = "January 2027 · Abia State, Nigeria";
@@ -34,7 +36,9 @@ const canonicalHref = Astro.url.href;
 	</head>
 	<body>
 		<div class="save-page">
-			<div class="save-page__bg" aria-hidden="true"></div>
+			<div class="save-page__bg-wrap" aria-hidden="true">
+				<div class="save-page__bg"></div>
+			</div>
 			<div class="save-page__veil" aria-hidden="true"></div>
 
 			<div class="save-page__inner">
@@ -71,6 +75,7 @@ const canonicalHref = Astro.url.href;
 					</section>
 
 					<p class="save-footnote">Details to follow.</p>
+					<LaunchNotifyForm />
 				</main>
 			</div>
 		</div>
@@ -126,6 +131,7 @@ const canonicalHref = Astro.url.href;
 			body {
 				margin: 0;
 				min-height: 100%;
+				overflow-x: clip;
 			}
 
 			body {
@@ -137,7 +143,7 @@ const canonicalHref = Astro.url.href;
 					Helvetica,
 					Arial,
 					sans-serif;
-				color: #f8fafc;
+				color: #faf6ef;
 			}
 		</style>
 
@@ -151,6 +157,15 @@ const canonicalHref = Astro.url.href;
 				align-items: center;
 				justify-content: center;
 				padding: clamp(1.25rem, 5vw, 3rem);
+				overflow-x: clip;
+			}
+
+			.save-page__bg-wrap {
+				position: absolute;
+				inset: 0;
+				z-index: 0;
+				overflow: hidden;
+				pointer-events: none;
 			}
 
 			.save-page__bg {
@@ -158,10 +173,10 @@ const canonicalHref = Astro.url.href;
 				inset: clamp(-2rem, -8vw, -4rem);
 				z-index: 0;
 				background:
-					radial-gradient(ellipse 80% 60% at 15% 25%, #818cf8 0%, transparent 55%),
-					radial-gradient(ellipse 70% 55% at 85% 75%, #f472b6 0%, transparent 50%),
-					radial-gradient(ellipse 60% 50% at 50% 45%, #22d3ee 0%, transparent 45%),
-					linear-gradient(145deg, #1e1b4b 0%, #312e81 40%, #0f172a 100%);
+					radial-gradient(ellipse 80% 60% at 18% 22%, #c9a87c 0%, transparent 52%),
+					radial-gradient(ellipse 70% 55% at 82% 78%, #a67c52 0%, transparent 48%),
+					radial-gradient(ellipse 55% 45% at 50% 50%, #8b6914 0%, transparent 42%),
+					linear-gradient(155deg, #2a1810 0%, #4a3728 38%, #1c120b 100%);
 				filter: blur(clamp(18px, 4vw, 36px)) saturate(1.15);
 				transform: scale(1.08);
 			}
@@ -170,7 +185,7 @@ const canonicalHref = Astro.url.href;
 				position: absolute;
 				inset: 0;
 				z-index: 1;
-				background: rgba(15, 23, 42, 0.48);
+				background: rgba(28, 18, 11, 0.52);
 				pointer-events: none;
 			}
 
@@ -188,7 +203,7 @@ const canonicalHref = Astro.url.href;
 				font-weight: 600;
 				letter-spacing: 0.06em;
 				text-transform: uppercase;
-				color: #e0e7ff;
+				color: #e8d5b7;
 			}
 
 			.save-title {
@@ -198,17 +213,17 @@ const canonicalHref = Astro.url.href;
 				line-height: 1.08;
 				letter-spacing: 0.03em;
 				text-transform: uppercase;
-				color: #f8fafc;
+				color: #fffcf7;
 				text-shadow:
-					0 0 24px rgba(255, 255, 255, 0.65),
-					0 0 48px rgba(199, 210, 254, 0.35);
+					0 0 20px rgba(255, 252, 247, 0.45),
+					0 0 40px rgba(201, 168, 124, 0.35);
 			}
 
 			.save-teaser {
 				margin: 0;
 				font-size: clamp(0.95rem, 2.2vw, 1.1rem);
 				line-height: 1.5;
-				color: #cbd5f5;
+				color: #d4c4a8;
 			}
 
 			.save-dates {
@@ -220,7 +235,7 @@ const canonicalHref = Astro.url.href;
 				gap: 0.65rem;
 				font-size: clamp(0.9rem, 2.1vw, 1.05rem);
 				line-height: 1.45;
-				color: #e2e8f0;
+				color: #e8dcc8;
 			}
 
 			.save-dates li {
@@ -233,7 +248,7 @@ const canonicalHref = Astro.url.href;
 				font-weight: 700;
 				letter-spacing: 0.12em;
 				text-transform: uppercase;
-				color: #a5b4fc;
+				color: #c9a87c;
 				margin-bottom: 0.2rem;
 			}
 
@@ -248,8 +263,8 @@ const canonicalHref = Astro.url.href;
 				margin: 0;
 				font-size: clamp(1rem, 2.5vw, 1.2rem);
 				font-weight: 600;
-				color: #fef08a;
-				text-shadow: 0 0 20px rgba(250, 250, 210, 0.35);
+				color: #e8c872;
+				text-shadow: 0 0 18px rgba(232, 200, 114, 0.4);
 			}
 
 			.save-rsvp time {
@@ -261,8 +276,8 @@ const canonicalHref = Astro.url.href;
 				padding: 1.15rem 1.25rem;
 				max-width: 100%;
 				border-radius: 1rem;
-				background: rgba(15, 23, 42, 0.45);
-				border: 1px solid rgba(226, 232, 240, 0.14);
+				background: rgba(45, 32, 22, 0.5);
+				border: 1px solid rgba(232, 213, 183, 0.22);
 				backdrop-filter: blur(10px);
 			}
 
@@ -272,28 +287,28 @@ const canonicalHref = Astro.url.href;
 				font-weight: 700;
 				letter-spacing: 0.14em;
 				text-transform: uppercase;
-				color: #a5b4fc;
+				color: #c9a87c;
 			}
 
 			.save-countdown__date {
 				margin: 0 0 0.5rem;
 				font-size: 1rem;
 				font-weight: 600;
-				color: #e2e8f0;
+				color: #f0e6d8;
 			}
 
 			.save-countdown__live {
 				margin: 0;
 				font-size: clamp(0.9rem, 2.2vw, 1rem);
 				line-height: 1.45;
-				color: #f1f5f9;
+				color: #faf6ef;
 				font-variant-numeric: tabular-nums;
 			}
 
 			.save-footnote {
 				margin: 0;
 				font-size: 0.9rem;
-				color: #94a3b8;
+				color: #a89880;
 			}
 		</style>
 	</body>
