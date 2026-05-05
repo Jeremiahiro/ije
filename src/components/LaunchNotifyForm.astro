@@ -1,0 +1,144 @@
+---
+---
+
+<section class="launch-notify" aria-labelledby="launch-notify-heading">
+	<h2 id="launch-notify-heading" class="launch-notify__heading">Full site coming soon</h2>
+	<div id="launch-notify-signup" class="launch-notify__signup">
+		<p class="launch-notify__hint">Leave your email and we’ll notify you when everything is live.</p>
+		<form
+			id="launch-notify-form"
+			class="launch-notify__form"
+			novalidate
+			method="post"
+			onsubmit="event.preventDefault()"
+		>
+			<input
+				type="email"
+				id="launch-notify-email"
+				class="launch-notify__input"
+				placeholder="you@example.com"
+				autocomplete="email"
+				inputmode="email"
+				required
+				aria-required="true"
+				aria-label="Email address"
+			/>
+			<button type="submit" class="launch-notify__submit" id="launch-notify-submit">
+				Notify me
+			</button>
+		</form>
+		<p id="launch-notify-status" class="launch-notify__status" role="status" aria-live="polite" hidden></p>
+	</div>
+	<p id="launch-notify-thanks" class="launch-notify__thanks" hidden>
+		Thanks — we’ll email you when the full site is ready.
+	</p>
+</section>
+
+<style>
+	.launch-notify {
+		margin-top: 1.75rem;
+		text-align: center;
+	}
+
+	.launch-notify__heading {
+		margin: 0 0 0.4rem;
+		font-size: 0.72rem;
+		font-weight: 700;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: #c9a87c;
+	}
+
+	.launch-notify__signup[hidden] {
+		display: none !important;
+	}
+
+	.launch-notify__hint {
+		margin: 0 0 0.85rem;
+		font-size: 0.88rem;
+		line-height: 1.45;
+		color: #a89880;
+	}
+
+	.launch-notify__thanks {
+		margin: 0.5rem 0 0;
+		font-size: 0.95rem;
+		line-height: 1.5;
+		color: #e8dcc8;
+	}
+
+	.launch-notify__thanks[hidden] {
+		display: none !important;
+	}
+
+	.launch-notify__form {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: stretch;
+		justify-content: center;
+		gap: 0.5rem;
+		max-width: 26rem;
+		margin: 0 auto;
+	}
+
+	.launch-notify__input {
+		flex: 1 1 12rem;
+		min-width: 0;
+		padding: 0.55rem 0.75rem;
+		border-radius: 0.5rem;
+		border: 1px solid rgba(232, 213, 183, 0.35);
+		background: rgba(28, 18, 11, 0.35);
+		color: #faf6ef;
+		font-size: 1rem;
+		outline-offset: 2px;
+	}
+
+	.launch-notify__input::placeholder {
+		color: rgba(232, 220, 200, 0.45);
+	}
+
+	.launch-notify__input:focus {
+		border-color: #c9a87c;
+		box-shadow: 0 0 0 2px rgba(201, 168, 124, 0.25);
+	}
+
+	.launch-notify__submit {
+		flex: 0 0 auto;
+		padding: 0.55rem 1.1rem;
+		border-radius: 0.5rem;
+		border: 1px solid rgba(232, 213, 183, 0.35);
+		background: linear-gradient(180deg, #c9a87c 0%, #a67c52 100%);
+		color: #1c120b;
+		font-weight: 700;
+		font-size: 0.95rem;
+		cursor: pointer;
+		white-space: nowrap;
+	}
+
+	.launch-notify__submit:hover:not(:disabled) {
+		filter: brightness(1.06);
+	}
+
+	.launch-notify__submit:disabled {
+		opacity: 0.65;
+		cursor: not-allowed;
+	}
+
+	.launch-notify__status {
+		margin: 0.75rem 0 0;
+		font-size: 0.88rem;
+		line-height: 1.45;
+	}
+
+	.launch-notify__status[data-kind="ok"] {
+		color: #e8dcc8;
+	}
+
+	.launch-notify__status[data-kind="err"] {
+		color: #f0b8a8;
+	}
+
+	.launch-notify__status[data-kind="info"] {
+		color: #a89880;
+	}
+</style>
