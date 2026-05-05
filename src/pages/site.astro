@@ -1,0 +1,274 @@
+---
+/** Swap placeholder names when ready */
+const coupleNames = "Jordan & Jamie";
+const rsvpDeadlineLabel = "October 1, 2026";
+const celebrationTeaser = "January 2027 · Abia State, Nigeria";
+/**
+ * Countdown target: first celebration day (local midnight visitor’s tz).
+ * Adjust for Nigeria-local instant if you want a fixed zone later.
+ */
+const countdownTargetIso = "2027-01-02T00:00:00";
+const countdownLabel = "Saturday, January 2, 2027";
+
+const title = `Save the date — ${coupleNames}`;
+const description = `Save the date. RSVP by ${rsvpDeadlineLabel}. ${celebrationTeaser}`;
+const canonicalHref = Astro.url.href;
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" href="/favicon.ico" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+		<meta name="description" content={description} />
+		<link rel="canonical" href={canonicalHref} />
+		<meta property="og:type" content="website" />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:url" content={canonicalHref} />
+	</head>
+	<body>
+		<div class="save-page">
+			<div class="save-page__bg" aria-hidden="true"></div>
+			<div class="save-page__veil" aria-hidden="true"></div>
+
+			<div class="save-page__inner">
+				<header class="save-header">
+					<p class="save-kicker">{coupleNames}</p>
+					<h1 class="save-title">Save the date</h1>
+					<p class="save-teaser">{celebrationTeaser}</p>
+				</header>
+
+				<main class="save-main">
+					<p class="save-rsvp">
+						RSVP by <time datetime="2026-10-01">{rsvpDeadlineLabel}</time>
+					</p>
+
+					<section
+						class="save-countdown"
+						id="countdown-root"
+						data-target={countdownTargetIso}
+						aria-label="Countdown to celebration"
+					>
+						<p class="save-countdown__label">Celebration begins</p>
+						<p class="save-countdown__date">{countdownLabel}</p>
+						<p class="save-countdown__live" id="countdown-live" hidden></p>
+					</section>
+
+					<p class="save-footnote">Details to follow.</p>
+				</main>
+			</div>
+		</div>
+
+		<script is:inline>
+			(function () {
+				var root = document.getElementById("countdown-root");
+				var live = document.getElementById("countdown-live");
+				if (!root || !live) return;
+
+				var raw = root.getAttribute("data-target");
+				if (!raw) return;
+
+				var end = Date.parse(raw);
+				if (Number.isNaN(end)) return;
+
+				function pad(n) {
+					return String(n).padStart(2, "0");
+				}
+
+				function formatDiff(ms) {
+					if (ms <= 0) return "The weekend is here!";
+					var sec = Math.floor(ms / 1000);
+					var d = Math.floor(sec / 86400);
+					sec -= d * 86400;
+					var h = Math.floor(sec / 3600);
+					sec -= h * 3600;
+					var m = Math.floor(sec / 60);
+					sec -= m * 60;
+					var parts = [];
+					if (d) parts.push(d + " day" + (d === 1 ? "" : "s"));
+					if (d || h) parts.push(h + " hour" + (h === 1 ? "" : "s"));
+					if (d || h || m) parts.push(m + " minute" + (m === 1 ? "" : "s"));
+					parts.push(sec + " second" + (sec === 1 ? "" : "s"));
+					return parts.join(", ") + " to go";
+				}
+
+				function tick() {
+					var now = Date.now();
+					live.textContent = formatDiff(end - now);
+					live.hidden = false;
+				}
+
+				tick();
+				setInterval(tick, 1000);
+			})();
+		</script>
+
+		<style is:global>
+			*,
+			*::before,
+			*::after {
+				box-sizing: border-box;
+			}
+
+			html,
+			body {
+				margin: 0;
+				min-height: 100%;
+			}
+
+			body {
+				font-family:
+					system-ui,
+					-apple-system,
+					Segoe UI,
+					Roboto,
+					Helvetica,
+					Arial,
+					sans-serif;
+				color: #f8fafc;
+			}
+		</style>
+
+		<style>
+			.save-page {
+				position: relative;
+				isolation: isolate;
+				min-height: 100dvh;
+				width: 100%;
+				overflow-x: clip;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				padding: clamp(1.25rem, 5vw, 3rem);
+			}
+
+			.save-page__bg {
+				position: absolute;
+				inset: clamp(-2rem, -8vw, -4rem);
+				z-index: 0;
+				background:
+					radial-gradient(ellipse 80% 60% at 15% 25%, #818cf8 0%, transparent 55%),
+					radial-gradient(ellipse 70% 55% at 85% 75%, #f472b6 0%, transparent 50%),
+					radial-gradient(ellipse 60% 50% at 50% 45%, #22d3ee 0%, transparent 45%),
+					linear-gradient(145deg, #1e1b4b 0%, #312e81 40%, #0f172a 100%);
+				filter: blur(clamp(18px, 4vw, 36px)) saturate(1.15);
+				transform: scale(1.08);
+			}
+
+			.save-page__veil {
+				position: absolute;
+				inset: 0;
+				z-index: 1;
+				background: rgba(15, 23, 42, 0.48);
+				pointer-events: none;
+			}
+
+			.save-page__inner {
+				position: relative;
+				z-index: 2;
+				width: 100%;
+				max-width: 36rem;
+				text-align: center;
+			}
+
+			.save-kicker {
+				margin: 0 0 0.5rem;
+				font-size: clamp(1.05rem, 2.8vw, 1.35rem);
+				font-weight: 600;
+				letter-spacing: 0.06em;
+				text-transform: uppercase;
+				color: #e0e7ff;
+			}
+
+			.save-title {
+				margin: 0 0 1rem;
+				font-size: clamp(2.25rem, 7vw + 0.75rem, 3.75rem);
+				font-weight: 800;
+				line-height: 1.08;
+				letter-spacing: 0.03em;
+				text-transform: uppercase;
+				color: #f8fafc;
+				text-shadow:
+					0 0 24px rgba(255, 255, 255, 0.65),
+					0 0 48px rgba(199, 210, 254, 0.35);
+			}
+
+			.save-teaser {
+				margin: 0;
+				font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+				line-height: 1.5;
+				color: #cbd5f5;
+			}
+
+			.save-main {
+				margin-top: clamp(2rem, 6vw, 3rem);
+				display: flex;
+				flex-direction: column;
+				gap: clamp(1.35rem, 4vw, 2rem);
+			}
+
+			.save-rsvp {
+				margin: 0;
+				font-size: clamp(1rem, 2.5vw, 1.2rem);
+				font-weight: 600;
+				color: #fef08a;
+				text-shadow: 0 0 20px rgba(250, 250, 210, 0.35);
+			}
+
+			.save-rsvp time {
+				font-weight: 700;
+			}
+
+			.save-countdown {
+				margin: 0 auto;
+				padding: 1.15rem 1.25rem;
+				max-width: 100%;
+				border-radius: 1rem;
+				background: rgba(15, 23, 42, 0.45);
+				border: 1px solid rgba(226, 232, 240, 0.14);
+				backdrop-filter: blur(10px);
+			}
+
+			.save-countdown__label {
+				margin: 0 0 0.35rem;
+				font-size: 0.75rem;
+				font-weight: 700;
+				letter-spacing: 0.14em;
+				text-transform: uppercase;
+				color: #a5b4fc;
+			}
+
+			.save-countdown__date {
+				margin: 0 0 0.5rem;
+				font-size: 1rem;
+				font-weight: 600;
+				color: #e2e8f0;
+			}
+
+			.save-countdown__live {
+				margin: 0;
+				font-size: clamp(0.9rem, 2.2vw, 1rem);
+				line-height: 1.45;
+				color: #f1f5f9;
+				font-variant-numeric: tabular-nums;
+			}
+
+			.save-countdown__noscript {
+				margin: 0;
+				font-size: 0.95rem;
+				color: #e2e8f0;
+			}
+
+			.save-footnote {
+				margin: 0;
+				font-size: 0.9rem;
+				color: #94a3b8;
+			}
+		</style>
+	</body>
+</html>
