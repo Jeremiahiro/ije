@@ -1,17 +1,18 @@
 ---
-/** Swap placeholder names when ready */
-const coupleNames = "Jordan & Jamie";
+const coupleNames = "Jane and Jeremiah";
 const rsvpDeadlineLabel = "October 1, 2026";
-const celebrationTeaser = "January 2027 · Abia State, Nigeria";
+const locationTeaser = "January 2027 · Abia State, Nigeria";
+
+const traditionalDateLong = "Saturday, 2 January 2027";
+const whiteWeddingDateLong = "Monday, 4 January 2027";
 /**
- * Countdown target: first celebration day (local midnight visitor’s tz).
- * Adjust for Nigeria-local instant if you want a fixed zone later.
+ * Countdown to traditional marriage (local midnight in the visitor’s timezone).
+ * Switch to a fixed Nigeria offset if you need a single instant worldwide.
  */
 const countdownTargetIso = "2027-01-02T00:00:00";
-const countdownLabel = "Saturday, January 2, 2027";
 
-const title = `Save the date — ${coupleNames}`;
-const description = `Save the date. RSVP by ${rsvpDeadlineLabel}. ${celebrationTeaser}`;
+const title = `${coupleNames} · Save the date`;
+const description = `${coupleNames} are getting married. Traditional marriage on 2 January 2027 and white wedding on 4 January 2027. ${locationTeaser}. RSVP by ${rsvpDeadlineLabel}.`;
 const canonicalHref = Astro.url.href;
 ---
 
@@ -40,7 +41,17 @@ const canonicalHref = Astro.url.href;
 				<header class="save-header">
 					<p class="save-kicker">{coupleNames}</p>
 					<h1 class="save-title">Save the date</h1>
-					<p class="save-teaser">{celebrationTeaser}</p>
+					<p class="save-teaser">{locationTeaser}</p>
+					<ul class="save-dates">
+						<li>
+							<span class="save-dates__kind">Traditional marriage</span>
+							<time datetime="2027-01-02">{traditionalDateLong}</time>
+						</li>
+						<li>
+							<span class="save-dates__kind">White wedding</span>
+							<time datetime="2027-01-04">{whiteWeddingDateLong}</time>
+						</li>
+					</ul>
 				</header>
 
 				<main class="save-main">
@@ -52,10 +63,10 @@ const canonicalHref = Astro.url.href;
 						class="save-countdown"
 						id="countdown-root"
 						data-target={countdownTargetIso}
-						aria-label="Countdown to celebration"
+						aria-label="Countdown to traditional marriage"
 					>
-						<p class="save-countdown__label">Celebration begins</p>
-						<p class="save-countdown__date">{countdownLabel}</p>
+						<p class="save-countdown__label">Traditional marriage</p>
+						<p class="save-countdown__date">{traditionalDateLong}</p>
 						<p class="save-countdown__live" id="countdown-live" hidden></p>
 					</section>
 
@@ -76,12 +87,8 @@ const canonicalHref = Astro.url.href;
 				var end = Date.parse(raw);
 				if (Number.isNaN(end)) return;
 
-				function pad(n) {
-					return String(n).padStart(2, "0");
-				}
-
 				function formatDiff(ms) {
-					if (ms <= 0) return "The weekend is here!";
+					if (ms <= 0) return "The celebrations are here!";
 					var sec = Math.floor(ms / 1000);
 					var d = Math.floor(sec / 86400);
 					sec -= d * 86400;
@@ -140,7 +147,6 @@ const canonicalHref = Astro.url.href;
 				isolation: isolate;
 				min-height: 100dvh;
 				width: 100%;
-				overflow-x: clip;
 				display: flex;
 				align-items: center;
 				justify-content: center;
@@ -205,6 +211,32 @@ const canonicalHref = Astro.url.href;
 				color: #cbd5f5;
 			}
 
+			.save-dates {
+				list-style: none;
+				margin: clamp(1rem, 3vw, 1.35rem) 0 0;
+				padding: 0;
+				display: flex;
+				flex-direction: column;
+				gap: 0.65rem;
+				font-size: clamp(0.9rem, 2.1vw, 1.05rem);
+				line-height: 1.45;
+				color: #e2e8f0;
+			}
+
+			.save-dates li {
+				margin: 0;
+			}
+
+			.save-dates__kind {
+				display: block;
+				font-size: 0.72rem;
+				font-weight: 700;
+				letter-spacing: 0.12em;
+				text-transform: uppercase;
+				color: #a5b4fc;
+				margin-bottom: 0.2rem;
+			}
+
 			.save-main {
 				margin-top: clamp(2rem, 6vw, 3rem);
 				display: flex;
@@ -256,12 +288,6 @@ const canonicalHref = Astro.url.href;
 				line-height: 1.45;
 				color: #f1f5f9;
 				font-variant-numeric: tabular-nums;
-			}
-
-			.save-countdown__noscript {
-				margin: 0;
-				font-size: 0.95rem;
-				color: #e2e8f0;
 			}
 
 			.save-footnote {
