@@ -120,6 +120,12 @@ const canonicalHref = Astro.url.href;
 			})();
 		</script>
 
+		<script>
+			import { mountLaunchNotifyForm } from "@/components/LaunchNotifyForm.script";
+
+			mountLaunchNotifyForm();
+		</script>
+
 		<style is:global>
 			*,
 			*::before,

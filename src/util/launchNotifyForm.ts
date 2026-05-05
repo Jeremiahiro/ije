@@ -15,7 +15,19 @@ export const LAUNCH_NOTIFY_COPY = {
 	submitLabel: "Notify me",
 } as const;
 
-type InsertResult = { error: { code?: string } | null };
+const isUniqueViolation = (error: {
+	code?: string | number;
+	message?: string;
+	details?: string | null;
+}): boolean => {
+	if (error.code != null && String(error.code) === "23505") return true;
+	const text = [error.message, error.details].filter(Boolean).join(" ").toLowerCase();
+	return (
+		text.includes("duplicate key") ||
+		text.includes("unique constraint") ||
+		text.includes("already exists")
+	);
+};
 
 export type NotifySubmitResult =
 	| { kind: "success" }
@@ -29,11 +41,19 @@ export const submitLaunchNotifyEmail = async (email: string): Promise<NotifySubm
 	const client = getSupabaseBrowser();
 	if (!client) return { kind: "not_configured" };
 
-	const { error } = await client.from(LAUNCH_NOTIFY_TABLE).insert({ email });
-	if (!error) return { kind: "success" };
-	if (error.code === "23505") return { kind: "already_registered" };
-	if (error.code === "42501") return { kind: "rls_denied" };
-	return { kind: "error" };
+	try {
+		const { error } = await client.from(LAUNCH_NOTIFY_TABLE).insert({ email });
+		if (error) {
+			if (isUniqueViolation(error)) return { kind: "already_registered" };
+			if (error.code != null && String(error.code) === "42501") return { kind: "rls_denied" };
+			return { kind: "error" };
+		}
+		return { kind: "success" };
+	} catch (err: unknown) {
+		const o = err && typeof err === "object" ? (err as { code?: string | number; message?: string; details?: string | null }) : {};
+		if (isUniqueViolation(o)) return { kind: "already_registered" };
+		return { kind: "error" };
+	}
 };
 
 export const shouldPersistNotifyCookie = (result: NotifySubmitResult): boolean =>

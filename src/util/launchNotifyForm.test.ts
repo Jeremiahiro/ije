@@ -84,7 +84,7 @@ describe("submitLaunchNotifyEmail", () => {
 
 	type Client = NonNullable<ReturnType<typeof getSupabaseBrowser>>;
 
-	const mockClient = (error: { code?: string } | null) => {
+	const mockClient = (error: { code?: string | number; message?: string; details?: string | null } | null) => {
 		const insert = vi.fn().mockResolvedValue({ error });
 		return { from: vi.fn().mockReturnValue({ insert }) } as unknown as Client;
 	};
@@ -108,6 +108,24 @@ describe("submitLaunchNotifyEmail", () => {
 
 	it("maps 23505 to already_registered", async () => {
 		mockGetSupabase.mockReturnValue(mockClient({ code: "23505" }));
+		await expect(submitLaunchNotifyEmail(email)).resolves.toEqual({
+			kind: "already_registered",
+		} satisfies NotifySubmitResult);
+	});
+
+	it("maps numeric 23505 code to already_registered", async () => {
+		mockGetSupabase.mockReturnValue(mockClient({ code: 23505 }));
+		await expect(submitLaunchNotifyEmail(email)).resolves.toEqual({
+			kind: "already_registered",
+		} satisfies NotifySubmitResult);
+	});
+
+	it("maps duplicate key message to already_registered when code missing", async () => {
+		mockGetSupabase.mockReturnValue(
+			mockClient({
+				message: 'duplicate key value violates unique constraint "jj-interest_email_key"',
+			}),
+		);
 		await expect(submitLaunchNotifyEmail(email)).resolves.toEqual({
 			kind: "already_registered",
 		} satisfies NotifySubmitResult);

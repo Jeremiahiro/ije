@@ -5,10 +5,15 @@
 	<h2 id="launch-notify-heading" class="launch-notify__heading">Full site coming soon</h2>
 	<div id="launch-notify-signup" class="launch-notify__signup">
 		<p class="launch-notify__hint">Leave your email and we’ll notify you when everything is live.</p>
-		<form id="launch-notify-form" class="launch-notify__form" novalidate>
+		<form
+			id="launch-notify-form"
+			class="launch-notify__form"
+			novalidate
+			method="post"
+			onsubmit="event.preventDefault()"
+		>
 			<input
 				type="email"
-				name="email"
 				id="launch-notify-email"
 				class="launch-notify__input"
 				placeholder="you@example.com"
@@ -28,116 +33,6 @@
 		Thanks — we’ll email you when the full site is ready.
 	</p>
 </section>
-
-<script>
-	import { getSupabaseBrowser } from "@/lib/supabaseBrowser";
-	import {
-		buildSubmittedCookieAssignment,
-		isNotifySignupCookieSet,
-		LAUNCH_NOTIFY_COOKIE_MAX_AGE_SEC,
-		LAUNCH_NOTIFY_COOKIE_NAME,
-		LAUNCH_NOTIFY_COOKIE_VALUE,
-		LAUNCH_NOTIFY_COPY,
-		shouldPersistNotifyCookie,
-		submitLaunchNotifyEmail,
-	} from "@/util/launchNotifyForm";
-
-	const setSubmittedCookie = () => {
-		const isHttps = typeof location !== "undefined" && location.protocol === "https:";
-		document.cookie = buildSubmittedCookieAssignment(
-			LAUNCH_NOTIFY_COOKIE_NAME,
-			LAUNCH_NOTIFY_COOKIE_VALUE,
-			LAUNCH_NOTIFY_COOKIE_MAX_AGE_SEC,
-			isHttps,
-		);
-	};
-
-	/**
-	 * @param {HTMLElement} el
-	 * @param {string} text
-	 * @param {'ok' | 'err' | 'info'} kind
-	 */
-	const showStatus = (el: HTMLElement, text: string, kind: 'ok' | 'err' | 'info') => {
-		el.hidden = false;
-		el.textContent = text;
-		el.dataset.kind = kind;
-	};
-
-	/**
-	 * @param {HTMLElement} signupEl
-	 * @param {HTMLElement} thanksEl
-	 */
-	const showThanksHideForm = (signupEl: HTMLElement, thanksEl: HTMLElement) => {
-		signupEl.hidden = true;
-		thanksEl.hidden = false;
-	};
-
-	const signupBlock = document.getElementById("launch-notify-signup");
-	const thanksEl = document.getElementById("launch-notify-thanks");
-	const form = document.getElementById("launch-notify-form");
-	const statusEl = document.getElementById("launch-notify-status");
-	const submitBtn = document.getElementById("launch-notify-submit");
-	const emailInput = document.getElementById("launch-notify-email");
-
-	if (!(signupBlock instanceof HTMLElement) || !(thanksEl instanceof HTMLElement)) {
-		throw new Error("Launch notify markup missing");
-	}
-
-	if (!(form instanceof HTMLFormElement) || !statusEl || !(submitBtn instanceof HTMLButtonElement) || !(emailInput instanceof HTMLInputElement)) {
-		throw new Error("Launch notify form markup missing");
-	}
-
-	if (isNotifySignupCookieSet(document.cookie)) {
-		showThanksHideForm(signupBlock, thanksEl);
-	}
-
-	const supabase = getSupabaseBrowser();
-	if (!supabase) {
-		showStatus(statusEl, LAUNCH_NOTIFY_COPY.notConfigured, "info");
-		for (const el of form.querySelectorAll("input, button")) {
-			if (el instanceof HTMLInputElement || el instanceof HTMLButtonElement) {
-				el.disabled = true;
-			}
-		}
-	} else {
-		form.addEventListener("submit", async (e) => {
-			e.preventDefault();
-			const email = emailInput.value.trim();
-			if (!email || !emailInput.checkValidity()) {
-				emailInput.reportValidity();
-				return;
-			}
-
-			submitBtn.disabled = true;
-			const prevLabel = submitBtn.textContent;
-			submitBtn.textContent = LAUNCH_NOTIFY_COPY.sending;
-			statusEl.hidden = true;
-
-			const result = await submitLaunchNotifyEmail(email);
-
-			submitBtn.disabled = false;
-			submitBtn.textContent = prevLabel ?? LAUNCH_NOTIFY_COPY.submitLabel;
-
-			if (shouldPersistNotifyCookie(result)) {
-				setSubmittedCookie();
-				showThanksHideForm(signupBlock, thanksEl);
-				return;
-			}
-
-			if (result.kind === "not_configured") {
-				showStatus(statusEl, LAUNCH_NOTIFY_COPY.notConfigured, "info");
-				return;
-			}
-
-			if (result.kind === "rls_denied") {
-				showStatus(statusEl, LAUNCH_NOTIFY_COPY.rlsDenied, "err");
-				return;
-			}
-
-			showStatus(statusEl, LAUNCH_NOTIFY_COPY.submitFailed, "err");
-		});
-	}
-</script>
 
 <style>
 	.launch-notify {
