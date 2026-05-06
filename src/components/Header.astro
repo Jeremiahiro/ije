@@ -361,9 +361,7 @@ const isCurrent = (href: string): boolean => {
 		--header-menu-stack-ease: cubic-bezier(0.34, 1.56, 0.64, 1);
 		--header-menu-stack-duration: var(--header-menu-slide-duration);
 		--header-menu-radius: 40px;
-		/* Slide stack fully off-screen (self %); larger on wide viewports where -120% can leave a sliver */
-		--header-menu-stack-hide-x: -200%;
-		/* Off-screen above the bar (x-large vertical slide) */
+		/* Off-screen above the bar (slide panel in vertically on all breakpoints) */
 		--header-menu-stack-hide-y: calc(-100% - 1rem);
 		/* Idle: logo ↔ left, CTA + menu ↔ right — same ease/duration as stack */
 		--header-idle-split-duration: var(--header-menu-stack-duration);
@@ -372,6 +370,9 @@ const isCurrent = (href: string): boolean => {
 		@apply absolute inset-x-0 top-0 z-50 w-full bg-transparent;
 		padding-top: max(1rem, env(safe-area-inset-top, 0px));
 		font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+		/* Avoid iOS shrinking text vs desktop simulators inside the header chrome */
+		-webkit-text-size-adjust: 100%;
+		text-size-adjust: 100%;
 	}
 
 	.app-header[data-scrolled]:not([data-menu-open="true"]) {
@@ -413,7 +414,6 @@ const isCurrent = (href: string): boolean => {
 
 	@media (min-width: 1024px) {
 		.app-header {
-			--header-menu-stack-hide-x: -280%;
 			/* Overshoot-friendly curve (easeOutBack); duration bump helps read the settle */
 			--header-menu-stack-ease: cubic-bezier(0.175, 0.885, 0.32, 1.275);
 			--header-menu-stack-duration: 640ms;
@@ -482,11 +482,11 @@ const isCurrent = (href: string): boolean => {
 	}
 
 	.app-header[data-menu-open="true"]:not([data-menu-exit="true"]) .app-header__idle .app-header__logo {
-		transform: translateX(-120%);
+		transform: translateX(-140%);
 	}
 
 	.app-header[data-menu-open="true"]:not([data-menu-exit="true"]) .app-header__idle .app-header__idle-actions {
-		transform: translateX(120%);
+		transform: translateX(140%);
 	}
 
 	/* Scrolled glass while menu is open (no style snap mid-motion) */
@@ -541,6 +541,12 @@ const isCurrent = (href: string): boolean => {
 		@apply flex shrink-0 items-center no-underline;
 	}
 
+	@media (max-width: 1023px) {
+		.app-header__menu-panel .app-header__nav-list > li:has(> .app-header__nav-logo) {
+			display: none;
+		}
+	}
+
 	.app-header[data-scrolled]:not([data-menu-open="true"]) .app-header__bar .app-header__logo {
 		background-color: var(--header-glass-bg);
 		border-color: var(--header-glass-border);
@@ -581,7 +587,7 @@ const isCurrent = (href: string): boolean => {
 		position: relative;
 		z-index: 1;
 		@apply flex w-fit max-w-full min-w-0 flex-col items-stretch;
-		transform: translateX(var(--header-menu-stack-hide-x));
+		transform: translateY(var(--header-menu-stack-hide-y));
 		pointer-events: none;
 		transition:
 			transform var(--header-menu-stack-duration) var(--header-menu-stack-ease);
@@ -590,42 +596,23 @@ const isCurrent = (href: string): boolean => {
 
 	.app-header__menu-stack.app-header__menu-stack--jump {
 		transition: none;
-		transform: translateX(var(--header-menu-stack-hide-x));
+		transform: translateY(var(--header-menu-stack-hide-y));
 	}
 
 	.app-header[data-menu-open="true"]:not([data-menu-exit="true"]) .app-header__menu-stack {
-		transform: translateX(0);
+		transform: translateY(0);
 		z-index: 3;
 		pointer-events: auto;
 	}
 
 	.app-header[data-menu-open="true"][data-menu-exit="true"] .app-header__menu-stack {
-		transform: translateX(var(--header-menu-stack-hide-x));
+		transform: translateY(var(--header-menu-stack-hide-y));
 		z-index: 3;
 		pointer-events: none;
 	}
 
-	/* lg+: must follow base .menu-stack rules — vertical slide + easeOutBack overshoot */
-	@media (min-width: 1024px) {
-		.app-header__menu-stack {
-			transform: translateY(var(--header-menu-stack-hide-y));
-		}
-
-		.app-header__menu-stack.app-header__menu-stack--jump {
-			transform: translateY(var(--header-menu-stack-hide-y));
-		}
-
-		.app-header[data-menu-open="true"]:not([data-menu-exit="true"]) .app-header__menu-stack {
-			transform: translateY(0);
-		}
-
-		.app-header[data-menu-open="true"][data-menu-exit="true"] .app-header__menu-stack {
-			transform: translateY(var(--header-menu-stack-hide-y));
-		}
-	}
-
 	.app-header__menu-panel {
-		@apply relative z-[1] flex w-full min-w-0 shrink-0 flex-row items-center justify-between gap-2 sm:gap-3;
+		@apply relative z-[1] flex w-full min-w-0 shrink-0 flex-row items-center justify-between gap-1 sm:gap-2 lg:gap-3;
 		border-radius: 9999px;
 		border: 1px solid transparent;
 		background: transparent;
@@ -789,11 +776,11 @@ const isCurrent = (href: string): boolean => {
 	}
 
 	.app-header__nav-list {
-		@apply m-0 flex list-none items-center gap-x-2 gap-y-1 p-0;
+		@apply m-0 flex list-none items-center gap-x-1 gap-y-0.5 p-0 lg:gap-x-2 lg:gap-y-1;
 	}
 
 	.app-header__nav-link {
-		@apply whitespace-nowrap rounded-full border border-transparent px-3 py-1.5 text-sm font-semibold no-underline sm:text-[0.9375rem];
+		@apply whitespace-nowrap rounded-full border border-transparent px-2 py-1 text-xs font-semibold no-underline lg:px-3 lg:py-1.5 lg:text-[0.9375rem];
 		color: var(--header-tan);
 		transition:
 			background-color var(--header-transition-duration) var(--header-transition-ease),
