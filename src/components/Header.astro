@@ -2,7 +2,7 @@
 import { navHref, navItems, type NavEntry } from "@/data/site-nav";
 
 const brandAlt = "J & J";
-const logoSrc = "/assets/logo-tan.png";
+const logoSrc = "/assets/logo-n.png";
 const cta = { href: "/rsvp", label: "RSVP" } as const;
 
 const navSublinkPanels = navItems.filter(
@@ -22,7 +22,7 @@ const isCurrent = (href: string): boolean => {
 		<div class="app-header__bar-inner">
 			<div class="app-header__idle">
 				<a href="/" class="app-header__logo">
-					<img class="app-header__logo-img" src={logoSrc} alt={brandAlt} width="500" height="30" decoding="async" />
+					<img class="app-header__logo-img" src={logoSrc} alt={brandAlt} width="500" height="80" decoding="async" />
 				</a>
 
 				<div class="app-header__idle-actions">
@@ -49,7 +49,7 @@ const isCurrent = (href: string): boolean => {
 					<ul class="app-header__nav-list">
 						<li>
 							<a href="/" class="app-header__nav-logo">
-								<img class="app-header__logo-img" src={logoSrc} alt={brandAlt} width="500" height="30" decoding="async" />
+								<img class="app-header__logo-img" src={logoSrc} alt={brandAlt} width="500" height="80" decoding="async" />
 							</a>
 						</li>
 						{
@@ -853,7 +853,7 @@ const isCurrent = (href: string): boolean => {
 	}
 
 	.app-header__logo-img {
-		@apply block w-auto h-8;
+		@apply block w-auto h-12;
 		object-fit: contain;
 	}
 
