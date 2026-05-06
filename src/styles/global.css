@@ -1,1 +1,42 @@
 @import "tailwindcss";
+
+:root {
+	--site-header-height: 3.5rem;
+	--focus-ring: #6e523c;
+	/* Page shell: light gray + tan */
+	--page-bg: #e9e7e4;
+	--page-bg-mid: #e3e0db;
+	--page-tan-glow: rgba(201, 168, 124, 0.32);
+	--page-tan-deep: rgba(110, 82, 60, 0.16);
+	--text-primary: #3a2e26;
+	--text-muted: #5c4a3d;
+}
+
+html {
+	background-color: var(--page-bg);
+}
+
+body {
+	margin: 0;
+	min-height: 100%;
+	color: var(--text-primary);
+	background-color: var(--page-bg);
+	background-image:
+		radial-gradient(ellipse 92% 78% at 8% 6%, var(--page-tan-glow), transparent 54%),
+		radial-gradient(ellipse 88% 72% at 96% 94%, var(--page-tan-deep), transparent 58%),
+		linear-gradient(168deg, #eceae6 0%, var(--page-bg-mid) 42%, #ebe7e1 100%);
+}
+
+/* Drop browser default blue ring; keep keyboard focus visible with on-palette ring. */
+:where(a, button) {
+	-webkit-tap-highlight-color: transparent;
+}
+
+:where(a, button):focus:not(:focus-visible) {
+	outline: none;
+}
+
+:where(a, button):focus-visible {
+	outline: 2px solid var(--focus-ring);
+	outline-offset: 2px;
+}
