@@ -43,7 +43,7 @@ const isCurrent = (href: string): boolean => {
 				</div>
 			</div>
 
-			<div class="app-header__menu-stack" id="app-header-menu-stack">
+			<div class="app-header__menu-stack" id="app-header-menu-stack" tabindex="-1">
 			<div class="app-header__menu-panel" id="app-header-menu-panel">
 				<nav class="app-header__nav" aria-label="Site">
 					<ul class="app-header__nav-list">
@@ -172,6 +172,7 @@ const isCurrent = (href: string): boolean => {
 
 		const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 		const useSublinksHover = () => matchMedia("(hover: hover) and (pointer: fine)").matches;
+		const prefersCoarsePointer = () => matchMedia("(hover: none) and (pointer: coarse)").matches;
 
 		let subCloseT = 0;
 		const cancelSubClose = () => {
@@ -251,7 +252,9 @@ const isCurrent = (href: string): boolean => {
 					stack.setAttribute("aria-hidden", "false");
 				}
 				requestAnimationFrame(() => {
-					if (closeBtn instanceof HTMLElement) closeBtn.focus();
+					/* Close-focused first tap on iOS often only blurs; focus the panel instead on touch. */
+					if (stack instanceof HTMLElement && prefersCoarsePointer()) stack.focus({ preventScroll: true });
+					else if (closeBtn instanceof HTMLElement) closeBtn.focus();
 				});
 			} else {
 				if (root.dataset.menuOpen !== "true") return;
@@ -273,6 +276,22 @@ const isCurrent = (href: string): boolean => {
 				if (e.propertyName !== "transform" || e.target !== stack || root.dataset.menuExit !== "true") return;
 				finishMenuClose();
 			});
+			stack.addEventListener(
+				"pointerdown",
+				(e) => {
+					if (!(e.target instanceof Element)) return;
+					if (e.target.closest("[data-nav-sublinks-trigger]")) {
+						cancelSubClose();
+						return;
+					}
+					const panel = e.target.closest("[data-nav-sublinks-panel]");
+					if (!panel) return;
+					cancelSubClose();
+					const sid = panel.getAttribute("data-nav-sublinks-panel");
+					if (sid) setSublinks(sid);
+				},
+				true,
+			);
 		}
 
 		openBtn.addEventListener("click", () => setMenuOpen(root.dataset.menuOpen !== "true"));
@@ -626,6 +645,10 @@ const isCurrent = (href: string): boolean => {
 		backface-visibility: hidden;
 	}
 
+	.app-header__menu-stack:focus {
+		outline: none;
+	}
+
 	.app-header__menu-stack.app-header__menu-stack--jump {
 		transition: none;
 		transform: translateY(var(--header-menu-stack-hide-y));
@@ -729,6 +752,7 @@ const isCurrent = (href: string): boolean => {
 		text-decoration: none;
 		color: var(--header-tan);
 		border: 1px solid transparent;
+		touch-action: manipulation;
 		transition:
 			background-color var(--header-transition-duration) var(--header-transition-ease),
 			border-color var(--header-transition-duration) var(--header-transition-ease);
@@ -780,6 +804,7 @@ const isCurrent = (href: string): boolean => {
 		background: transparent;
 		margin: 0;
 		text-align: inherit;
+		touch-action: manipulation;
 	}
 
 	.app-header__disclosure-chevron {
