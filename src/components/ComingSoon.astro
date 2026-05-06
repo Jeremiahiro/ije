@@ -1,10 +1,17 @@
 ---
+interface Props {
+	heading: string;
+	subheading?: string;
+}
+
+const { heading, subheading } = Astro.props;
 ---
 
 <div class="coming-soon">
 	<div class="coming-soon__bg" aria-hidden="true"></div>
 	<main class="coming-soon__main">
-		<h1>Coming soon</h1>
+		<h1>{heading}</h1>
+		{subheading ? <p class="coming-soon__sub">{subheading}</p> : null}
 	</main>
 </div>
 
@@ -78,7 +85,7 @@
 		position: relative;
 		z-index: 2;
 		text-align: center;
-		max-width: min(100%, 28ch);
+		max-width: min(100%, 36ch);
 	}
 
 	.coming-soon__main h1 {
@@ -92,6 +99,15 @@
 		text-shadow:
 			0 1px 0 rgb(255 255 255 / 0.6),
 			0 12px 40px rgb(110 82 60 / 0.12);
+	}
+
+	.coming-soon__sub {
+		margin: clamp(1rem, 3vw, 1.5rem) 0 0;
+		font-size: clamp(1rem, 2.5vw, 1.2rem);
+		line-height: 1.5;
+		color: var(--text-muted);
+		font-weight: 500;
+		letter-spacing: 0.02em;
 	}
 
 	@media (min-width: 768px) {

@@ -1,0 +1,17 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import ComingSoon from "@/components/ComingSoon.astro";
+import { defaultPageDescription, siteTitleSuffix } from "@/data/site-nav";
+
+const title = `RSVP · ${siteTitleSuffix}`;
+const canonicalHref = new URL("/rsvp", Astro.url.origin).href;
+---
+
+<BaseLayout
+	title={title}
+	description={defaultPageDescription}
+	canonicalHref={canonicalHref}
+	htmlClass="coming-soon-page"
+>
+	<ComingSoon heading="RSVP" />
+</BaseLayout>

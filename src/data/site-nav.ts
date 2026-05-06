@@ -1,0 +1,83 @@
+/** Shared nav + routes for Header and static pages */
+export const siteTitleSuffix = "Jane & Jeremiah";
+export const defaultPageDescription = `${siteTitleSuffix} · Wedding details coming soon.`;
+
+const navImageSrc = "/assets/image.png";
+
+export type NavSubPage = {
+	slug: string;
+	title: string;
+	description?: string;
+	image?: string;
+};
+
+export type NavSublinksSection = {
+	kind: "sublinks";
+	id: string;
+	label: string;
+	path: string;
+	sublinks: NavSubPage[];
+};
+
+export type NavTopLink = {
+	kind: "link";
+	href: string;
+	label: string;
+};
+
+export type NavEntry = NavSublinksSection | NavTopLink;
+
+function sub(
+	slug: string,
+	title: string,
+	description?: string,
+	image: string = navImageSrc,
+): NavSubPage {
+	return { slug, title, description, image };
+}
+
+export const navItems: NavEntry[] = [
+	{
+		kind: "sublinks",
+		id: "schedule",
+		label: "Schedule",
+		path: "/schedule",
+		sublinks: [
+			sub("itinerary", "Itinerary", "Ceremony and reception details"),
+			sub("attire", "Attire", "What to wear for each event"),
+		],
+	},
+	{
+		kind: "sublinks",
+		id: "travel",
+		label: "Travel",
+		path: "/travel",
+		sublinks: [
+			sub("flights", "Flights", "Arrival airports and transport options"),
+			sub("hotels", "Hotels", "Recommended stays and booking info"),
+			sub("visa", "Visa", "Entry requirements for Nigeria"),
+			sub("local-transport", "Local Transport", "Getting around during your stay"),
+		],
+	},
+	{
+		kind: "sublinks",
+		id: "about",
+		label: "About",
+		path: "/about",
+		sublinks: [
+			sub("our-story", "Our Story", "How Jane & Jeremiah met"),
+			sub("wedding-party", "Wedding Party", "Bridesmaids, groomsmen, and family"),
+			sub("faq", "FAQ", "Common questions answered"),
+			sub("contact", "Contact", "Who to reach for help"),
+		],
+	},
+	{
+		kind: "link",
+		href: "/registry",
+		label: "Registry",
+	},
+];
+
+export function navHref(path: string, slug: string): string {
+	return `${path.replace(/\/$/, "")}/${slug}`;
+}

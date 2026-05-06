@@ -1,109 +1,9 @@
 ---
+import { navHref, navItems, type NavEntry } from "@/data/site-nav";
+
 const brandAlt = "J & J";
 const logoSrc = "/assets/logo-tan.png";
-const navImageSrc = "/assets/image.png";
-const cta = { href: "/preview", label: "RSVP" } as const;
-
-type NavSubLink = {
-	href: string;
-	title: string;
-	description?: string;
-	image?: string;
-};
-
-type NavEntry =
-	| { kind: "link"; href: string; label: string }
-	| { kind: "sublinks"; id: string; label: string; sublinks: NavSubLink[] };
-
-	const navItems: NavEntry[] = [
-  {
-    kind: "sublinks",
-    id: "schedule",
-    label: "Schedule",
-    sublinks: [
-      {
-        href: "#itinerary",
-        title: "Itinerary",
-        description: "Ceremony and reception details",
-        image: navImageSrc,
-      },
-      {
-        href: "#attire",
-        title: "Attire",
-        description: "What to wear for each event",
-        image: navImageSrc,
-      },
-    ],
-  },
-  {
-    kind: "sublinks",
-    id: "travel",
-    label: "Travel",
-    sublinks: [
-      {
-        href: "#travel-flight",
-        title: "Flights",
-        description: "Arrival airports and transport options",
-        image: navImageSrc,
-      },
-      {
-        href: "#travel-hotel",
-        title: "Hotels",
-        description: "Recommended stays and booking info",
-        image: navImageSrc,
-      },
-      {
-        href: "#travel-visa",
-        title: "Visa",
-        description: "Entry requirements for Nigeria",
-        image: navImageSrc,
-      },
-      {
-        href: "#travel-local",
-        title: "Local Transport",
-        description: "Getting around during your stay",
-        image: navImageSrc,
-      },
-    ],
-  },
-  {
-    kind: "sublinks",
-    id: "about",
-    label: "About",
-    sublinks: [
-      {
-        href: "#our-story",
-        title: "Our Story",
-        description: "How Jane & Jeremiah met",
-        image: navImageSrc,
-      },
-      {
-        href: "#wedding-party",
-        title: "Wedding Party",
-        description: "Bridesmaids, groomsmen, and family",
-        image: navImageSrc,
-      },
-      {
-        href: "#faq",
-        title: "FAQ",
-        description: "Common questions answered",
-        image: navImageSrc,
-      },
-      {
-        href: "#contact",
-        title: "Contact",
-        description: "Who to reach for help",
-        image: navImageSrc,
-      },
-    ],
-  },
-  {
-    kind: "link",
-    href: "#registry",
-    label: "Registry",
-  },
-];
-
+const cta = { href: "/rsvp", label: "RSVP" } as const;
 
 const navSublinkPanels = navItems.filter(
 	(item): item is Extract<NavEntry, { kind: "sublinks" }> => item.kind === "sublinks",
@@ -202,14 +102,14 @@ const isCurrent = (href: string): boolean => {
 						<div class="app-header__nav-sublinks-clip">
 							<div class="app-header__nav-sublinks-motion">
 								<ul class="app-header__nav-sublinks-list">
-									{panel.sublinks.map(({ href, title, description, image }) => (
+									{panel.sublinks.map(({ slug, title, description, image }) => (
 										<li>
 											<a
 												class:list={[
 													"app-header__nav-sublinks-row",
 													{ "app-header__nav-sublinks-row--no-thumb": !image },
 												]}
-												href={href}
+												href={navHref(panel.path, slug)}
 											>
 												{image ? (
 													<img
@@ -356,6 +256,8 @@ const isCurrent = (href: string): boolean => {
 			} else {
 				if (root.dataset.menuOpen !== "true") return;
 				if (root.dataset.menuExit === "true") return;
+				openBtn.setAttribute("aria-expanded", "false");
+				setMenuAria(false);
 				if (reducedMotion) {
 					finishMenuClose();
 					return;
@@ -1016,6 +918,11 @@ const isCurrent = (href: string): boolean => {
 		background: currentColor;
 		transform-origin: center;
 		transition: transform 200ms var(--header-transition-ease);
+	}
+
+	/* Icon snaps to bars as soon as close starts (aria-expanded clears before stack finishes) */
+	.app-header[data-menu-exit="true"] .app-header__burger-line {
+		transition: none;
 	}
 
 	.app-header__menu[aria-expanded="true"] .app-header__burger-line:first-child {
