@@ -286,10 +286,25 @@ const isCurrent = (href: string): boolean => {
 		triggers.forEach((btn) => {
 			const id = btn.getAttribute("data-nav-sublinks-trigger");
 			if (!id) return;
+			btn.addEventListener(
+				"mousedown",
+				(e) => {
+					if (e.button !== 0) return;
+					/* Capture state before focus moves (focusin used to open, then click toggled closed). */
+					btn.dataset.preSublinksOpen = root.dataset.navSublinksOpen ?? "";
+				},
+				true,
+			);
 			btn.addEventListener("click", (e) => {
-				if (useSublinksHover()) return;
 				e.stopPropagation();
-				setSublinks(root.dataset.navSublinksOpen === id ? null : id);
+				const pre = btn.dataset.preSublinksOpen;
+				delete btn.dataset.preSublinksOpen;
+				if (pre === undefined) {
+					setSublinks(root.dataset.navSublinksOpen === id ? null : id);
+					return;
+				}
+				if (pre === id) setSublinks(null);
+				else setSublinks(id);
 			});
 			btn.addEventListener("mouseenter", () => useSublinksHover() && setSublinks(id));
 			btn.addEventListener("mouseleave", () => useSublinksHover() && scheduleSubClose());
@@ -304,7 +319,23 @@ const isCurrent = (href: string): boolean => {
 
 		root.addEventListener("focusin", (e) => {
 			if (root.dataset.menuOpen !== "true") return;
-			const id = e.target instanceof Element ? sublinksId(e.target) : null;
+			const target = e.target instanceof Element ? e.target : null;
+			if (!target) return;
+			const triggerEl = target.closest("[data-nav-sublinks-trigger]");
+			if (triggerEl) {
+				const tid = triggerEl.getAttribute("data-nav-sublinks-trigger");
+				if (!tid) return;
+				const rel = e.relatedTarget;
+				/* Sync panel when tabbing from another trigger or from inside a panel. Skip when
+				   coming from e.g. close — pointer click would focus trigger and open, then click closed. */
+				if (rel instanceof Element) {
+					const prevT = rel.closest("[data-nav-sublinks-trigger]");
+					if (prevT && prevT !== triggerEl) setSublinks(tid);
+					else if (rel.closest("[data-nav-sublinks-panel]")) setSublinks(tid);
+				}
+				return;
+			}
+			const id = sublinksId(target);
 			if (id) setSublinks(id);
 		});
 		root.addEventListener("focusout", () => {
@@ -315,7 +346,8 @@ const isCurrent = (href: string): boolean => {
 					setSublinks(null);
 					return;
 				}
-				const id = a instanceof Element ? sublinksId(a) : null;
+				if (a instanceof Element && a.closest("[data-nav-sublinks-trigger]")) return;
+				const id = sublinksId(a);
 				setSublinks(id);
 			});
 		});
@@ -482,11 +514,11 @@ const isCurrent = (href: string): boolean => {
 	}
 
 	.app-header[data-menu-open="true"]:not([data-menu-exit="true"]) .app-header__idle .app-header__logo {
-		transform: translateX(-140%);
+		transform: translateX(-180%);
 	}
 
 	.app-header[data-menu-open="true"]:not([data-menu-exit="true"]) .app-header__idle .app-header__idle-actions {
-		transform: translateX(140%);
+		transform: translateX(180%);
 	}
 
 	/* Scrolled glass while menu is open (no style snap mid-motion) */
