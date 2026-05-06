@@ -57,14 +57,14 @@
 		margin: 0 0 0.85rem;
 		font-size: 0.88rem;
 		line-height: 1.45;
-		color: #a89880;
+		color: var(--text-muted);
 	}
 
 	.launch-notify__thanks {
 		margin: 0.5rem 0 0;
 		font-size: 0.95rem;
 		line-height: 1.5;
-		color: #e8dcc8;
+		color: #4a3d32;
 	}
 
 	.launch-notify__thanks[hidden] {
@@ -86,15 +86,15 @@
 		min-width: 0;
 		padding: 0.55rem 0.75rem;
 		border-radius: 0.5rem;
-		border: 1px solid rgba(232, 213, 183, 0.35);
-		background: rgba(28, 18, 11, 0.35);
-		color: #faf6ef;
+		border: 1px solid rgb(110 82 60 / 0.22);
+		background: rgb(255 252 247 / 0.9);
+		color: var(--text-primary);
 		font-size: 1rem;
 		outline-offset: 2px;
 	}
 
 	.launch-notify__input::placeholder {
-		color: rgba(232, 220, 200, 0.45);
+		color: rgb(92 74 61 / 0.45);
 	}
 
 	.launch-notify__input:focus {
@@ -106,9 +106,9 @@
 		flex: 0 0 auto;
 		padding: 0.55rem 1.1rem;
 		border-radius: 0.5rem;
-		border: 1px solid rgba(232, 213, 183, 0.35);
-		background: linear-gradient(180deg, #c9a87c 0%, #a67c52 100%);
-		color: #1c120b;
+		border: 1px solid rgb(110 82 60 / 0.35);
+		background: linear-gradient(180deg, #6e523c 0%, #5a4434 100%);
+		color: #fffcf7;
 		font-weight: 700;
 		font-size: 0.95rem;
 		cursor: pointer;
@@ -131,14 +131,14 @@
 	}
 
 	.launch-notify__status[data-kind="ok"] {
-		color: #e8dcc8;
+		color: #5a7d4a;
 	}
 
 	.launch-notify__status[data-kind="err"] {
-		color: #f0b8a8;
+		color: #b54a3a;
 	}
 
 	.launch-notify__status[data-kind="info"] {
-		color: #a89880;
+		color: var(--text-muted);
 	}
 </style>

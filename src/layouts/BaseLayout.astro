@@ -1,0 +1,58 @@
+---
+import "@/styles/global.css";
+import Header from "@/components/Header.astro";
+
+interface Props {
+	title: string;
+	description?: string;
+	canonicalHref?: string;
+	ogTitle?: string;
+	ogDescription?: string;
+	ogUrl?: string;
+	htmlClass?: string;
+	bodyClass?: string;
+}
+
+const {
+	title,
+	description,
+	canonicalHref = Astro.url.href,
+	ogTitle,
+	ogDescription,
+	ogUrl = canonicalHref,
+	htmlClass,
+	bodyClass,
+} = Astro.props;
+
+const resolvedOgTitle = ogTitle ?? title;
+const resolvedOgDescription = ogDescription ?? description;
+---
+
+<!doctype html>
+<html lang="en" class:list={[htmlClass]}>
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" href="/favicon.ico" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+		{description ? <meta name="description" content={description} /> : null}
+		<link rel="canonical" href={canonicalHref} />
+		{
+			resolvedOgDescription ? (
+				<>
+					<meta property="og:type" content="website" />
+					<meta property="og:title" content={resolvedOgTitle} />
+					<meta property="og:description" content={resolvedOgDescription} />
+					<meta property="og:url" content={ogUrl} />
+				</>
+			) : null
+		}
+		<slot name="head" />
+	</head>
+	<body class:list={[bodyClass]}>
+		<Header />
+		<slot />
+	</body>
+</html>
