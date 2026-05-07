@@ -11,28 +11,40 @@ const topLinks = navItems.map((item) =>
 
 <footer class="site-footer" aria-label="Site">
 	<div class="site-footer__inner">
-		<p class="site-footer__brand">{siteTitleSuffix}</p>
-		<nav class="site-footer__nav" aria-label="Footer">
-			<ul class="site-footer__list">
-				<li>
-					<a href="/" class="site-footer__link">Home</a>
-				</li>
-				{
-					topLinks.map(({ href, label }) => (
-						<li>
-							<a href={href} class="site-footer__link">
-								{label}
-							</a>
-						</li>
-					))
-				}
-			</ul>
-		</nav>
-		<p class="site-footer__meta">&copy; {year} · With love</p>
+		<p class="site-footer__brand">
+			<span class="site-footer__brand-breathe">{siteTitleSuffix}</span>
+		</p>
+		<div class="site-footer__lower">
+			<nav class="site-footer__nav" aria-label="Footer">
+				<ul class="site-footer__list">
+					<li>
+						<a href="/" class="site-footer__link">Home</a>
+					</li>
+					{
+						topLinks.map(({ href, label }) => (
+							<li>
+								<a href={href} class="site-footer__link">
+									{label}
+								</a>
+							</li>
+						))
+					}
+				</ul>
+			</nav>
+			<p class="site-footer__meta">&copy; {year} · With love</p>
+		</div>
 	</div>
 </footer>
 
 <style>
+	@font-face {
+		font-family: "TFMix VF";
+		src: url("https://garet.typeforward.com/assets/fonts/shared/TFMixVF.woff2") format("woff2");
+		font-weight: 100 900;
+		font-style: normal;
+		font-display: swap;
+	}
+
 	.site-footer {
 		--footer-tan: #6e523c;
 		position: fixed;
@@ -43,8 +55,8 @@ const topLinks = navItems.map((item) =>
 		min-height: var(--site-footer-reveal);
 		padding: 1.25rem 1.25rem calc(1.25rem + env(safe-area-inset-bottom, 0px));
 		display: flex;
+		flex-direction: column;
 		align-items: center;
-		justify-content: center;
 		font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 		color: var(--footer-tan);
 		background-color: rgb(233 231 228);
@@ -59,30 +71,91 @@ const topLinks = navItems.map((item) =>
 		background-size: cover;
 		background-position: center, top;
 		background-repeat: no-repeat, no-repeat;
-		border-top: 1px solid rgb(110 82 60 / 0.18);
-		box-shadow: 0 -8px 32px rgb(110 82 60 / 0.08);
+		border-top: none;
+		box-shadow: 0 -12px 40px -8px rgb(110 82 60 / 0.12);
 		pointer-events: auto;
 	}
 
 	.site-footer__inner {
+		position: relative;
+		z-index: 1;
+		flex: 1 1 auto;
 		width: 100%;
 		max-width: 36rem;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		gap: 0.85rem;
+		min-height: 0;
 		text-align: center;
 	}
 
-	.site-footer__brand {
-		margin: 0;
-		font-size: 0.9375rem;
-		font-weight: 700;
-		letter-spacing: 0.02em;
+	/* Fills space above the bottom strip so nav/meta stay pinned down */
+	.site-footer__inner::before {
+		content: "";
+		flex: 1 1 auto;
+		min-height: 0;
+		width: 100%;
 	}
 
-	.site-footer__nav {
+	.site-footer__lower {
+		flex: 0 0 auto;
+		position: relative;
+		z-index: 2;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.5rem;
 		width: 100%;
+	}
+
+	.site-footer__brand {
+		position: absolute;
+		inset-inline: 0;
+		top: 50%;
+		z-index: 1;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		margin: 0;
+		text-align: center;
+		transform: translateY(-50%);
+	}
+
+	.site-footer__brand-breathe {
+		font-family: "TFMix VF", ui-sans-serif, system-ui, sans-serif;
+		font-size: clamp(1.75rem, 11vw, 4rem);
+		font-weight: 400;
+		color: var(--footer-tan);
+		text-align: center;
+		text-shadow:
+			0 1px 0 rgb(255 255 255 / 0.45),
+			0 2px 8px rgb(110 82 60 / 0.2);
+		font-variation-settings: "wght" 100;
+		animation: site-footer-letter-breathe 3s ease-in-out infinite;
+		white-space: normal;
+	}
+
+	@media (min-width: 768px) {
+		.site-footer__brand-breathe {
+			white-space: nowrap;
+		}
+	}
+
+	@keyframes site-footer-letter-breathe {
+		from,
+		to {
+			font-variation-settings: "wght" 100;
+		}
+		50% {
+			font-variation-settings: "wght" 900;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.site-footer__brand-breathe {
+			animation: none;
+			font-variation-settings: "wght" 500;
+		}
 	}
 
 	.site-footer__list {

@@ -3,6 +3,8 @@
 :root {
 	--site-header-height: 3.5rem;
 	--site-footer-reveal: 30dvh;
+	/* Extends .site-shell background over the top of the fixed footer to hide the seam */
+	--footer-overlap: 12px;
 	--focus-ring: #6e523c;
 	/* Page shell: light gray + tan */
 	--page-bg: #e9e7e4;
@@ -11,6 +13,12 @@
 	--page-tan-deep: rgba(110, 82, 60, 0.16);
 	--text-primary: #3a2e26;
 	--text-muted: #5c4a3d;
+}
+
+@media (min-width: 768px) {
+	:root {
+		--site-footer-reveal: 50dvh;
+	}
 }
 
 html {
@@ -33,7 +41,8 @@ body {
 	position: relative;
 	z-index: 1;
 	min-height: 100dvh;
-	margin-bottom: var(--site-footer-reveal);
+	/* padding-bottom: var(--footer-overlap); */
+	margin-bottom: calc(var(--site-footer-reveal) - var(--footer-overlap));
 	background-color: var(--page-bg);
 	background-image:
 		radial-gradient(ellipse 92% 78% at 8% 6%, var(--page-tan-glow), transparent 54%),
