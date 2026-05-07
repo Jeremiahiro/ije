@@ -1,5 +1,6 @@
 ---
 import "@/styles/global.css";
+import Footer from "@/components/Footer.astro";
 import Header from "@/components/Header.astro";
 
 interface Props {
@@ -53,6 +54,9 @@ const resolvedOgDescription = ogDescription ?? description;
 	</head>
 	<body class:list={[bodyClass]}>
 		<Header />
-		<slot />
+		<div class="site-shell">
+			<slot />
+		</div>
+		<Footer />
 	</body>
 </html>
