@@ -17,6 +17,7 @@
     "@astrojs/vercel": "^10.0.6",
     "@supabase/supabase-js": "^2.105.3",
     "@tailwindcss/vite": "^4.2.4",
+    "@vercel/analytics": "^2.0.1",
     "astro": "^6.2.2",
     "sass": "^1.99.0",
     "tailwindcss": "^4.2.4"
