@@ -3,10 +3,8 @@
 :root {
 	--site-header-height: 3.5rem;
 	--site-footer-reveal: 30dvh;
-	/* Extends .site-shell background over the top of the fixed footer to hide the seam */
 	--footer-overlap: 12px;
 	--focus-ring: #6e523c;
-	/* Page shell: light gray + tan */
 	--page-bg: #e9e7e4;
 	--page-bg-mid: #e3e0db;
 	--page-tan-glow: rgba(201, 168, 124, 0.32);
@@ -36,12 +34,10 @@ body {
 		linear-gradient(168deg, #eceae6 0%, var(--page-bg-mid) 42%, #ebe7e1 100%);
 }
 
-/* Sits above the fixed footer (z-index 0) until scroll reveals the margin strip */
 .site-shell {
 	position: relative;
 	z-index: 1;
 	min-height: 100dvh;
-	/* padding-bottom: var(--footer-overlap); */
 	margin-bottom: calc(var(--site-footer-reveal) - var(--footer-overlap));
 	background-color: var(--page-bg);
 	background-image:
@@ -57,7 +53,6 @@ html.coming-soon-page .site-shell {
 	flex-direction: column;
 }
 
-/* Drop browser default blue ring; keep keyboard focus visible with on-palette ring. */
 :where(a, button) {
 	-webkit-tap-highlight-color: transparent;
 }

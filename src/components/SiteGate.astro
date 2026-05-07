@@ -1,0 +1,231 @@
+---
+const expected = import.meta.env.PUBLIC_SITE_GATE_PASSWORD ?? "";
+const enabled = expected.length > 0;
+const ttlMs = 36 * 60 * 60 * 1000;
+const storageKey = "jj_site_unlock_until";
+---
+
+{
+	enabled ? (
+		<>
+			<div id="site-gate" class="site-gate" aria-hidden="true">
+				<div class="site-gate__backdrop" aria-hidden="true" />
+				<div
+					class="site-gate__panel"
+					role="dialog"
+					aria-modal="true"
+					aria-labelledby="site-gate-label"
+				>
+					<p id="site-gate-label" class="site-gate__label">
+						Password
+					</p>
+					<form id="site-gate-form" class="site-gate__form" autocomplete="off">
+						<div class="site-gate__field-row">
+							<input
+								id="site-gate-input"
+								class="site-gate__input"
+								type="password"
+								name="password"
+								required
+								autocapitalize="off"
+								spellcheck="false"
+							/>
+							<button type="submit" class="site-gate__submit">
+								Submit
+							</button>
+						</div>
+						<p id="site-gate-err" class="site-gate__err" role="status" aria-live="polite" />
+					</form>
+				</div>
+			</div>
+			<script define:vars={{ expected, ttlMs, storageKey }}>
+				(function () {
+					var root = document.getElementById("site-gate");
+					var form = document.getElementById("site-gate-form");
+					var input = document.getElementById("site-gate-input");
+					var errEl = document.getElementById("site-gate-err");
+					if (!root || !form || !input || !errEl) return;
+
+					function clearGate() {
+						document.documentElement.classList.remove("site-gate-open");
+						root.remove();
+					}
+
+					var until = Number(localStorage.getItem(storageKey));
+					if (Number.isFinite(until) && until > Date.now()) {
+						clearGate();
+						return;
+					}
+
+					root.classList.add("site-gate--show");
+					root.setAttribute("aria-hidden", "false");
+					document.documentElement.classList.add("site-gate-open");
+					input.focus();
+
+					form.addEventListener("submit", function (e) {
+						e.preventDefault();
+						errEl.textContent = "";
+						if (input.value === expected) {
+							localStorage.setItem(storageKey, String(Date.now() + ttlMs));
+							clearGate();
+							return;
+						}
+						errEl.textContent = "That did not match.";
+						input.select();
+					});
+				})();
+			</script>
+		</>
+	) : null
+}
+
+<style>
+	.site-gate {
+		position: fixed;
+		inset: 0;
+		z-index: 100000;
+		display: none;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		box-sizing: border-box;
+		padding: max(1rem, env(safe-area-inset-top, 0px))
+			max(1rem, env(safe-area-inset-right, 0px))
+			max(1rem, env(safe-area-inset-bottom, 0px))
+			max(1rem, env(safe-area-inset-left, 0px));
+		font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+	}
+
+	.site-gate.site-gate--show {
+		display: flex;
+	}
+
+	.site-gate__backdrop {
+		position: absolute;
+		inset: 0;
+		background: rgb(58 46 38 / 0.38);
+		backdrop-filter: blur(12px) saturate(1.12);
+		-webkit-backdrop-filter: blur(12px) saturate(1.12);
+	}
+
+	.site-gate__panel {
+		position: relative;
+		box-sizing: border-box;
+		width: 100%;
+		max-width: 22rem;
+		margin-inline: auto;
+		align-self: center;
+		padding: 1.25rem 1.15rem 1.15rem;
+		border-radius: 1rem;
+		background: rgb(255 252 247 / 0.26);
+		border: 1px solid rgb(255 255 255 / 0.42);
+		box-shadow:
+			0 0 0 1px rgb(110 82 60 / 0.08) inset,
+			0 18px 44px rgb(20 14 10 / 0.28);
+		backdrop-filter: blur(10px);
+		-webkit-backdrop-filter: blur(10px);
+	}
+
+	.site-gate__label {
+		margin: 0 0 0.5rem;
+		font-size: 0.72rem;
+		font-weight: 650;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		color: rgb(58 46 38 / 0.8);
+	}
+
+	.site-gate__field-row {
+		display: flex;
+		flex-direction: row;
+		gap: 0.45rem;
+		align-items: stretch;
+		width: 100%;
+		min-width: 0;
+	}
+
+	.site-gate__input {
+		box-sizing: border-box;
+		flex: 1 1 auto;
+		min-width: 0;
+		width: 100%;
+		padding: 0.65rem 0.75rem;
+		font-size: 1rem;
+		border-radius: 0.5rem;
+		border: 1px solid rgb(110 82 60 / 0.3);
+		background: rgb(255 255 255 / 0.75);
+		color: #3a2e26;
+	}
+
+	.site-gate__input:focus {
+		outline: 2px solid #6e523c;
+		outline-offset: 2px;
+	}
+
+	.site-gate__submit {
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-shrink: 0;
+		padding: 0.65rem 1rem;
+		border-radius: 0.5rem;
+		border: 1px solid rgb(90 66 48 / 0.55);
+		background: rgb(110 82 60);
+		color: rgb(255 252 247);
+		font-size: 0.8125rem;
+		font-weight: 650;
+		letter-spacing: 0.02em;
+		cursor: pointer;
+		transition:
+			background-color 150ms ease,
+			transform 150ms ease;
+	}
+
+	.site-gate__submit:hover {
+		background: rgb(95 70 52);
+	}
+
+	.site-gate__submit:focus {
+		outline: 2px solid #6e523c;
+		outline-offset: 2px;
+	}
+
+	.site-gate__submit:focus:not(:focus-visible) {
+		outline: none;
+	}
+
+	.site-gate__submit:active {
+		transform: scale(0.97);
+	}
+
+	@media (max-width: 480px) {
+		.site-gate__field-row {
+			flex-direction: column;
+			align-items: stretch;
+		}
+
+		.site-gate__submit {
+			width: 100%;
+		}
+	}
+
+	.site-gate__err {
+		min-height: 1.35rem;
+		margin: 0.55rem 0 0;
+		font-size: 0.8125rem;
+		font-weight: 500;
+		color: rgb(130 50 40);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.site-gate__backdrop {
+			backdrop-filter: blur(6px);
+			-webkit-backdrop-filter: blur(6px);
+		}
+	}
+
+	:global(html.site-gate-open) {
+		overflow: hidden;
+	}
+</style>

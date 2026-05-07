@@ -8,6 +8,9 @@ export default defineConfig({
 	test: {
 		environment: "node",
 	},
+	server: {
+		allowedHosts: [".trycloudflare.com"],
+	},
 	resolve: {
 		alias: {
 			"@": path.resolve(dir, "src"),
