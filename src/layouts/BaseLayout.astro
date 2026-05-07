@@ -2,6 +2,7 @@
 import "@/styles/global.css";
 import Footer from "@/components/Footer.astro";
 import Header from "@/components/Header.astro";
+import SiteGate from "@/components/SiteGate.astro";
 
 interface Props {
 	title: string;
@@ -35,7 +36,10 @@ const resolvedOgDescription = ogDescription ?? description;
 		<meta charset="utf-8" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1, maximum-scale=1"
+		/>
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
 		{description ? <meta name="description" content={description} /> : null}
@@ -53,6 +57,7 @@ const resolvedOgDescription = ogDescription ?? description;
 		<slot name="head" />
 	</head>
 	<body class:list={[bodyClass]}>
+		<SiteGate />
 		<Header />
 		<div class="site-shell">
 			<slot />

@@ -39,9 +39,9 @@ function sub(
 export const navItems: NavEntry[] = [
 	{
 		kind: "sublinks",
-		id: "schedule",
-		label: "Schedule",
-		path: "/schedule",
+		id: "on-the-day",
+		label: "On the Day",
+		path: "/on-the-day",
 		sublinks: [
 			sub("itinerary", "Itinerary", "Ceremony and reception details"),
 			sub("attire", "Attire", "What to wear for each event"),
@@ -68,7 +68,6 @@ export const navItems: NavEntry[] = [
 			sub("our-story", "Our Story", "How Jane & Jeremiah met"),
 			sub("wedding-party", "Wedding Party", "Bridesmaids, groomsmen, and family"),
 			sub("faq", "FAQ", "Common questions answered"),
-			sub("contact", "Contact", "Who to reach for help"),
 		],
 	},
 	{
