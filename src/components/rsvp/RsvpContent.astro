@@ -1,0 +1,730 @@
+---
+import ContentCard from "@/components/ContentCard.astro";
+import HeroPageSurface from "@/components/HeroPageSurface.astro";
+import FormCheck from "@/components/forms/FormCheck.astro";
+import FormChoice from "@/components/forms/FormChoice.astro";
+import FormChoiceGroup from "@/components/forms/FormChoiceGroup.astro";
+import type { FormFieldVariant } from "@/components/forms/FormField.astro";
+import type { FormSelectOption } from "@/components/forms/FormSelect.astro";
+import RsvpFormField from "@/components/rsvp/RsvpFormField.astro";
+import RsvpFormSelect from "@/components/rsvp/RsvpFormSelect.astro";
+import RsvpSection from "@/components/rsvp/RsvpSection.astro";
+import { RSVP_EVENTS_ERROR_KEY, RSVP_FIELD } from "@/util/rsvpForm";
+
+const fieldIds = {
+	country: "rsvp-field-country",
+	otherCountry: "rsvp-field-other-country",
+	fullName: "rsvp-field-full-name",
+	email: "rsvp-field-email",
+	phone: "rsvp-field-phone",
+	plusOneCheck: "rsvp-check-plus-one",
+	plusOneName: "rsvp-field-plus-one",
+	arrival: "rsvp-field-arrival",
+	departure: "rsvp-field-departure",
+	guestNotes: "rsvp-field-guest-notes",
+	messageCouple: "rsvp-field-message-couple",
+} as const;
+
+const countryOptions: FormSelectOption[] = [
+	{ value: "nigeria", label: "Nigeria" },
+	{ value: "uk", label: "United Kingdom" },
+	{ value: "usa", label: "United States" },
+	{ value: "other", label: "Other (specify below)" },
+];
+
+type SimpleField = {
+	id: string;
+	name: string;
+	label: string;
+	variant: FormFieldVariant;
+	optional?: boolean;
+	hint?: string;
+	autocomplete?: string;
+	inputmode?: "email" | "tel" | "text" | "numeric" | "decimal" | "url" | "search" | "none";
+	required?: boolean;
+};
+
+const personalFields: SimpleField[] = [
+	{
+		id: fieldIds.fullName,
+		name: RSVP_FIELD.fullName,
+		label: "Full name",
+		variant: "text",
+		autocomplete: "name",
+		required: true,
+	},
+	{
+		id: fieldIds.email,
+		name: RSVP_FIELD.email,
+		label: "Email address",
+		variant: "email",
+		autocomplete: "email",
+		inputmode: "email",
+		required: true,
+	},
+	{
+		id: fieldIds.phone,
+		name: RSVP_FIELD.phone,
+		label: "Phone number",
+		variant: "tel",
+		optional: true,
+		autocomplete: "tel",
+		inputmode: "tel",
+		hint: "Include your country code",
+	},
+];
+
+const internationalDateFields: SimpleField[] = [
+	{
+		id: fieldIds.arrival,
+		name: RSVP_FIELD.expectedArrival,
+		label: "Expected arrival in Nigeria",
+		variant: "date",
+		required: true,
+	},
+	{
+		id: fieldIds.departure,
+		name: RSVP_FIELD.expectedDeparture,
+		label: "Expected departure",
+		variant: "date",
+		required: true,
+	},
+];
+
+const internationalYesNo = [
+	{
+		legend: "Airport pickup",
+		name: RSVP_FIELD.airportPickup,
+		note: "You’ll need to arrive on our recommended days to qualify for organised pickup — we’ll confirm details closer to the date.",
+		yes: "Yes, I may need pickup help",
+		no: "No thanks",
+	},
+	{
+		legend: "Travel coordination",
+		name: RSVP_FIELD.travelGroupCoordination,
+		note: "Would you like to be grouped with other guests arriving around the same time?",
+		yes: "Yes, please",
+		no: "No thanks",
+	},
+] as const;
+
+const relationshipChoices = [
+	{ value: "family", label: "Family" },
+	{ value: "friend", label: "Friend" },
+	{ value: "colleague", label: "Colleague" },
+	{ value: "church", label: "Church" },
+	{ value: "other", label: "Other" },
+] as const;
+
+const eventsLede =
+	"We’re celebrating with a traditional ceremony and a white wedding — select each one you plan to attend.";
+
+const thankYouWriteChars = ["T", "h", "a", "n", "k", "\u00A0", "y", "o", "u"];
+---
+
+<HeroPageSurface
+	bgSrc="/assets/rsvp.jpg"
+	surfaceClass="rsvp-page"
+	ariaLabelledBy="rsvp-heading"
+>
+	<header class="rsvp__intro">
+		<h1 id="rsvp-heading" class="rsvp__title">RSVP</h1>
+		<p class="rsvp__lede">
+			We’d love to know how we can make your time with us smooth — events
+			you’ll join, travel logistics, and anything that helps us host you
+			well.
+		</p>
+	</header>
+
+	<ContentCard variant="secondary" class="rsvp__card">
+		<div class="rsvp__body">
+			<form
+				id="rsvp-form"
+				class="rsvp__form"
+				novalidate
+				method="post"
+				onsubmit="event.preventDefault()"
+			>
+				<p class="rsvp__callout" role="note">
+					<strong>Please respond by</strong>
+					<time datetime="2026-10-01">October 1, 2026</time>
+					<br /> It helps us finalise numbers and plan for guests
+					travelling from abroad.
+				</p>
+
+				<p
+					id="rsvp-form-summary"
+					class="rsvp__summary"
+					role="alert"
+					hidden
+				>
+				</p>
+
+				<RsvpSection
+					lead
+					headingId="rsvp-personal-heading"
+					title="Personal information"
+				>
+					{personalFields.map((f) => <RsvpFormField {...f} />)}
+
+					<RsvpFormSelect
+						name={RSVP_FIELD.countryResidence}
+						id={fieldIds.country}
+						label="Where are you coming from?"
+						options={countryOptions}
+						placeholder="Choose a country"
+						required
+					/>
+					<div
+						id="rsvp-other-country"
+						class="rsvp__conditional"
+						hidden
+					>
+						<RsvpFormField
+							name={RSVP_FIELD.otherCountry}
+							id={fieldIds.otherCountry}
+							label="Country name"
+							variant="text"
+							autocomplete="country-name"
+							hint="We’ll treat this as international travel for planning and support."
+							required
+						/>
+					</div>
+				</RsvpSection>
+
+				<RsvpSection
+					headingId="rsvp-guests-heading"
+					title="Your party"
+					lede="Let us know if someone’s coming with you."
+				>
+					<div class="rsvp__checkbox-stack">
+						<FormCheck
+							id={fieldIds.plusOneCheck}
+							name={RSVP_FIELD.hasPlusOne}
+						>
+							I’m bringing a plus one
+						</FormCheck>
+					</div>
+					<div id="rsvp-plus-one" class="rsvp__conditional" hidden>
+						<RsvpFormField
+							name={RSVP_FIELD.plusOneName}
+							id={fieldIds.plusOneName}
+							label="Plus one — full name"
+							variant="text"
+							autocomplete="name"
+							hint="We’ll use this for seating and travel notes."
+						/>
+					</div>
+				</RsvpSection>
+
+				<RsvpSection
+					headingId="rsvp-events-heading"
+					title="Event selection"
+					lede={eventsLede}
+				>
+					<div
+						class="rsvp__checkbox-stack"
+						role="group"
+						aria-labelledby="rsvp-events-heading"
+					>
+						<FormCheck
+							id="rsvp-check-traditional"
+							name={RSVP_FIELD.eventTraditional}
+						>
+							Traditional wedding
+						</FormCheck>
+						<FormCheck
+							id="rsvp-check-white"
+							name={RSVP_FIELD.eventWhite}
+						>
+							White wedding
+						</FormCheck>
+					</div>
+					<p
+						class="rsvp__inline-error"
+						id={`rsvp-error-${RSVP_EVENTS_ERROR_KEY}`}
+						hidden
+					>
+					</p>
+				</RsvpSection>
+
+				<div
+					class="rsvp__conditional-shell"
+					id="rsvp-international-shell"
+					data-expanded="false"
+				>
+					<div class="rsvp__conditional-shell-inner" inert>
+						<RsvpSection
+							id="rsvp-international"
+							headingId="rsvp-intl-heading"
+							title="International travel"
+							ariaHidden={true}
+						>
+							<div class="rsvp__date-row">
+								{internationalDateFields.map((f) => (
+									<RsvpFormField {...f} />
+								))}
+							</div>
+							{internationalYesNo.map((g) => (
+								<FormChoiceGroup
+									legend={g.legend}
+									errorId={`rsvp-error-${g.name}`}
+								>
+									<p class="rsvp__field-note">{g.note}</p>
+									<div class="rsvp__choice-row">
+										<FormChoice name={g.name} value="yes" required>
+											{g.yes}
+										</FormChoice>
+										<FormChoice name={g.name} value="no">
+											{g.no}
+										</FormChoice>
+									</div>
+								</FormChoiceGroup>
+							))}
+						</RsvpSection>
+					</div>
+				</div>
+
+				<RsvpSection
+					headingId="rsvp-anything-heading"
+					title="Anything we should know?"
+				>
+					<RsvpFormField
+						name={RSVP_FIELD.guestNotes}
+						id={fieldIds.guestNotes}
+						label="Details for the hosts"
+						variant="textarea"
+						optional
+						rows={4}
+					/>
+				</RsvpSection>
+
+				<RsvpSection
+					ariaLabel="Optional: relationship to the couple and a message"
+				>
+					<FormChoiceGroup
+						legend="Relationship to the couple"
+						errorId={`rsvp-error-${RSVP_FIELD.relationship}`}
+					>
+						<div class="rsvp__relationship-choices">
+							{relationshipChoices.map((c) => (
+								<FormChoice
+									name={RSVP_FIELD.relationship}
+									value={c.value}
+								>
+									{c.label}
+								</FormChoice>
+							))}
+						</div>
+					</FormChoiceGroup>
+					<RsvpFormField
+						name={RSVP_FIELD.messageCouple}
+						id={fieldIds.messageCouple}
+						label="Message to the couple"
+						variant="textarea"
+						optional
+						rows={3}
+					/>
+				</RsvpSection>
+
+				<div class="rsvp__actions">
+					<button type="submit" class="rsvp__submit" id="rsvp-submit">
+						Submit RSVP
+					</button>
+				</div>
+			</form>
+
+			<div
+				id="rsvp-success"
+				class="rsvp__success"
+				hidden
+				role="status"
+				aria-live="polite"
+				tabindex="-1"
+			>
+				<p class="rsvp__success-title">
+					<span class="rsvp__sr-only">Thank you</span>
+					<span class="rsvp__success-write" aria-hidden="true">
+						{
+							thankYouWriteChars.map((ch, i) => (
+								<span class="rsvp__success-write-char" style={`--write-i: ${i}`}>
+									{ch}
+								</span>
+							))
+						}
+					</span>
+				</p>
+				<p class="rsvp__success-copy">
+					We’ve saved your details — our guest list will sync soon. Reach out if anything changes.
+				</p>
+			</div>
+		</div>
+	</ContentCard>
+</HeroPageSurface>
+
+<style>
+	.rsvp__intro {
+		margin: 0 auto clamp(1.5rem, 4vw, 2.25rem);
+		max-width: 40rem;
+		text-align: center;
+	}
+
+	.rsvp__title {
+		margin: 0 0 0.5rem;
+		font-size: clamp(2rem, 4.5vw, 2.75rem);
+		font-weight: 800;
+		line-height: 1.1;
+		letter-spacing: 0.02em;
+		color: #4a3d32;
+	}
+
+	.rsvp__lede {
+		margin: 0;
+		font-size: clamp(0.95rem, 2vw, 1.05rem);
+		line-height: 1.55;
+		color: var(--text-muted);
+	}
+
+	:global(.hero-page.rsvp-page):has(#rsvp-form[hidden]) .rsvp__intro {
+		display: none;
+	}
+
+	.rsvp__card {
+		max-width: min(52rem, calc(100vw - 2rem));
+		margin-inline: auto;
+	}
+
+	/*
+	 * Post-submit only: taller card, centred body, lighter glass, 1px blur.
+	 */
+	:global(.content-card--secondary.rsvp__card):has(#rsvp-form[hidden]) {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		min-height: 0;
+		background: rgb(255 255 255 / 0.11);
+		border-color: rgb(255 255 255 / 0.36);
+		box-shadow: 0 14px 40px rgb(110 82 60 / 0.07);
+		-webkit-backdrop-filter: blur(1px);
+		backdrop-filter: blur(1px);
+
+		& .rsvp__body {
+			flex: 1;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			min-height: 0;
+		}
+
+		& .rsvp__success-write-char {
+			animation: rsvp-success-write 2.65s cubic-bezier(0.2, 0.82, 0.28, 1) infinite;
+			animation-delay: calc(var(--write-i, 0) * 0.058s);
+		}
+
+		& .rsvp__success-copy {
+			text-shadow:
+				0 1px 2px rgb(255 252 247 / 0.9),
+				0 0 14px rgb(255 252 247 / 0.42);
+		}
+	}
+
+	.rsvp__form {
+		display: flex;
+		flex-direction: column;
+		--rsvp-form-stack-gap: 2.35rem;
+		gap: var(--rsvp-form-stack-gap);
+	}
+
+	.rsvp__callout {
+		margin: 0;
+		padding: 1rem 1.15rem;
+		border-radius: 0.75rem;
+		border: 1px solid rgb(201 168 124 / 0.45);
+		background: linear-gradient(
+			135deg,
+			rgb(255 251 243 / 0.95) 0%,
+			rgb(245 232 214 / 0.45) 100%
+		);
+		font-size: 0.95rem;
+		line-height: 1.5;
+		color: #4a3d32;
+		text-align: center;
+	}
+
+	.rsvp__callout strong {
+		font-weight: 700;
+		color: #6e523c;
+	}
+
+	.rsvp__callout time {
+		font-weight: 600;
+		white-space: nowrap;
+	}
+
+	.rsvp__conditional[hidden] {
+		display: none !important;
+	}
+
+	.rsvp__conditional-shell[data-expanded="false"] {
+		margin-bottom: calc(-1 * var(--rsvp-form-stack-gap));
+	}
+
+	.rsvp__conditional-shell {
+		display: grid;
+		grid-template-rows: 0fr;
+		transition:
+			grid-template-rows 0.45s cubic-bezier(0.33, 1, 0.68, 1),
+			margin-bottom 0.45s cubic-bezier(0.33, 1, 0.68, 1);
+	}
+
+	.rsvp__conditional-shell[data-expanded="true"] {
+		grid-template-rows: 1fr;
+		margin-bottom: 0;
+	}
+
+	.rsvp__conditional-shell-inner {
+		min-height: 0;
+		overflow: hidden;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.rsvp__conditional-shell {
+			transition: none;
+		}
+	}
+
+	.rsvp__checkbox-stack {
+		display: flex;
+		flex-direction: column;
+		gap: 0.65rem;
+	}
+
+	.rsvp__date-row {
+		display: grid;
+		gap: 1.15rem;
+		grid-template-columns: 1fr;
+		width: 100%;
+	}
+
+	@media (min-width: 640px) {
+		.rsvp__date-row {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	.rsvp__date-row :global(.form-field) {
+		width: 100%;
+		min-width: 0;
+	}
+
+	.rsvp__date-row :global(.form-field__control--narrow) {
+		max-width: none;
+	}
+
+	.rsvp__choice-row {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.65rem;
+	}
+
+	.rsvp__relationship-choices {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(10.25rem, 1fr));
+		gap: 0.8rem 0.75rem;
+		width: 100%;
+	}
+
+	.rsvp__field-note {
+		margin: 0 0 0.35rem;
+		font-size: 0.86rem;
+		line-height: 1.45;
+		color: var(--text-muted);
+		flex: 1 0 100%;
+	}
+
+	.rsvp__inline-error {
+		margin: 0;
+		font-size: 0.82rem;
+		line-height: 1.35;
+		color: #b54a3a;
+	}
+
+	.rsvp__inline-error[hidden] {
+		display: none !important;
+	}
+
+	.rsvp__summary {
+		margin: 0;
+		font-size: 0.88rem;
+		line-height: 1.45;
+		color: #b54a3a;
+	}
+
+	.rsvp__summary:not([hidden]) {
+		padding: 0.75rem 1rem;
+		border-radius: 0.6rem;
+		border: 1px solid rgb(181 74 58 / 0.35);
+		background: rgb(181 74 58 / 0.07);
+		font-weight: 600;
+	}
+
+	.rsvp__summary[hidden] {
+		display: none !important;
+	}
+
+	.rsvp__actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+		padding-top: 0.35rem;
+	}
+
+	.rsvp__submit {
+		padding: 0.72rem 1.5rem;
+		min-height: 3.1rem;
+		border-radius: 0.55rem;
+		border: 1px solid rgb(110 82 60 / 0.35);
+		background: linear-gradient(180deg, #6e523c 0%, #5a4434 100%);
+		color: #fffcf7;
+		font-weight: 700;
+		font-size: 1.02rem;
+		cursor: pointer;
+		font-family: inherit;
+	}
+
+	.rsvp__submit:hover:not(:disabled) {
+		filter: brightness(1.06);
+	}
+
+	.rsvp__submit:disabled {
+		opacity: 0.65;
+		cursor: not-allowed;
+	}
+
+	.rsvp__success {
+		text-align: center;
+		padding-block: 0.75rem;
+		max-width: 34rem;
+		margin-inline: auto;
+		scroll-margin-top: max(
+			4rem,
+			calc(
+				var(--site-header-height) + env(safe-area-inset-top, 0px) + 4.5rem
+			)
+		);
+	}
+
+	.rsvp__success[hidden] {
+		display: none !important;
+	}
+
+	.rsvp__sr-only {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		padding: 0;
+		margin: -1px;
+		overflow: hidden;
+		clip-path: inset(50%);
+		white-space: nowrap;
+		border: 0;
+	}
+
+	.rsvp__success-title {
+		position: relative;
+		display: flex;
+		justify-content: center;
+		flex-wrap: wrap;
+		min-height: 1.85em;
+		margin: 0 0 0.4rem;
+		font-weight: 800;
+		color: #5a7d4a;
+		line-height: 1.2;
+		text-shadow:
+			0 1px 2px rgb(255 252 247 / 0.95),
+			0 0 18px rgb(255 252 247 / 0.55);
+	}
+
+	.rsvp__success-write {
+		display: inline-flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		font-family: inherit;
+		font-weight: inherit;
+		font-size: clamp(1.35rem, 4.25vw, 1.85rem);
+		letter-spacing: 0.02em;
+	}
+
+	.rsvp__success-write-char {
+		display: inline-block;
+		opacity: 1;
+		transform-origin: bottom left;
+	}
+
+	@keyframes rsvp-success-write {
+		0% {
+			opacity: 0;
+			transform: translate(0.2em, 0.06em) rotate(-5deg);
+		}
+
+		14% {
+			opacity: 1;
+			transform: translate(0, 0) rotate(0deg);
+		}
+
+		52% {
+			opacity: 1;
+			transform: translate(0, 0) rotate(0deg);
+		}
+
+		72% {
+			opacity: 0;
+			transform: translate(0.2em, 0.06em) rotate(-5deg);
+		}
+
+		100% {
+			opacity: 0;
+			transform: translate(0.2em, 0.06em) rotate(-5deg);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		:global(.content-card--secondary.rsvp__card):has(#rsvp-form[hidden]) {
+			& .rsvp__success-write-char {
+				opacity: 1;
+				animation: none;
+				transform: none;
+			}
+		}
+	}
+
+	.rsvp__success-copy {
+		margin: 0;
+		font-size: 0.95rem;
+		line-height: 1.5;
+		color: var(--text-muted);
+	}
+
+	:global(.rsvp-page.hero-page) {
+		overflow-x: visible;
+		min-height: 100vh;
+		min-height: 100dvh;
+		display: flex;
+		flex-direction: column;
+	}
+
+	:global(.rsvp-page.hero-page .hero-page__shell) {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+		min-height: 0;
+		box-sizing: border-box;
+	}
+
+	@media (min-width: 1024px) {
+		:global(.rsvp-page .hero-page__bg) {
+			background-position: center top;
+		}
+	}
+</style>

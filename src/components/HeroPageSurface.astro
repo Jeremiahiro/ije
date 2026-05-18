@@ -1,0 +1,120 @@
+---
+interface Props {
+	bgSrc: string;
+	surfaceClass?: string;
+	ariaLabelledBy?: string;
+}
+
+const { bgSrc, surfaceClass, ariaLabelledBy } = Astro.props;
+---
+
+<section
+	class:list={[
+		"hero-page",
+		surfaceClass,
+	]}
+	aria-labelledby={ariaLabelledBy}
+>
+	<div
+		class="hero-page__bg"
+		aria-hidden="true"
+		style={`--hero-bg:url('${bgSrc}')`}
+	>
+	</div>
+	<div class="hero-page__scrim" aria-hidden="true"></div>
+
+	<div class="hero-page__shell wrapper">
+		<slot />
+	</div>
+</section>
+
+<style>
+	.hero-page {
+		position: relative;
+		isolation: isolate;
+		overflow-x: clip;
+		font-family:
+			system-ui,
+			-apple-system,
+			"Segoe UI",
+			Roboto,
+			Helvetica,
+			Arial,
+			sans-serif;
+		color: var(--text-primary);
+		-webkit-text-size-adjust: 100%;
+		text-size-adjust: 100%;
+	}
+
+	.hero-page__bg {
+		position: absolute;
+		inset: 0;
+		z-index: 0;
+		background-image:
+			var(--hero-bg),
+			linear-gradient(
+				168deg,
+				#eceae6 0%,
+				var(--page-bg-mid) 52%,
+				#ebe7e1 100%
+			);
+		background-position: center;
+		background-size: cover;
+		background-repeat: no-repeat;
+		pointer-events: none;
+	}
+
+	.hero-page__scrim {
+		position: absolute;
+		inset: 0;
+		z-index: 0;
+		background:
+			radial-gradient(
+				ellipse 92% 78% at 8% 6%,
+				var(--page-tan-glow),
+				transparent 54%
+			),
+			radial-gradient(
+				ellipse 88% 72% at 96% 94%,
+				var(--page-tan-deep),
+				transparent 58%
+			),
+			radial-gradient(
+				ellipse 80% 72% at 50% -10%,
+				rgb(233 231 228 / 0.45),
+				transparent 58%
+			),
+			linear-gradient(
+				180deg,
+				rgb(245 239 229 / 0.35) 0%,
+				rgb(233 229 223 / 0.72) 48%,
+				rgb(233 229 223 / 0.88) 100%
+			);
+		pointer-events: none;
+	}
+
+	.hero-page__shell {
+		position: relative;
+		z-index: 1;
+		padding-top: max(
+			4rem,
+			calc(
+				var(--site-header-height) + env(safe-area-inset-top, 0px) +
+					4.5rem
+			)
+		);
+		padding-bottom: clamp(2.5rem, 6vw, 4rem);
+	}
+
+	@media (min-width: 1024px) {
+		.hero-page__shell {
+			padding-top: max(
+				4.25rem,
+				calc(
+					var(--site-header-height) + env(safe-area-inset-top, 0px) +
+						5rem
+				)
+			);
+		}
+	}
+</style>

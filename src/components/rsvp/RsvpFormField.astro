@@ -1,0 +1,27 @@
+---
+import FormField from "@/components/forms/FormField.astro";
+import type { FormFieldVariant } from "@/components/forms/FormField.astro";
+
+interface Props {
+	name: string;
+	id: string;
+	label: string;
+	variant: FormFieldVariant;
+	optional?: boolean;
+	hint?: string;
+	class?: string;
+	rows?: number;
+	min?: string | number;
+	max?: string | number;
+	step?: string | number;
+	value?: string;
+	autocomplete?: string;
+	inputmode?: "email" | "tel" | "text" | "numeric" | "decimal" | "url" | "search" | "none";
+	required?: boolean;
+	placeholder?: string;
+}
+
+const props = Astro.props;
+---
+
+<FormField {...props} errorId={`rsvp-error-${props.name}`} />

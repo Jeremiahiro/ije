@@ -1,0 +1,15 @@
+---
+import TravelFlightsContent from "@/components/travel/TravelFlightsContent.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { navHref, siteTitleSuffix } from "@/data/site-nav";
+
+const pageTitle = "Flights";
+const description =
+	"Lagos arrivals, connecting flights to Owerri at Sam Mbakwe International Cargo Airport, recommended arrival dates, and coordinated ground transportation for Jane & Jeremiah’s wedding.";
+const title = `${pageTitle} · ${siteTitleSuffix}`;
+const canonicalHref = new URL(navHref("/travel", "flights"), Astro.url.origin).href;
+---
+
+<BaseLayout title={title} description={description} canonicalHref={canonicalHref}>
+	<TravelFlightsContent />
+</BaseLayout>
