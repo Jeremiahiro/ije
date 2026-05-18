@@ -11,7 +11,5 @@ const canonicalHref = new URL(navHref("/travel", "flights"), Astro.url.origin).h
 ---
 
 <BaseLayout title={title} description={description} canonicalHref={canonicalHref}>
-	<main id="main-content" class="travel-flights-page">
-		<TravelFlightsContent />
-	</main>
+	<TravelFlightsContent />
 </BaseLayout>

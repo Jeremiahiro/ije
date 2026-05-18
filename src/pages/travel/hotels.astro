@@ -1,0 +1,15 @@
+---
+import TravelHotelsContent from "@/components/travel/TravelHotelsContent.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { navHref, siteTitleSuffix } from "@/data/site-nav";
+
+const pageTitle = "Hotels";
+const description =
+	"Curated hotel options in Lagos and Umuahia for Jane & Jeremiah’s wedding guests—arrival stays, wedding-week lodging, booking links, and insider tips.";
+const title = `${pageTitle} · ${siteTitleSuffix}`;
+const canonicalHref = new URL(navHref("/travel", "hotels"), Astro.url.origin).href;
+---
+
+<BaseLayout title={title} description={description} canonicalHref={canonicalHref}>
+	<TravelHotelsContent />
+</BaseLayout>

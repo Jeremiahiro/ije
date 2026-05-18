@@ -12,114 +12,114 @@ const bgSrc = "/assets/travel.jpg";
 	surfaceClass="travel-flights"
 	ariaLabelledBy="travel-flights-heading"
 >
-		<header class="travel-flights__intro">
-			<p class="travel-flights__eyebrow">Travel information</p>
+	<header class="travel-flights__intro">
+		<p class="travel-flights__eyebrow">Travel information</p>
 
-			<h1 id="travel-flights-heading" class="travel-flights__title">
-				Flights
-			</h1>
-			<p class="travel-flights__lede">
-				Planning your route to Nigeria for our celebration -
-				international connections through Lagos and regional travel to
-				Abia&nbsp;State.
-			</p>
-		</header>
+		<h1 id="travel-flights-heading" class="travel-flights__title">
+			Flights
+		</h1>
+		<p class="travel-flights__lede">
+			Planning your route to Nigeria for our celebration -
+			international connections through Lagos and regional travel to
+			Abia&nbsp;State.
+		</p>
+	</header>
 
-		<ContentCard variant="secondary" class="travel-flights__intl-shell">
-			<h2 class="travel-flights__section-title">International guests</h2>
-			<p class="travel-flights__section-lede">
-				Arrive in Lagos, connect to Owerri, then we’ll help with ground
-				logistics for guests arriving from outside&nbsp;Nigeria.
-			</p>
+	<ContentCard variant="secondary" class="travel-flights__intl-shell">
+		<h2 class="travel-flights__section-title">International guests</h2>
+		<p class="travel-flights__section-lede">
+			Arrive in Lagos, connect to Owerri, then we’ll help with ground
+			logistics for guests arriving from outside&nbsp;Nigeria.
+		</p>
 
-			<div class="travel-flights__timeline" aria-label="Trip steps">
-				{
-					internationalFlightTimelineSteps.map((step) => (
-						<ContentCard
-							variant="default"
-							class="travel-flights__timeline-card"
-						>
-							<span
-								class="travel-flights__timeline-node"
-								aria-hidden="true"
-							/>
-							<div class="travel-flights__card-text">
-								<p class="travel-flights__step-label">
-									{step.stepLabel}
+		<div class="travel-flights__timeline" aria-label="Trip steps">
+			{
+				internationalFlightTimelineSteps.map((step) => (
+					<ContentCard
+						variant="default"
+						class="travel-flights__timeline-card"
+					>
+						<span
+							class="travel-flights__timeline-node"
+							aria-hidden="true"
+						/>
+						<div class="travel-flights__card-text">
+							<p class="travel-flights__step-label">
+								{step.stepLabel}
+							</p>
+							<p class="travel-flights__eyebrow travel-flights__eyebrow--card">
+								{step.eyebrow}
+							</p>
+							<h3 class="travel-flights__card-title">
+								{step.title}
+							</h3>
+							{step.variant === "airport" ? (
+								<p class="travel-flights__airport">
+									{step.airport}
 								</p>
-								<p class="travel-flights__eyebrow travel-flights__eyebrow--card">
-									{step.eyebrow}
+							) : (
+								<p class="travel-flights__card-body">
+									{step.body}
 								</p>
-								<h3 class="travel-flights__card-title">
-									{step.title}
-								</h3>
-								{step.variant === "airport" ? (
-									<p class="travel-flights__airport">
-										{step.airport}
-									</p>
-								) : (
-									<p class="travel-flights__card-body">
-										{step.body}
-									</p>
-								)}
-							</div>
-						</ContentCard>
-					))
-				}
-			</div>
+							)}
+						</div>
+					</ContentCard>
+				))
+			}
+		</div>
 
-			<ContentCard variant="primary">
-				<p
-					class="travel-flights__eyebrow travel-flights__eyebrow--card travel-flights__eyebrow--inline"
-				>
-					<span aria-hidden="true">📅</span> Recommended arrival dates
-				</p>
-				<p class="travel-flights__banner-title">
-					Plan to arrive in Lagos on December 30th or 31st
-				</p>
-				<p class="travel-flights__banner-copy">
-					These are the two days we coordinate airport assistance,
-					ground transportation, and overall travel coordination for
-					international guests.
-				</p>
-				<p class="travel-flights__note">
-					Guests arriving outside those dates will need to arrange
-					their own transportation to&nbsp;Abia&nbsp;State.
-				</p>
-			</ContentCard>
-
-			<div class="travel-flights__eyebrow-section">
-				<TravelMapEmbed
-					class="travel-flights__map-embed"
-					title="TravelMap embed"
-					width="100%"
-					height={550}
-					allow="fullscreen"
-				/>
-			</div>
-
-		</ContentCard>
-
-		<ContentCard variant="secondary" class="travel-flights__domestic-shell">
+		<ContentCard variant="primary">
 			<p
 				class="travel-flights__eyebrow travel-flights__eyebrow--card travel-flights__eyebrow--inline"
 			>
-				<span aria-hidden="true">🇳🇬</span> Travelling within Nigeria
+				<span aria-hidden="true">📅</span> Recommended arrival dates
 			</p>
-			<h2 class="travel-flights__domestic-title">Domestic route</h2>
-			<p class="travel-flights__domestic-label">Fly directly to</p>
-			<p class="travel-flights__airport travel-flights__airport--solo">
-				Sam Mbakwe International Cargo Airport
+			<p class="travel-flights__banner-title">
+				Plan to arrive in Lagos on December 30th or 31st
 			</p>
-			<p class="travel-flights__domestic-copy">
-				Additional transportation details will be shared closer to the
-				wedding&nbsp;date.
+			<p class="travel-flights__banner-copy">
+				These are the two days we coordinate airport assistance,
+				ground transportation, and overall travel coordination for
+				international guests.
+			</p>
+			<p class="travel-flights__note">
+				Guests arriving outside those dates will need to arrange
+				their own transportation to&nbsp;Abia&nbsp;State.
 			</p>
 		</ContentCard>
+
+		<div class="travel-flights__eyebrow-section">
+			<TravelMapEmbed
+				class="travel-flights__map-embed"
+				title="TravelMap embed"
+				width="100%"
+				height={550}
+				allow="fullscreen"
+			/>
+		</div>
+
+	</ContentCard>
+
+	<ContentCard variant="secondary" class="travel-flights__domestic-shell">
+		<p
+			class="travel-flights__eyebrow travel-flights__eyebrow--card travel-flights__eyebrow--inline"
+		>
+			<span aria-hidden="true">🇳🇬</span> Travelling within Nigeria
+		</p>
+		<h2 class="travel-flights__domestic-title">Domestic route</h2>
+		<p class="travel-flights__domestic-label">Fly directly to</p>
+		<p class="travel-flights__airport travel-flights__airport--solo">
+			Sam Mbakwe International Cargo Airport
+		</p>
+		<p class="travel-flights__domestic-copy">
+			Additional transportation details will be shared closer to the
+			wedding&nbsp;date.
+		</p>
+	</ContentCard>
 </TravelPageSurface>
 
 <style>
-	.travel-flights {
+	:global(.travel-flights.travel-page) {
 		--travel-stack-gap: clamp(0.75rem, 2.2vw, 1.25rem);
 		--travel-block-gap: clamp(1rem, 3vw, 1.5rem);
 	}

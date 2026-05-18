@@ -81,7 +81,7 @@ export const navItems: NavEntry[] = [
 export const dedicatedSublinkSlugsBySection: Readonly<
 	Record<string, ReadonlySet<string>>
 > = {
-	travel: new Set(["flights"]),
+	travel: new Set(["flights", "hotels"]),
 };
 
 export function hasDedicatedSublinkPage(section: string, slug: string): boolean {

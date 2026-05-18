@@ -1,18 +1,24 @@
 ---
+import type { HTMLAttributes } from "astro/types";
+
 export type ContentCardVariant = "default" | "primary" | "secondary";
 
-interface Props {
+interface Props extends HTMLAttributes<"div"> {
 	variant?: ContentCardVariant;
 	as?: "article" | "div" | "section";
 	class?: string;
 }
 
-const { variant = "default", as = "div", class: className } = Astro.props;
+const { variant = "default", as = "div", class: className, ...htmlAttrs } =
+	Astro.props;
 
 const Tag = as ?? "div";
 ---
 
-<Tag class:list={["content-card", `content-card--${variant}`, className]}>
+<Tag
+	class:list={["content-card", `content-card--${variant}`, className]}
+	{...htmlAttrs}
+>
 	<slot />
 </Tag>
 

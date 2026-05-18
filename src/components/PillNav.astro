@@ -1,0 +1,174 @@
+---
+export type PillNavLink = {
+	id: string;
+	label: string;
+};
+
+interface Props {
+	links: readonly PillNavLink[];
+	ariaLabel?: string;
+	class?: string;
+}
+
+const { links, ariaLabel = "Section navigation", class: className } = Astro.props;
+---
+
+<div class:list={["pill-nav", className]} data-pill-nav>
+	<nav class="pill-nav__track" aria-label={ariaLabel}>
+		<span class="pill-nav__highlight" aria-hidden="true"></span>
+		{
+			links.map((link) => (
+				<a class="pill-nav__link" href={`#${link.id}`}>
+					<span class="pill-nav__label">{link.label}</span>
+				</a>
+			))
+		}
+	</nav>
+</div>
+
+<script>
+	import { mountPillNav } from "@/components/PillNav.script";
+
+	mountPillNav();
+</script>
+
+<style>
+	.pill-nav {
+		--header-tan: #6e523c;
+		--header-glass-bg: rgb(255 255 255 / 0.38);
+		--header-glass-border: rgb(255 255 255 / 0.55);
+		--header-glass-active-bg: rgb(255 255 255 / 0.58);
+		--header-glass-hover-bg: rgb(255 255 255 / 0.48);
+		--header-glass-active-blur: 12px;
+		--header-glass-blur: 14px;
+
+		position: sticky;
+		top: var(
+			--pill-nav-sticky-top,
+			calc(
+				var(--site-header-height) + env(safe-area-inset-top, 0px) + 1.5rem
+			)
+		);
+		z-index: 2;
+		align-self: center;
+		width: fit-content;
+		max-width: 100%;
+		margin: 0 auto clamp(1.1rem, 2.8vw, 1.5rem);
+		box-sizing: border-box;
+	}
+
+	.pill-nav__track {
+		position: relative;
+		display: flex;
+		flex-wrap: nowrap;
+		align-items: stretch;
+		width: fit-content;
+		max-width: 100%;
+		box-sizing: border-box;
+		padding: 0.1875rem;
+		gap: 0;
+		border-radius: 9999px;
+		/* Clip sliding highlight + hover fills to the outer pill (avoids square corners at the caps). */
+		overflow: hidden;
+		border: 1px solid var(--header-glass-border);
+		background: var(--header-glass-bg);
+		backdrop-filter: blur(var(--header-glass-blur));
+		-webkit-backdrop-filter: blur(var(--header-glass-blur));
+		box-shadow: 0 2px 16px rgb(110 82 60 / 0.1);
+	}
+
+	.pill-nav__highlight {
+		position: absolute;
+		top: 0.1875rem;
+		bottom: 0.1875rem;
+		left: 0;
+		width: 0;
+		z-index: 0;
+		pointer-events: none;
+		opacity: 0;
+		border-radius: 9999px;
+		background: var(--header-glass-active-bg);
+		box-shadow:
+			inset 0 1px 0 rgb(255 255 255 / 0.35),
+			0 1px 8px rgb(110 82 60 / 0.08);
+		backdrop-filter: blur(var(--header-glass-active-blur));
+		-webkit-backdrop-filter: blur(var(--header-glass-active-blur));
+		transition:
+			opacity 0.15s ease,
+			transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+			width 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+	}
+
+	.pill-nav--ready .pill-nav__highlight {
+		opacity: 1;
+	}
+
+	@media (scripting: none) {
+		.pill-nav__highlight {
+			display: none;
+		}
+
+		.pill-nav__link:first-of-type {
+			font-weight: 700;
+		}
+	}
+
+	.pill-nav__link {
+		position: relative;
+		z-index: 1;
+		cursor: pointer;
+		flex: 1 1 auto;
+		min-width: min-content;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 0.875rem 1rem;
+		border: none;
+		border-radius: 9999px;
+		background: transparent;
+		font-size: 0.75rem;
+		font-weight: 600;
+		line-height: 1.25;
+		color: var(--header-tan);
+		text-decoration: none;
+		text-align: center;
+		text-wrap: balance;
+		transition:
+			background 0.25s ease,
+			box-shadow 0.25s ease,
+			font-weight 0.2s ease;
+	}
+
+	.pill-nav__link.is-active {
+		font-weight: 700;
+	}
+
+	@media (min-width: 640px) {
+		.pill-nav__link {
+			padding: 0.875rem 1.25rem;
+		}
+	}
+
+	@media (min-width: 1024px) {
+		.pill-nav__link {
+			padding: 1rem 1.5rem;
+			font-size: 0.9375rem;
+		}
+	}
+
+	.pill-nav__label {
+		display: block;
+	}
+
+	.pill-nav__link:hover {
+		background: var(--header-glass-hover-bg);
+		backdrop-filter: blur(var(--header-glass-blur));
+		-webkit-backdrop-filter: blur(var(--header-glass-blur));
+		box-shadow: 0 1px 6px rgb(110 82 60 / 0.08);
+	}
+
+	.pill-nav__link:focus-visible {
+		outline: none;
+		box-shadow: inset 0 0 0 2px var(--header-tan);
+	}
+</style>

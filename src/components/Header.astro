@@ -47,44 +47,47 @@ const isCurrent = (href: string): boolean => {
 			<div class="app-header__menu-stack" id="app-header-menu-stack" tabindex="-1">
 			<div class="app-header__menu-panel" id="app-header-menu-panel">
 				<nav class="app-header__nav" aria-label="Site">
-					<ul class="app-header__nav-list">
-						{
-							navItems.map((item) =>
-								item.kind === "sublinks" ? (
-									<li class="app-header__nav-item">
-										<button
-											type="button"
-											class:list={[
-												"app-header__nav-link",
-												"app-header__nav-link--disclosure",
-												{ "app-header__nav-link--active": isCurrent(item.path) },
-											]}
-											id={`app-header-nav-trigger-${item.id}`}
-											data-nav-sublinks-trigger={item.id}
-											aria-expanded="false"
-											aria-controls={`app-header-sublinks-${item.id}`}
-											aria-haspopup="true"
-										>
-											{item.label}
-											<span class="app-header__disclosure-chevron" aria-hidden="true"></span>
-										</button>
-									</li>
-								) : (
-									<li class="app-header__nav-item">
-										<a
-											class:list={[
-												"app-header__nav-link",
-												{ "app-header__nav-link--active": isCurrent(item.href) },
-											]}
-											href={item.href}
-										>
-											{item.label}
-										</a>
-									</li>
-								),
-							)
-						}
-					</ul>
+					<div class="app-header__nav-track" data-app-header-nav-track>
+						<span class="app-header__nav-highlight" aria-hidden="true"></span>
+						<ul class="app-header__nav-list">
+							{
+								navItems.map((item) =>
+									item.kind === "sublinks" ? (
+										<li class="app-header__nav-item">
+											<button
+												type="button"
+												class:list={[
+													"app-header__nav-link",
+													"app-header__nav-link--disclosure",
+													{ "app-header__nav-link--active": isCurrent(item.path) },
+												]}
+												id={`app-header-nav-trigger-${item.id}`}
+												data-nav-sublinks-trigger={item.id}
+												aria-expanded="false"
+												aria-controls={`app-header-sublinks-${item.id}`}
+												aria-haspopup="true"
+											>
+												{item.label}
+												<span class="app-header__disclosure-chevron" aria-hidden="true"></span>
+											</button>
+										</li>
+									) : (
+										<li class="app-header__nav-item">
+											<a
+												class:list={[
+													"app-header__nav-link",
+													{ "app-header__nav-link--active": isCurrent(item.href) },
+												]}
+												href={item.href}
+											>
+												{item.label}
+											</a>
+										</li>
+									),
+								)
+							}
+						</ul>
+					</div>
 				</nav>
 				<button type="button" class="app-header__close" id="app-header-menu-close" aria-label="Close menu">
 					<span class="app-header__close-icon" aria-hidden="true"></span>
@@ -141,6 +144,12 @@ const isCurrent = (href: string): boolean => {
 		</div>
 	</div>
 </div>
+
+<script>
+	import { mountAppHeaderNavHighlight } from "@/components/AppHeaderNav.script";
+
+	mountAppHeaderNavHighlight();
+</script>
 
 <script is:inline>
 	(() => {
@@ -428,6 +437,7 @@ const isCurrent = (href: string): boolean => {
 	.app-header {
 		--header-tan: #6e523c;
 		--header-glass-bg: rgb(255 255 255 / 0.38);
+		--header-glass-hover-bg: rgb(255 255 255 / 0.48);
 		--header-glass-border: rgb(255 255 255 / 0.55);
 		--header-glass-active-bg: rgb(255 255 255 / 0.58);
 		--header-glass-active-border: rgb(255 255 255 / 0.72);
@@ -669,6 +679,7 @@ const isCurrent = (href: string): boolean => {
 		box-shadow: 0 2px 16px rgb(110 82 60 / 0);
 		backdrop-filter: blur(0);
 		-webkit-backdrop-filter: blur(0);
+		transform: translateY(0);
 		transition:
 			background-color var(--header-idle-glass-duration) var(--header-idle-glass-ease),
 			border-color var(--header-idle-glass-duration) var(--header-idle-glass-ease),
@@ -722,7 +733,7 @@ const isCurrent = (href: string): boolean => {
 	}
 
 	.app-header__menu-panel {
-		@apply relative z-[1] flex w-full min-w-0 shrink-0 flex-row items-center justify-between gap-1 sm:gap-2 lg:gap-3;
+		@apply relative z-[1] flex w-full min-w-0 shrink-0 flex-row items-center justify-between gap-1 sm:gap-2 lg:gap-2;
 		border-radius: 9999px;
 		border: 1px solid transparent;
 		background: transparent;
@@ -737,12 +748,19 @@ const isCurrent = (href: string): boolean => {
 		backdrop-filter: blur(var(--header-glass-blur));
 		-webkit-backdrop-filter: blur(var(--header-glass-blur));
 		box-shadow: 0 2px 16px rgb(110 82 60 / 0.1);
-		@apply py-2.5 pl-4 pr-2.5 sm:pl-6 sm:pr-3;
+		/* Outer shell only; per-cell padding matches PillNav on .app-header__nav-track / links */
+		padding: 0.25rem 0.5rem;
+	}
+
+	@media (min-width: 640px) {
+		.app-header[data-menu-open="true"] .app-header__menu-panel {
+			padding: 0.25rem 0.65rem;
+		}
 	}
 
 	@media (min-width: 1024px) {
 		.app-header[data-menu-open="true"] .app-header__menu-panel {
-			padding: 0.625rem 1.5rem;
+			padding: 0.25rem 0.75rem;
 		}
 
 		.app-header__cta {
@@ -870,7 +888,7 @@ const isCurrent = (href: string): boolean => {
 	.app-header__nav-link--disclosure {
 		@apply gap-0.5;
 		cursor: pointer;
-		font: inherit;
+		font-family: inherit;
 		background: transparent;
 		margin: 0;
 		text-align: inherit;
@@ -898,42 +916,114 @@ const isCurrent = (href: string): boolean => {
 	}
 
 	.app-header__nav {
-		@apply min-w-0 shrink flex-1;
+		/* No padding here — spacing is menu-panel padding + track inset + link padding */
+		@apply flex min-w-0 shrink flex-1 items-center justify-start;
+	}
+
+	.app-header__nav-track {
+		position: relative;
+		box-sizing: border-box;
+		width: fit-content;
+		max-width: 100%;
+		flex: none;
+		padding: 0.1875rem;
+		border-radius: 9999px;
+		overflow: hidden;
+		background: transparent;
+	}
+
+	.app-header__nav-highlight {
+		position: absolute;
+		top: 0.1875rem;
+		bottom: 0.1875rem;
+		left: 0;
+		width: 0;
+		z-index: 0;
+		pointer-events: none;
+		opacity: 0;
+		border-radius: 9999px;
+		background: var(--header-glass-active-bg);
+		box-shadow:
+			inset 0 1px 0 rgb(255 255 255 / 0.35),
+			0 1px 8px rgb(110 82 60 / 0.08);
+		backdrop-filter: blur(var(--header-glass-active-blur));
+		-webkit-backdrop-filter: blur(var(--header-glass-active-blur));
+		transition:
+			opacity 0.15s ease,
+			transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+			width 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+	}
+
+	.app-header__nav-track--ready .app-header__nav-highlight {
+		opacity: 1;
+	}
+
+	@media (scripting: none) {
+		.app-header__nav-highlight {
+			display: none;
+		}
+
+		.app-header__nav-link.app-header__nav-link--active {
+			background: var(--header-glass-active-bg);
+			border-color: var(--header-glass-active-border);
+			backdrop-filter: blur(var(--header-glass-active-blur));
+			-webkit-backdrop-filter: blur(var(--header-glass-active-blur));
+			box-shadow: 0 2px 12px rgb(110 82 60 / 0.08);
+		}
 	}
 
 	.app-header__nav-list {
-		@apply m-0 flex list-none items-center gap-x-1 gap-y-0.5 p-0 lg:gap-x-2 lg:gap-y-1;
+		position: relative;
+		z-index: 1;
+		@apply m-0 flex list-none items-center gap-0 p-0;
 	}
 
 	.app-header__nav-link {
-		@apply inline-flex items-center whitespace-nowrap rounded-full border border-transparent px-2 py-1 text-xs font-semibold no-underline lg:px-3 lg:py-1.5 lg:text-[0.9375rem];
+		position: relative;
+		z-index: 1;
+		@apply inline-flex items-center justify-center whitespace-nowrap rounded-full border border-transparent no-underline;
+		box-sizing: border-box;
+		min-width: min-content;
+		padding: 0.875rem 1rem;
+		font-size: 0.75rem;
+		font-weight: 600;
+		line-height: 1.25;
 		color: var(--header-tan);
+		background: transparent;
+		text-align: center;
+		text-wrap: balance;
 		transition:
-			background-color var(--header-transition-duration) var(--header-transition-ease),
-			border-color var(--header-transition-duration) var(--header-transition-ease),
-			box-shadow var(--header-transition-duration) var(--header-transition-ease),
-			backdrop-filter var(--header-transition-duration) var(--header-transition-ease),
-			-webkit-backdrop-filter var(--header-transition-duration) var(--header-transition-ease);
+			background-color 0.25s ease,
+			box-shadow 0.25s ease,
+			backdrop-filter 0.25s ease,
+			-webkit-backdrop-filter 0.25s ease,
+			font-weight 0.2s ease;
 	}
 
-	.app-header__nav-link:hover:not(.app-header__nav-link--active) {
-		background: var(--header-glass-bg);
-		border-color: var(--header-glass-border);
-		backdrop-filter: blur(var(--header-glass-blur));
-		-webkit-backdrop-filter: blur(var(--header-glass-blur));
-		box-shadow: 0 2px 12px rgb(110 82 60 / 0.08);
+	@media (min-width: 640px) {
+		.app-header__nav-link {
+			padding: 0.875rem 1.25rem;
+		}
+	}
+
+	@media (min-width: 1024px) {
+		.app-header__nav-link {
+			padding: 1rem 1.5rem;
+			font-size: 0.9375rem;
+		}
 	}
 
 	.app-header__nav-link--active {
-		background: var(--header-glass-active-bg);
-		border-color: var(--header-glass-active-border);
-		backdrop-filter: blur(var(--header-glass-active-blur));
-		-webkit-backdrop-filter: blur(var(--header-glass-active-blur));
-		box-shadow: 0 2px 12px rgb(110 82 60 / 0.08);
+		font-weight: 700;
+	}
+
+	.app-header__nav-link:focus-visible {
+		outline: none;
+		box-shadow: inset 0 0 0 2px var(--header-tan);
 	}
 
 	.app-header__close {
-		@apply inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-solid p-0 leading-none text-[var(--header-tan)] transition-colors hover:bg-white/35;
+		@apply inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-solid p-0 leading-none text-[var(--header-tan)] transition-colors;
 		border-color: var(--header-glass-border);
 	}
 
@@ -1003,8 +1093,20 @@ const isCurrent = (href: string): boolean => {
 		box-shadow: 0 2px 16px rgb(110 82 60 / 0.1);
 	}
 
+	/* Hover styles: real pointers only (avoids stuck :hover / wrong hit area on touch). */
 	@media (hover: hover) and (pointer: fine) {
-		.app-header:not([data-menu-open="true"]) .app-header__bar .app-header__logo:hover {
+		.app-header__nav-link:hover {
+			background: var(--header-glass-hover-bg);
+			backdrop-filter: blur(var(--header-glass-blur));
+			-webkit-backdrop-filter: blur(var(--header-glass-blur));
+			box-shadow: 0 1px 6px rgb(110 82 60 / 0.08);
+		}
+	}
+
+	/* Idle chrome hovers are desktop-only: <lg layout + touch shows no CTA; avoids pill mismatch vs flyout. */
+	@media (hover: hover) and (pointer: fine) and (min-width: 1024px) {
+		.app-header:not([data-scrolled]) .app-header__idle .app-header__logo:hover,
+		.app-header:not([data-scrolled]) .app-header__bar .app-header__logo:hover {
 			background-color: var(--header-glass-bg);
 			border-color: var(--header-glass-border);
 			backdrop-filter: blur(var(--header-glass-blur));
@@ -1012,13 +1114,35 @@ const isCurrent = (href: string): boolean => {
 			box-shadow: 0 2px 16px rgb(110 82 60 / 0.1);
 		}
 
-		.app-header:not([data-menu-open="true"]) .app-header__bar .app-header__cta:hover {
+		.app-header[data-scrolled] .app-header__idle .app-header__logo:hover,
+		.app-header[data-scrolled] .app-header__bar .app-header__logo:hover {
+			background-color: var(--header-glass-hover-bg);
+			border-color: var(--header-glass-border);
+			backdrop-filter: blur(var(--header-glass-blur));
+			-webkit-backdrop-filter: blur(var(--header-glass-blur));
+			box-shadow: 0 4px 22px rgb(110 82 60 / 0.2);
+		}
+
+		.app-header:not([data-scrolled]) .app-header__idle .app-header__cta:hover,
+		.app-header:not([data-scrolled]) .app-header__bar .app-header__cta:hover {
 			background-color: var(--header-glass-bg);
 			color: var(--header-tan);
 			border-color: var(--header-glass-border);
 			backdrop-filter: blur(var(--header-glass-blur));
 			-webkit-backdrop-filter: blur(var(--header-glass-blur));
 			box-shadow: 0 2px 16px rgb(110 82 60 / 0.1);
+			transform: translateY(-1px);
+		}
+
+		.app-header[data-scrolled] .app-header__idle .app-header__cta:hover,
+		.app-header[data-scrolled] .app-header__bar .app-header__cta:hover {
+			background-color: var(--header-glass-hover-bg);
+			color: var(--header-tan);
+			border-color: var(--header-glass-border);
+			backdrop-filter: blur(var(--header-glass-blur));
+			-webkit-backdrop-filter: blur(var(--header-glass-blur));
+			box-shadow: 0 4px 22px rgb(110 82 60 / 0.2);
+			transform: translateY(-1px);
 		}
 
 		.app-header:not([data-menu-open="true"]) .app-header__bar .app-header__menu:hover {
@@ -1027,6 +1151,10 @@ const isCurrent = (href: string): boolean => {
 			backdrop-filter: blur(var(--header-glass-blur));
 			-webkit-backdrop-filter: blur(var(--header-glass-blur));
 			box-shadow: 0 2px 16px rgb(110 82 60 / 0.1);
+		}
+
+		.app-header__close:hover {
+			background-color: rgb(255 255 255 / 0.35);
 		}
 	}
 

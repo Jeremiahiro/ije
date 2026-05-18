@@ -67,8 +67,8 @@ body {
 }
 
 @media (max-width: 899px) {
-	.travel-flights-page {
-		--wrapper-padding-inline: clamp(0.625rem, 3.75vw, 1rem);
+	:root {
+		--wrapper-padding-inline: clamp(0.875rem, 3.75vw, 1.25rem);
 	}
 }
 
