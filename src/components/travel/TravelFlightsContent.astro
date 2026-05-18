@@ -1,13 +1,13 @@
 ---
 import ContentCard from "@/components/ContentCard.astro";
 import TravelMapEmbed from "@/components/travel/TravelMapEmbed.astro";
-import TravelPageSurface from "@/components/travel/TravelPageSurface.astro";
+import HeroPageSurface from "@/components/HeroPageSurface.astro";
 import { internationalFlightTimelineSteps } from "@/data/travel-flights-international-timeline";
 
 const bgSrc = "/assets/travel.jpg";
 ---
 
-<TravelPageSurface
+<HeroPageSurface
 	bgSrc={bgSrc}
 	surfaceClass="travel-flights"
 	ariaLabelledBy="travel-flights-heading"
@@ -116,10 +116,10 @@ const bgSrc = "/assets/travel.jpg";
 			wedding&nbsp;date.
 		</p>
 	</ContentCard>
-</TravelPageSurface>
+</HeroPageSurface>
 
 <style>
-	:global(.travel-flights.travel-page) {
+	:global(.travel-flights.hero-page) {
 		--travel-stack-gap: clamp(0.75rem, 2.2vw, 1.25rem);
 		--travel-block-gap: clamp(1rem, 3vw, 1.5rem);
 	}

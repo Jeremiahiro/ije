@@ -2,10 +2,8 @@ import { setSegmentedHighlightGeometry } from "@/lib/segmentedNavHighlightGeomet
 
 const ACTIVE_CLASS = "app-header__nav-link--active";
 
-const readPinnedIndex = (items: HTMLElement[]): number => {
-	const i = items.findIndex((el) => el.classList.contains(ACTIVE_CLASS));
-	return i >= 0 ? i : 0;
-};
+const readPinnedIndex = (items: HTMLElement[]): number =>
+	items.findIndex((el) => el.classList.contains(ACTIVE_CLASS));
 
 const usePointerHoverPreview = (): boolean =>
 	matchMedia("(hover: hover) and (pointer: fine)").matches;
@@ -28,13 +26,17 @@ const initTrack = (track: HTMLElement): void => {
 
 	const apply = (): void => {
 		const pinned = readPinnedIndex(items);
-		const visual = hoverIndex ?? focusIndex ?? pinned;
-		const target = items[visual];
+		const visual =
+			hoverIndex ?? focusIndex ?? (pinned >= 0 ? pinned : undefined);
+		const target = typeof visual === "number" ? items[visual] : undefined;
 		if (target) {
 			const tr = track.getBoundingClientRect();
 			if (tr.width > 0) {
 				setSegmentedHighlightGeometry(track, highlight, target);
 			}
+		} else {
+			highlight.style.width = "0px";
+			highlight.style.transform = "translate3d(0, 0, 0)";
 		}
 	};
 

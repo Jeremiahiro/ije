@@ -1,0 +1,65 @@
+---
+interface Props {
+	id?: string;
+	headingId?: string;
+	title?: string;
+	lede?: string;
+	ariaLabel?: string;
+	ariaHidden?: boolean;
+	lead?: boolean;
+}
+
+const { id, headingId, title, lede, ariaLabel, ariaHidden, lead } = Astro.props;
+
+if (!ariaLabel && (!headingId || !title)) {
+	throw new Error("RsvpSection: set ariaLabel, or both headingId and title");
+}
+---
+
+<section
+	id={id}
+	class:list={["rsvp__section", lead && "rsvp__section--lead"]}
+	aria-labelledby={ariaLabel ? undefined : headingId}
+	aria-label={ariaLabel}
+	aria-hidden={ariaHidden === true ? "true" : undefined}
+>
+	{
+		title && headingId ? (
+			<h2 id={headingId} class="rsvp__section-title">
+				{title}
+			</h2>
+		) : null
+	}
+	{lede ? <p class="rsvp__section-lede">{lede}</p> : null}
+	<slot />
+</section>
+
+<style>
+	.rsvp__section {
+		display: flex;
+		flex-direction: column;
+		gap: 1.1rem;
+		padding-top: 1.1rem;
+		border-top: 1px solid rgb(110 82 60 / 0.12);
+	}
+
+	.rsvp__section--lead {
+		border-top: none;
+		padding-top: 0;
+	}
+
+	.rsvp__section-title {
+		margin: 0;
+		font-size: 1.05rem;
+		font-weight: 800;
+		letter-spacing: 0.02em;
+		color: #4a3d32;
+	}
+
+	.rsvp__section-lede {
+		margin: -0.35rem 0 0;
+		font-size: 0.88rem;
+		line-height: 1.45;
+		color: var(--text-muted);
+	}
+</style>

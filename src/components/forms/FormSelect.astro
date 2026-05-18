@@ -1,0 +1,123 @@
+---
+export type FormSelectOption = { value: string; label: string };
+
+interface Props {
+	name: string;
+	id: string;
+	label: string;
+	errorId: string;
+	options: FormSelectOption[];
+	placeholder?: string;
+	hint?: string;
+	required?: boolean;
+	class?: string;
+}
+
+const {
+	name,
+	id,
+	label,
+	errorId,
+	options,
+	placeholder = "Choose an option",
+	hint,
+	required = true,
+	class: className,
+} = Astro.props;
+
+const hintId = hint ? `${id}__hint` : undefined;
+const describedBy = [hintId, errorId].filter(Boolean).join(" ") || undefined;
+---
+
+<div class:list={["form-field", className]}>
+	<label class="form-field__label" for={id}>{label}</label>
+	{hint ? <p class="form-field__hint" id={hintId}>{hint}</p> : null}
+	<div class="form-select-wrap">
+		<select
+			name={name}
+			id={id}
+			class="form-field__control form-field__select"
+			required={required}
+			aria-required={required ? "true" : undefined}
+			aria-invalid="false"
+			aria-describedby={describedBy}
+		>
+			<option value="" disabled selected>
+				{placeholder}
+			</option>
+			{options.map((o) => <option value={o.value}>{o.label}</option>)}
+		</select>
+	</div>
+	<p class="form-field__error" id={errorId} hidden></p>
+</div>
+
+<style>
+	.form-field {
+		display: flex;
+		flex-direction: column;
+		gap: 0.45rem;
+		min-inline-size: 0;
+	}
+
+	.form-field__label {
+		font-size: 0.84rem;
+		font-weight: 600;
+		color: #4a3d32;
+	}
+
+	.form-field__hint {
+		margin: 0;
+		font-size: 0.84rem;
+		line-height: 1.45;
+		color: var(--text-muted);
+	}
+
+	.form-select-wrap {
+		position: relative;
+	}
+
+	.form-select-wrap::after {
+		content: "";
+		position: absolute;
+		right: 1rem;
+		top: 50%;
+		translate: 0 -50%;
+		width: 0;
+		height: 0;
+		border-inline: 0.35rem solid transparent;
+		border-block-start: 0.45rem solid rgb(110 82 60 / 0.55);
+		pointer-events: none;
+	}
+
+	.form-field__select {
+		width: 100%;
+		box-sizing: border-box;
+		padding: 0.72rem 2.5rem 0.72rem 0.95rem;
+		min-height: 3rem;
+		border-radius: 0.55rem;
+		border: 1px solid rgb(110 82 60 / 0.22);
+		background: rgb(255 252 247 / 0.92);
+		color: var(--text-primary);
+		font-size: 1.05rem;
+		font-family: inherit;
+		appearance: none;
+		cursor: pointer;
+		outline-offset: 3px;
+	}
+
+	.form-field__select:focus {
+		border-color: #c9a87c;
+		box-shadow: 0 0 0 3px rgba(201, 168, 124, 0.22);
+	}
+
+	.form-field__error {
+		margin: 0;
+		font-size: 0.82rem;
+		line-height: 1.35;
+		color: #b54a3a;
+	}
+
+	.form-field__error[hidden] {
+		display: none !important;
+	}
+</style>

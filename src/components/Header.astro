@@ -672,7 +672,9 @@ const isCurrent = (href: string): boolean => {
 	}
 
 	.app-header__cta {
-		@apply inline-flex shrink-0 min-h-10 items-center justify-center rounded-full border border-transparent px-5 py-2.5 text-center text-sm font-semibold no-underline;
+		@apply inline-flex shrink-0 items-center justify-center rounded-full border border-transparent text-center text-sm font-semibold no-underline;
+		box-sizing: border-box;
+		padding: 0.875rem 1.25rem;
 		backface-visibility: hidden;
 		background-color: var(--header-tan);
 		color: #fff;
@@ -748,29 +750,7 @@ const isCurrent = (href: string): boolean => {
 		backdrop-filter: blur(var(--header-glass-blur));
 		-webkit-backdrop-filter: blur(var(--header-glass-blur));
 		box-shadow: 0 2px 16px rgb(110 82 60 / 0.1);
-		/* Outer shell only; per-cell padding matches PillNav on .app-header__nav-track / links */
-		padding: 0.25rem 0.5rem;
-	}
-
-	@media (min-width: 640px) {
-		.app-header[data-menu-open="true"] .app-header__menu-panel {
-			padding: 0.25rem 0.65rem;
-		}
-	}
-
-	@media (min-width: 1024px) {
-		.app-header[data-menu-open="true"] .app-header__menu-panel {
-			padding: 0.25rem 0.75rem;
-		}
-
-		.app-header__cta {
-			min-height: 3.25rem;
-			padding-top: 0;
-			padding-bottom: 0;
-			padding-left: 1.35rem;
-			padding-right: 1.35rem;
-			font-size: 0.9375rem;
-		}
+		align-items: center;
 	}
 
 	.app-header__nav-sublinks {
@@ -1011,6 +991,11 @@ const isCurrent = (href: string): boolean => {
 			padding: 1rem 1.5rem;
 			font-size: 0.9375rem;
 		}
+
+		.app-header__cta {
+			padding: 1rem 1.35rem;
+			font-size: 0.9375rem;
+		}
 	}
 
 	.app-header__nav-link--active {
@@ -1023,8 +1008,10 @@ const isCurrent = (href: string): boolean => {
 	}
 
 	.app-header__close {
-		@apply inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-solid p-0 leading-none text-[var(--header-tan)] transition-colors;
+		@apply inline-flex shrink-0 items-center justify-center rounded-full border border-solid leading-none text-[var(--header-tan)] transition-colors;
 		border-color: var(--header-glass-border);
+		box-sizing: border-box;
+		padding: 0.875rem;
 	}
 
 	.app-header__close-icon {
@@ -1071,7 +1058,9 @@ const isCurrent = (href: string): boolean => {
 
 	.app-header__menu {
 		position: relative;
-		@apply flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-transparent;
+		@apply flex shrink-0 items-center justify-center rounded-full border border-transparent;
+		box-sizing: border-box;
+		padding: 0.875rem;
 		color: var(--header-tan);
 		background-color: transparent;
 		box-shadow: 0 2px 16px rgb(110 82 60 / 0);

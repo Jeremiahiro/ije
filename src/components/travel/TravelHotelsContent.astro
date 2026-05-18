@@ -2,7 +2,7 @@
 import ContentCard from "@/components/ContentCard.astro";
 import TravelHotelCard from "@/components/travel/TravelHotelCard.astro";
 import PillNav from "@/components/PillNav.astro";
-import TravelPageSurface from "@/components/travel/TravelPageSurface.astro";
+import HeroPageSurface from "@/components/HeroPageSurface.astro";
 import {
 	travelHotelsPage,
 } from "@/data/travel-hotels";
@@ -13,7 +13,7 @@ const { introLede, regions, pageTip } = travelHotelsPage;
 const jumpLinks = regions.map((r) => ({ id: r.id, label: r.jumpLabel }));
 ---
 
-<TravelPageSurface
+<HeroPageSurface
 	bgSrc={bgSrc}
 	surfaceClass="travel-hotels"
 	ariaLabelledBy="travel-hotels-heading"
@@ -61,27 +61,16 @@ const jumpLinks = regions.map((r) => ({ id: r.id, label: r.jumpLabel }));
 		<p class="travel-hotels__tip-title">{pageTip.title}</p>
 		<p class="travel-hotels__tip-copy">{pageTip.body}</p>
 	</ContentCard>
-</TravelPageSurface>
+</HeroPageSurface>
 
 <style>
-	/*
-	 * Surface root lives in TravelPageSurface (different scoped hash); use :global
-	 * so stack/block spacing variables apply to the whole page.
-	 */
-	:global(.travel-hotels.travel-page) {
-		/*
-		 * `overflow-x: clip` on `.travel-page` breaks viewport `position: sticky`
-		 * for the pill nav; allow horizontal overflow on this page only (assets
-		 * are still constrained by `.wrapper` / cards).
-		 */
+	:global(.travel-hotels.hero-page) {
 		overflow-x: visible;
 		--travel-stack-gap: clamp(0.75rem, 2.2vw, 1.25rem);
 		--travel-block-gap: clamp(1rem, 3vw, 1.5rem);
-		/* Breathing room under fixed header when pills are stuck */
 		--pill-nav-sticky-top: calc(
 			var(--site-header-height) + env(safe-area-inset-top, 0px) + 1.5rem
 		);
-		/* Section #anchors land below header + sticky pill nav */
 		--travel-hotels-section-scroll-margin: calc(
 			var(--pill-nav-sticky-top) + 3.25rem
 		);
@@ -169,7 +158,6 @@ const jumpLinks = regions.map((r) => ({ id: r.id, label: r.jumpLabel }));
 		align-items: stretch;
 	}
 
-	/* ContentCard adds vertical margin; grid already has row gap */
 	:global(.travel-hotels__grid .content-card.travel-hotel-card) {
 		margin-block: 0;
 	}
@@ -202,7 +190,6 @@ const jumpLinks = regions.map((r) => ({ id: r.id, label: r.jumpLabel }));
 
 	.travel-hotels__tip-copy {
 		margin: 0.65rem 0 0;
-		max-width: 46rem;
 		font-size: 0.9375rem;
 		line-height: 1.55;
 		color: var(--text-muted);

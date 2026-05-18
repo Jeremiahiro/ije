@@ -1,0 +1,104 @@
+---
+interface Props {
+	name: string;
+	value: string;
+	required?: boolean;
+}
+
+const { name, value, required = false } = Astro.props;
+---
+
+<label class="form-choice">
+	<input
+		type="radio"
+		class="form-choice__input"
+		name={name}
+		value={value}
+		required={required}
+		aria-required={required ? "true" : undefined}
+	/>
+	<span class="form-choice__face">
+		<span class="form-choice__dot" aria-hidden="true"></span>
+		<span class="form-choice__text"><slot /></span>
+	</span>
+</label>
+
+<style>
+	.form-choice {
+		position: relative;
+		cursor: pointer;
+		min-width: 0;
+	}
+
+	.form-choice__input {
+		position: absolute;
+		opacity: 0;
+		width: 1px;
+		height: 1px;
+		margin: -1px;
+		clip: rect(0, 0, 0, 0);
+		pointer-events: none;
+	}
+
+	.form-choice__input:focus-visible + .form-choice__face {
+		outline: 2px solid #c9a87c;
+		outline-offset: 2px;
+	}
+
+	.form-choice__face {
+		display: flex;
+		align-items: center;
+		gap: 0.55rem;
+		min-height: 3rem;
+		padding: 0.55rem 1rem 0.55rem 0.75rem;
+		border-radius: 0.65rem;
+		border: 2px solid rgb(110 82 60 / 0.2);
+		background: rgb(255 252 247 / 0.75);
+		box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.65);
+		transition:
+			border-color 0.15s ease,
+			background 0.15s ease,
+			box-shadow 0.15s ease;
+	}
+
+	.form-choice__input:checked + .form-choice__face {
+		border-color: rgb(110 82 60 / 0.52);
+		background: linear-gradient(
+			180deg,
+			rgb(255 251 243 / 0.98) 0%,
+			rgb(245 232 214 / 0.55) 100%
+		);
+		box-shadow:
+			inset 0 1px 0 rgb(255 255 255 / 0.8),
+			0 0 0 1px rgb(201 168 124 / 0.35);
+	}
+
+	.form-choice:hover .form-choice__face {
+		border-color: rgb(110 82 60 / 0.35);
+	}
+
+	.form-choice__dot {
+		flex: 0 0 auto;
+		width: 1.1rem;
+		height: 1.1rem;
+		border-radius: 50%;
+		border: 2px solid rgb(110 82 60 / 0.35);
+		background: rgb(255 252 247 / 0.9);
+		box-shadow: inset 0 0 0 2px rgb(255 252 247 / 1);
+		transition:
+			border-color 0.15s ease,
+			background 0.15s ease;
+	}
+
+	.form-choice__input:checked + .form-choice__face .form-choice__dot {
+		border-color: #6e523c;
+		background: radial-gradient(circle, #6e523c 39%, transparent 40%);
+	}
+
+	.form-choice__text {
+		font-size: 1rem;
+		line-height: 1.35;
+		font-weight: 550;
+		color: var(--text-primary);
+	}
+</style>

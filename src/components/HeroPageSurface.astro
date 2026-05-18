@@ -1,7 +1,6 @@
 ---
 interface Props {
 	bgSrc: string;
-	/** Extra classes on the root section (e.g. travel-flights, travel-hotels). */
 	surfaceClass?: string;
 	ariaLabelledBy?: string;
 }
@@ -10,24 +9,27 @@ const { bgSrc, surfaceClass, ariaLabelledBy } = Astro.props;
 ---
 
 <section
-	class:list={["travel-page", surfaceClass]}
+	class:list={[
+		"hero-page",
+		surfaceClass,
+	]}
 	aria-labelledby={ariaLabelledBy}
 >
 	<div
-		class="travel-page__bg"
+		class="hero-page__bg"
 		aria-hidden="true"
-		style={`--travel-bg:url('${bgSrc}')`}
+		style={`--hero-bg:url('${bgSrc}')`}
 	>
 	</div>
-	<div class="travel-page__scrim" aria-hidden="true"></div>
+	<div class="hero-page__scrim" aria-hidden="true"></div>
 
-	<div class="travel-page__shell wrapper">
+	<div class="hero-page__shell wrapper">
 		<slot />
 	</div>
 </section>
 
 <style>
-	.travel-page {
+	.hero-page {
 		position: relative;
 		isolation: isolate;
 		overflow-x: clip;
@@ -44,12 +46,12 @@ const { bgSrc, surfaceClass, ariaLabelledBy } = Astro.props;
 		text-size-adjust: 100%;
 	}
 
-	.travel-page__bg {
+	.hero-page__bg {
 		position: absolute;
 		inset: 0;
 		z-index: 0;
 		background-image:
-			var(--travel-bg),
+			var(--hero-bg),
 			linear-gradient(
 				168deg,
 				#eceae6 0%,
@@ -62,7 +64,7 @@ const { bgSrc, surfaceClass, ariaLabelledBy } = Astro.props;
 		pointer-events: none;
 	}
 
-	.travel-page__scrim {
+	.hero-page__scrim {
 		position: absolute;
 		inset: 0;
 		z-index: 0;
@@ -91,7 +93,7 @@ const { bgSrc, surfaceClass, ariaLabelledBy } = Astro.props;
 		pointer-events: none;
 	}
 
-	.travel-page__shell {
+	.hero-page__shell {
 		position: relative;
 		z-index: 1;
 		padding-top: max(
@@ -105,7 +107,7 @@ const { bgSrc, surfaceClass, ariaLabelledBy } = Astro.props;
 	}
 
 	@media (min-width: 1024px) {
-		.travel-page__shell {
+		.hero-page__shell {
 			padding-top: max(
 				4.25rem,
 				calc(

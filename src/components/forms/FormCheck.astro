@@ -1,0 +1,102 @@
+---
+interface Props {
+	name: string;
+	id: string;
+	value?: string;
+}
+
+const { name, id, value = "yes" } = Astro.props;
+---
+
+<label class="form-check" for={id}>
+	<input
+		type="checkbox"
+		class="form-check__input"
+		name={name}
+		id={id}
+		value={value}
+	/>
+	<span class="form-check__face" aria-hidden="true">
+		<span class="form-check__box"></span>
+	</span>
+	<span class="form-check__text"><slot /></span>
+</label>
+
+<style>
+	.form-check {
+		position: relative;
+		display: flex;
+		align-items: center;
+		gap: 0.6rem;
+		cursor: pointer;
+		min-width: 0;
+		font-size: 1rem;
+		line-height: 1.35;
+		font-weight: 550;
+		color: var(--text-primary);
+	}
+
+	.form-check__input {
+		position: absolute;
+		opacity: 0;
+		width: 1px;
+		height: 1px;
+		margin: -1px;
+		clip: rect(0, 0, 0, 0);
+		pointer-events: none;
+	}
+
+	.form-check__input:focus-visible + .form-check__face {
+		outline: 2px solid #c9a87c;
+		outline-offset: 2px;
+		border-radius: 0.35rem;
+	}
+
+	.form-check__face {
+		flex: 0 0 auto;
+		display: grid;
+		place-items: center;
+		width: 1.35rem;
+		height: 1.35rem;
+		border-radius: 0.35rem;
+		border: 2px solid rgb(110 82 60 / 0.35);
+		background: rgb(255 252 247 / 0.9);
+		transition:
+			border-color 0.15s ease,
+			background 0.15s ease,
+			box-shadow 0.15s ease;
+	}
+
+	.form-check__box {
+		width: 0.45rem;
+		height: 0.45rem;
+		border-radius: 0.1rem;
+		background: transparent;
+		opacity: 0;
+		transform: scale(0.6);
+		transition:
+			opacity 0.12s ease,
+			transform 0.12s ease;
+	}
+
+	.form-check__input:checked + .form-check__face {
+		border-color: #6e523c;
+		background: linear-gradient(180deg, rgb(255 251 243) 0%, rgb(245 232 214 / 0.75) 100%);
+		box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.75);
+	}
+
+	.form-check__input:checked + .form-check__face .form-check__box {
+		opacity: 1;
+		transform: scale(1);
+		background: #6e523c;
+	}
+
+	.form-check:hover .form-check__face {
+		border-color: rgb(110 82 60 / 0.48);
+	}
+
+	.form-check__text {
+		flex: 1 1 auto;
+		min-width: 0;
+	}
+</style>

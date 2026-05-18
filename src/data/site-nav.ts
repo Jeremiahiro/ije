@@ -2,7 +2,7 @@
 export const siteTitleSuffix = "Jane & Jeremiah";
 export const defaultPageDescription = `${siteTitleSuffix} · Wedding details coming soon.`;
 
-const navImageSrc = "/assets/image.png";
+const navImageSrc = "/assets/travel.jpg";
 
 export type NavSubPage = {
 	slug: string;
@@ -53,8 +53,8 @@ export const navItems: NavEntry[] = [
 		label: "Travel",
 		path: "/travel",
 		sublinks: [
-			sub("flights", "Flights", "Arrival airports and transport options"),
-			sub("hotels", "Hotels", "Recommended stays and booking info"),
+			sub("flights", "Flights", "Arrival airports and transport options", "/assets/travel.jpg"),
+			sub("hotels", "Hotels", "Recommended stays and booking info", "/assets/hotel.jpg"),
 			sub("visa", "Visa", "Entry requirements for Nigeria"),
 			sub("local-transport", "Local Transport", "Getting around during your stay"),
 		],

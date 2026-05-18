@@ -1,0 +1,168 @@
+---
+export type FormFieldVariant = "text" | "email" | "tel" | "number" | "date" | "textarea";
+
+interface Props {
+	name: string;
+	id: string;
+	label: string;
+	errorId: string;
+	variant: FormFieldVariant;
+	optional?: boolean;
+	hint?: string;
+	class?: string;
+	rows?: number;
+	min?: string | number;
+	max?: string | number;
+	step?: string | number;
+	value?: string;
+	autocomplete?: string;
+	inputmode?: "email" | "tel" | "text" | "numeric" | "decimal" | "url" | "search" | "none";
+	required?: boolean;
+	placeholder?: string;
+}
+
+const {
+	name,
+	id,
+	label,
+	errorId,
+	variant,
+	optional = false,
+	hint,
+	class: className,
+	rows = 3,
+	min,
+	max,
+	step,
+	value,
+	autocomplete,
+	inputmode,
+	required = false,
+	placeholder,
+} = Astro.props;
+
+const hintId = hint ? `${id}__hint` : undefined;
+const describedBy = [hintId, errorId].filter(Boolean).join(" ") || undefined;
+---
+
+<div class:list={["form-field", className]}>
+	<label class="form-field__label" for={id}>
+		{label}{optional && <span class="form-field__optional"> (optional)</span>}
+	</label>
+	{hint ? <p class="form-field__hint" id={hintId}>{hint}</p> : null}
+	{
+		variant === "textarea" ? (
+			<textarea
+				name={name}
+				id={id}
+				class="form-field__control form-field__control--textarea"
+				rows={rows}
+				autocomplete={autocomplete}
+				required={required}
+				aria-required={required ? "true" : undefined}
+				aria-invalid="false"
+				aria-describedby={describedBy}
+				placeholder={placeholder}
+			/>
+		) : (
+			<input
+				type={variant}
+				name={name}
+				id={id}
+				class:list={[
+					"form-field__control",
+					variant === "number" || variant === "date" ? "form-field__control--narrow" : undefined,
+				]}
+				min={min}
+				max={max}
+				step={step}
+				value={value}
+				autocomplete={autocomplete}
+				inputmode={inputmode}
+				required={required}
+				aria-required={required ? "true" : undefined}
+				aria-invalid="false"
+				aria-describedby={describedBy}
+				placeholder={placeholder}
+			/>
+		)
+	}
+	<p class="form-field__error" id={errorId} hidden></p>
+</div>
+
+<style>
+	.form-field {
+		display: flex;
+		flex-direction: column;
+		gap: 0.45rem;
+		min-inline-size: 0;
+	}
+
+	.form-field__label {
+		font-size: 0.84rem;
+		font-weight: 600;
+		color: #4a3d32;
+		display: flex;
+		flex-wrap: wrap;
+		align-items: baseline;
+		gap: 0.35rem;
+	}
+
+	.form-field__optional {
+		font-weight: 500;
+		font-size: 0.8rem;
+		color: var(--text-muted);
+	}
+
+	.form-field__hint {
+		margin: 0;
+		font-size: 0.84rem;
+		line-height: 1.45;
+		color: var(--text-muted);
+	}
+
+	.form-field__control {
+		width: 100%;
+		box-sizing: border-box;
+		padding: 0.72rem 0.95rem;
+		min-height: 3rem;
+		border-radius: 0.55rem;
+		border: 1px solid rgb(110 82 60 / 0.22);
+		background: rgb(255 252 247 / 0.92);
+		color: var(--text-primary);
+		font-size: 1.05rem;
+		font-family: inherit;
+		outline-offset: 3px;
+	}
+
+	.form-field__control--narrow {
+		max-width: 14rem;
+	}
+
+	.form-field__control--textarea {
+		min-height: 5.5rem;
+		padding-block: 0.65rem;
+		resize: vertical;
+		line-height: 1.45;
+	}
+
+	.form-field__control::placeholder {
+		color: rgb(92 74 61 / 0.45);
+	}
+
+	.form-field__control:focus {
+		border-color: #c9a87c;
+		box-shadow: 0 0 0 3px rgba(201, 168, 124, 0.22);
+	}
+
+	.form-field__error {
+		margin: 0;
+		font-size: 0.82rem;
+		line-height: 1.35;
+		color: #b54a3a;
+	}
+
+	.form-field__error[hidden] {
+		display: none !important;
+	}
+</style>
