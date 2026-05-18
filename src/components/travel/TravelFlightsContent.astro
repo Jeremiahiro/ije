@@ -1,0 +1,404 @@
+---
+import ContentCard from "@/components/ContentCard.astro";
+import TravelMapEmbed from "@/components/travel/TravelMapEmbed.astro";
+import TravelPageSurface from "@/components/travel/TravelPageSurface.astro";
+import { internationalFlightTimelineSteps } from "@/data/travel-flights-international-timeline";
+
+const bgSrc = "/assets/travel.jpg";
+---
+
+<TravelPageSurface
+	bgSrc={bgSrc}
+	surfaceClass="travel-flights"
+	ariaLabelledBy="travel-flights-heading"
+>
+		<header class="travel-flights__intro">
+			<p class="travel-flights__eyebrow">Travel information</p>
+
+			<h1 id="travel-flights-heading" class="travel-flights__title">
+				Flights
+			</h1>
+			<p class="travel-flights__lede">
+				Planning your route to Nigeria for our celebration -
+				international connections through Lagos and regional travel to
+				Abia&nbsp;State.
+			</p>
+		</header>
+
+		<ContentCard variant="secondary" class="travel-flights__intl-shell">
+			<h2 class="travel-flights__section-title">International guests</h2>
+			<p class="travel-flights__section-lede">
+				Arrive in Lagos, connect to Owerri, then we’ll help with ground
+				logistics for guests arriving from outside&nbsp;Nigeria.
+			</p>
+
+			<div class="travel-flights__timeline" aria-label="Trip steps">
+				{
+					internationalFlightTimelineSteps.map((step) => (
+						<ContentCard
+							variant="default"
+							class="travel-flights__timeline-card"
+						>
+							<span
+								class="travel-flights__timeline-node"
+								aria-hidden="true"
+							/>
+							<div class="travel-flights__card-text">
+								<p class="travel-flights__step-label">
+									{step.stepLabel}
+								</p>
+								<p class="travel-flights__eyebrow travel-flights__eyebrow--card">
+									{step.eyebrow}
+								</p>
+								<h3 class="travel-flights__card-title">
+									{step.title}
+								</h3>
+								{step.variant === "airport" ? (
+									<p class="travel-flights__airport">
+										{step.airport}
+									</p>
+								) : (
+									<p class="travel-flights__card-body">
+										{step.body}
+									</p>
+								)}
+							</div>
+						</ContentCard>
+					))
+				}
+			</div>
+
+			<ContentCard variant="primary">
+				<p
+					class="travel-flights__eyebrow travel-flights__eyebrow--card travel-flights__eyebrow--inline"
+				>
+					<span aria-hidden="true">📅</span> Recommended arrival dates
+				</p>
+				<p class="travel-flights__banner-title">
+					Plan to arrive in Lagos on December 30th or 31st
+				</p>
+				<p class="travel-flights__banner-copy">
+					These are the two days we coordinate airport assistance,
+					ground transportation, and overall travel coordination for
+					international guests.
+				</p>
+				<p class="travel-flights__note">
+					Guests arriving outside those dates will need to arrange
+					their own transportation to&nbsp;Abia&nbsp;State.
+				</p>
+			</ContentCard>
+
+			<div class="travel-flights__eyebrow-section">
+				<TravelMapEmbed
+					class="travel-flights__map-embed"
+					title="TravelMap embed"
+					width="100%"
+					height={550}
+					allow="fullscreen"
+				/>
+			</div>
+
+		</ContentCard>
+
+		<ContentCard variant="secondary" class="travel-flights__domestic-shell">
+			<p
+				class="travel-flights__eyebrow travel-flights__eyebrow--card travel-flights__eyebrow--inline"
+			>
+				<span aria-hidden="true">🇳🇬</span> Travelling within Nigeria
+			</p>
+			<h2 class="travel-flights__domestic-title">Domestic route</h2>
+			<p class="travel-flights__domestic-label">Fly directly to</p>
+			<p class="travel-flights__airport travel-flights__airport--solo">
+				Sam Mbakwe International Cargo Airport
+			</p>
+			<p class="travel-flights__domestic-copy">
+				Additional transportation details will be shared closer to the
+				wedding&nbsp;date.
+			</p>
+		</ContentCard>
+</TravelPageSurface>
+
+<style>
+	.travel-flights {
+		--travel-stack-gap: clamp(0.75rem, 2.2vw, 1.25rem);
+		--travel-block-gap: clamp(1rem, 3vw, 1.5rem);
+	}
+
+	/* --- Page hero --- */
+	.travel-flights__intro {
+		margin: 0 auto clamp(2rem, 5vw, 3rem);
+		max-width: 52rem;
+		text-align: center;
+	}
+
+	.travel-flights__eyebrow-section {
+		width: 100%;
+		margin-block-start: var(--travel-block-gap);
+		margin-block-end: clamp(1.25rem, 3.5vw, 2rem);
+	}
+
+	.travel-flights__eyebrow {
+		font-size: 0.7rem;
+		font-weight: 600;
+		letter-spacing: 0.32em;
+		text-transform: uppercase;
+		color: var(--text-muted);
+	}
+
+	.travel-flights__eyebrow-section .travel-flights__map-embed {
+		margin: 0;
+		text-align: left;
+	}
+
+	.travel-flights__title {
+		margin: 0;
+		font-size: clamp(2.125rem, 5.5vw + 1rem, 3rem);
+		font-weight: 600;
+		line-height: 1.06;
+		letter-spacing: -0.02em;
+	}
+
+	.travel-flights__lede {
+		margin: 1.25rem auto 0;
+		max-width: 42rem;
+		text-wrap: pretty;
+		font-size: 1rem;
+		line-height: 1.6;
+		color: var(--text-muted);
+	}
+
+	/* Secondary shells — :global targets ContentCard roots (child scoped) */
+	:global(.travel-flights__intl-shell) .travel-flights__section-title,
+	:global(.travel-flights__intl-shell) .travel-flights__section-lede {
+		padding-inline: clamp(1rem, 4vw, 2.75rem);
+	}
+
+	:global(.travel-flights__domestic-shell) {
+		margin-top: var(--travel-block-gap);
+		border-color: rgb(110 82 60 / 0.12);
+		background: rgb(255 255 255 / 0.32);
+		box-shadow: 0 16px 48px rgb(110 82 60 / 0.1);
+		width: 100%;
+	}
+
+	.travel-flights__section-title {
+		margin: 0 0 0.5rem;
+		font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+		font-weight: 600;
+		letter-spacing: -0.02em;
+	}
+
+	.travel-flights__section-lede {
+		margin: 0 0 var(--travel-block-gap);
+		font-size: 0.9375rem;
+		line-height: 1.55;
+		color: var(--text-muted);
+	}
+
+	/* Timeline: vertical rhythm from grid gap only (ContentCard defaults add margin-block). */
+	.travel-flights__timeline :global(.travel-flights__timeline-card) {
+		margin-block: 0;
+	}
+
+	:global(.travel-flights__intl-shell > .content-card--primary) {
+		margin-block: var(--travel-block-gap) 0;
+	}
+
+	.travel-flights__timeline {
+		box-sizing: border-box;
+		position: relative;
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		column-gap: var(--travel-stack-gap);
+		row-gap: var(--travel-stack-gap);
+		width: 100%;
+		padding: 0;
+	}
+
+	:global(.travel-flights__timeline-card) {
+		flex: 1 1 0;
+		min-width: 0;
+		display: flex;
+		column-gap: 0.95rem;
+		align-items: flex-start;
+		text-align: left;
+	}
+
+	.travel-flights__timeline-node {
+		flex-shrink: 0;
+		width: 13px;
+		height: 13px;
+		border-radius: 50%;
+		border: 2px solid #6e523c;
+		background: rgb(255 252 247 / 0.75);
+		box-shadow: 0 0 0 4px rgb(255 255 255 / 0.42);
+	}
+
+	.travel-flights__card-text {
+		min-width: 0;
+		width: 100%;
+	}
+
+	.travel-flights__step-label {
+		margin: 0;
+		font-size: 0.6875rem;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.18em;
+		color: var(--text-muted);
+		line-height: 1.35;
+	}
+
+	.travel-flights__eyebrow--card {
+		margin: 0.35rem 0 0;
+		font-size: 0.6875rem;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.2em;
+		color: rgb(92 74 61 / 0.78);
+	}
+
+	.travel-flights__eyebrow--inline {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		margin: 0 0 1rem;
+		text-transform: none;
+		letter-spacing: 0.2em;
+	}
+
+	.travel-flights__card-title {
+		margin: 0.75rem 0 0;
+		font-size: 1rem;
+		font-weight: 600;
+		line-height: 1.35;
+		color: var(--text-primary);
+	}
+
+	.travel-flights__airport {
+		margin: 0.35rem 0 0;
+		font-size: 0.95rem;
+		font-weight: 600;
+		line-height: 1.42;
+		color: #6e523c;
+	}
+
+	.travel-flights__airport--solo {
+		margin-top: 0.5rem;
+	}
+
+	.travel-flights__card-body {
+		margin: 0.5rem 0 0;
+		font-size: 0.9rem;
+		line-height: 1.52;
+		color: var(--text-muted);
+	}
+
+	.travel-flights__banner-title {
+		margin: 0;
+		font-size: clamp(1.125rem, 2.2vw, 1.25rem);
+		font-weight: 600;
+		color: var(--text-primary);
+	}
+
+	.travel-flights__banner-copy,
+	.travel-flights__domestic-copy {
+		max-width: 48rem;
+		font-size: 0.9375rem;
+		line-height: 1.55;
+		color: var(--text-muted);
+	}
+
+	.travel-flights__banner-copy {
+		margin: 0.75rem 0 0;
+	}
+
+	.travel-flights__note {
+		margin: 1rem 0 0;
+		padding: 0.75rem 1rem;
+		border-radius: 0.75rem;
+		border: 1px dashed rgb(110 82 60 / 0.22);
+		background: rgb(255 255 255 / 0.42);
+		font-size: 0.875rem;
+		line-height: 1.55;
+		color: var(--text-muted);
+	}
+
+	.travel-flights__domestic-title {
+		margin: 0;
+		font-size: clamp(1.125rem, 2.2vw, 1.35rem);
+		font-weight: 600;
+		color: var(--text-primary);
+	}
+
+	.travel-flights__domestic-label {
+		margin: 0.75rem 0 0;
+		font-size: 0.9375rem;
+		font-weight: 500;
+		line-height: 1.5;
+		color: var(--text-muted);
+	}
+
+	.travel-flights__domestic-copy {
+		margin: 1rem 0 0;
+	}
+
+	@media (max-width: 899px) {
+		:global(.travel-flights__intl-shell) {
+			border-radius: clamp(1.35rem, 5vw, 2rem);
+		}
+
+		:global(.travel-flights__intl-shell) .travel-flights__section-title,
+		:global(.travel-flights__intl-shell) .travel-flights__section-lede {
+			padding-inline: 0;
+		}
+
+		.travel-flights__timeline {
+			grid-template-columns: 1fr;
+		}
+
+		:global(.travel-flights__timeline-card) {
+			flex-direction: row;
+			justify-content: flex-start;
+			text-align: left;
+		}
+
+		.travel-flights__timeline-node {
+			margin-top: 0.35rem;
+		}
+	}
+
+	@media (min-width: 768px) {
+		.travel-flights__eyebrow {
+			font-size: 0.75rem;
+		}
+
+		.travel-flights__lede {
+			font-size: 1.125rem;
+		}
+
+		.travel-flights__section-lede,
+		.travel-flights__banner-copy,
+		.travel-flights__domestic-copy {
+			font-size: 1rem;
+		}
+
+		.travel-flights__domestic-label {
+			font-size: 1rem;
+		}
+	}
+
+	@media (min-width: 900px) {
+		:global(.travel-flights__timeline-card) {
+			flex-direction: column;
+			align-items: center;
+			text-align: center;
+		}
+
+		.travel-flights__timeline-node {
+			margin-bottom: 0.65rem;
+			margin-top: 0;
+		}
+	}
+
+</style>

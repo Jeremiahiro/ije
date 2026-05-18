@@ -77,6 +77,18 @@ export const navItems: NavEntry[] = [
 	},
 ];
 
+/** Section path segment (no leading slash) → sublink slugs implemented as dedicated pages */
+export const dedicatedSublinkSlugsBySection: Readonly<
+	Record<string, ReadonlySet<string>>
+> = {
+	travel: new Set(["flights"]),
+};
+
+export function hasDedicatedSublinkPage(section: string, slug: string): boolean {
+	const set = dedicatedSublinkSlugsBySection[section];
+	return set?.has(slug) ?? false;
+}
+
 export function navHref(path: string, slug: string): string {
 	return `${path.replace(/\/$/, "")}/${slug}`;
 }
