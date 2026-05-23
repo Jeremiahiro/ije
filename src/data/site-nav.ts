@@ -38,14 +38,9 @@ function sub(
 
 export const navItems: NavEntry[] = [
 	{
-		kind: "sublinks",
-		id: "on-the-day",
-		label: "On the Day",
-		path: "/on-the-day",
-		sublinks: [
-			sub("itinerary", "Itinerary", "Ceremony and reception details"),
-			sub("attire", "Attire", "What to wear for each event"),
-		],
+		kind: "link",
+		label: "Asoebi",
+		href: "/asoebi",
 	},
 	{
 		kind: "sublinks",

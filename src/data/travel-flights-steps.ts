@@ -56,11 +56,11 @@ export const internationalFlightStepCards: TravelFlightStepCard[] = [
 			],
 		},
 		footer: "Murtala Muhammed International Airport",
-		detailDescription: `Fly into Lagos on your international flight. Plan to arrive on December 30th or 31st — the days we coordinate airport assistance and ground transportation for guests travelling from outside${nbsp}Nigeria.`,
+		detailDescription: `Fly into Lagos on your international flight. Plan to arrive on December 30th or 31st — these are the only days we will coordinate airport assistance and ground transportation for guests travelling from outside${nbsp}Nigeria.`,
 	},
 	{
 		tag: "Domestic",
-		title: "Connect to Owerri",
+		title: "Connect to Owerri, Imo State",
 		visual: "/assets/map.png",
 		footer: "Sam Mbakwe International Cargo Airport",
 		detailDescription: `Take a local flight from Lagos to Owerri. This domestic connection brings you closer to Abia${nbsp}State and the celebration.`,
@@ -80,5 +80,5 @@ export const domesticFlightStepCard: TravelFlightStepCard = {
 	visual: "/assets/map.png",
 	footer: "Sam Mbakwe International Cargo Airport",
 	detailDescription:
-		"Travelling within Nigeria? Fly directly to Owerri. Additional transportation details will be shared closer to the wedding date.",
+		"Travelling within Nigeria? Fly directly to Owerri.",
 };
