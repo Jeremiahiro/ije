@@ -13,7 +13,7 @@
 	--text-muted: #5c4a3d;
 
 	--wrapper-padding-inline: clamp(1rem, 4vw, 2.25rem);
-	--wrapper-max-width: min(72rem, 1200px);
+	--wrapper-max-width: min(80rem);
 	--wrapper-lg-max-width: min(90rem, 1440px);
 }
 
