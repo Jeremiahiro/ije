@@ -1,0 +1,15 @@
+---
+import TravelVisaContent from "@/components/travel/TravelVisaContent.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { navHref, siteTitleSuffix } from "@/data/site-nav";
+
+const pageTitle = "Visa";
+const description =
+	"Visa guidance for international guests travelling to Nigeria for Jane & Jeremiah’s wedding, including document checklist, application timing, and official visa links.";
+const title = `${pageTitle} · ${siteTitleSuffix}`;
+const canonicalHref = new URL(navHref("/travel", "visa"), Astro.url.origin).href;
+---
+
+<BaseLayout title={title} description={description} canonicalHref={canonicalHref}>
+	<TravelVisaContent />
+</BaseLayout>

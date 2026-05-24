@@ -1,6 +1,7 @@
 ---
 import ContentCard from "@/components/ContentCard.astro";
 import TravelHotelCard from "@/components/travel/TravelHotelCard.astro";
+import TravelPageIntro from "@/components/travel/TravelPageIntro.astro";
 import PillNav from "@/components/PillNav.astro";
 import HeroPageSurface from "@/components/HeroPageSurface.astro";
 import {
@@ -18,11 +19,12 @@ const jumpLinks = regions.map((r) => ({ id: r.id, label: r.jumpLabel }));
 	surfaceClass="travel-hotels"
 	ariaLabelledBy="travel-hotels-heading"
 >
-	<header class="travel-hotels__intro">
-		<p class="travel-hotels__eyebrow">Where to stay</p>
-		<h1 id="travel-hotels-heading" class="travel-hotels__title">Hotels</h1>
-		<p class="travel-hotels__lede">{introLede}</p>
-	</header>
+	<TravelPageIntro
+		eyebrow="Where to stay"
+		title="Hotels"
+		headingId="travel-hotels-heading"
+		ledes={[introLede]}
+	/>
 
 	<ContentCard variant="secondary" class="travel-hotels__main-shell">
 		<PillNav links={jumpLinks} aria-label="Cities" />
@@ -53,9 +55,7 @@ const jumpLinks = regions.map((r) => ({ id: r.id, label: r.jumpLabel }));
 	</ContentCard>
 
 	<ContentCard variant="primary" class="travel-hotels__tip">
-		<p
-			class="travel-hotels__tip-eyebrow travel-hotels__eyebrow travel-hotels__eyebrow--inline"
-		>
+		<p class="travel-hotels__tip-eyebrow travel-hotels__eyebrow--inline">
 			{pageTip.eyebrow}
 		</p>
 		<p class="travel-hotels__tip-title">{pageTip.title}</p>
@@ -76,35 +76,8 @@ const jumpLinks = regions.map((r) => ({ id: r.id, label: r.jumpLabel }));
 		);
 	}
 
-	.travel-hotels__intro {
-		margin: 0 auto clamp(1.5rem, 4vw, 2.25rem);
-		max-width: 52rem;
-		text-align: center;
-	}
-
-	.travel-hotels__eyebrow {
-		font-size: 0.7rem;
-		font-weight: 600;
-		letter-spacing: 0.32em;
-		text-transform: uppercase;
-		color: var(--text-muted);
-	}
-
-	.travel-hotels__title {
-		margin: 0;
-		font-size: clamp(2.125rem, 5.5vw + 1rem, 3rem);
-		font-weight: 600;
-		line-height: 1.06;
-		letter-spacing: -0.02em;
-	}
-
-	.travel-hotels__lede {
-		margin: 1.25rem auto 0;
+	:global(.travel-hotels.hero-page .travel-page-intro__lede) {
 		max-width: 42rem;
-		text-wrap: pretty;
-		font-size: 1rem;
-		line-height: 1.6;
-		color: var(--text-muted);
 	}
 
 	:global(.travel-hotels__main-shell) {
@@ -207,14 +180,6 @@ const jumpLinks = regions.map((r) => ({ id: r.id, label: r.jumpLabel }));
 	}
 
 	@media (min-width: 768px) {
-		.travel-hotels__eyebrow {
-			font-size: 0.75rem;
-		}
-
-		.travel-hotels__lede {
-			font-size: 1.125rem;
-		}
-
 		.travel-hotels__region-lede,
 		.travel-hotels__tip-copy {
 			font-size: 1rem;

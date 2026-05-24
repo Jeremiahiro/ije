@@ -1,6 +1,7 @@
 ---
 import ContentCard from "@/components/ContentCard.astro";
 import HeroPageSurface from "@/components/HeroPageSurface.astro";
+import TravelPageIntro from "@/components/travel/TravelPageIntro.astro";
 import TravelStepCard from "@/components/travel/TravelStepCard.astro";
 import { travelFlightsPage } from "@/data/travel-flights";
 
@@ -17,14 +18,13 @@ const {
 	surfaceClass="travel-flights"
 	ariaLabelledBy="travel-flights-heading"
 >
-	<header class="travel-flights__intro">
-		<p class="travel-flights__eyebrow">{hero.eyebrow}</p>
-
-		<h1 id="travel-flights-heading" class="travel-flights__title">
-			{hero.title}
-		</h1>
-		{hero.ledes.map((lede) => <p class="travel-flights__lede">{lede}</p>)}
-	</header>
+	<TravelPageIntro
+		eyebrow={hero.eyebrow}
+		title={hero.title}
+		headingId="travel-flights-heading"
+		ledes={hero.ledes}
+		accentEyebrow
+	/>
 
 	<ContentCard variant="secondary" class="travel-flights__intl-shell">
 		<h2 class="travel-flights__section-title">{international.title}</h2>
@@ -40,7 +40,7 @@ const {
 					variant="primary"
 					class="travel-flights__recommended-dates"
 				>
-					<p class="travel-flights__eyebrow travel-flights__eyebrow--card travel-flights__eyebrow--inline">
+					<p class="travel-flights__eyebrow--card travel-flights__eyebrow--inline">
 						{international.recommendedDates.eyebrowIcon ? (
 							<span aria-hidden="true">
 								{international.recommendedDates.eyebrowIcon}
@@ -165,40 +165,12 @@ const {
 		--travel-block-gap: clamp(1rem, 3vw, 1.5rem);
 	}
 
-	.travel-flights__intro {
+	:global(.travel-flights.hero-page .travel-page-intro) {
 		margin: 0 auto clamp(2rem, 5vw, 3rem);
-		max-width: 52rem;
-		text-align: center;
 	}
 
-	.travel-flights__eyebrow {
-		font-size: 0.7rem;
-		font-weight: 600;
-		letter-spacing: 0.32em;
-		text-transform: uppercase;
-		color: var(--text-muted);
-	}
-
-	.travel-flights__intro .travel-flights__eyebrow {
-		letter-spacing: 0.18em;
-		color: rgb(92 74 61 / 0.82);
-	}
-
-	.travel-flights__title {
-		margin: 0;
-		font-size: clamp(2.125rem, 5.5vw + 1rem, 3rem);
-		font-weight: 600;
-		line-height: 1.06;
-		letter-spacing: -0.02em;
-	}
-
-	.travel-flights__lede {
-		margin: 1.25rem auto 0;
+	:global(.travel-flights.hero-page .travel-page-intro__lede) {
 		max-width: 42rem;
-		text-wrap: pretty;
-		font-size: 1rem;
-		line-height: 1.6;
-		color: var(--text-muted);
 	}
 
 	:global(.travel-flights__intl-shell) .travel-flights__section-title,
@@ -350,18 +322,6 @@ const {
 	}
 
 	@media (min-width: 768px) {
-		.travel-flights__eyebrow {
-			font-size: 0.75rem;
-		}
-
-		.travel-flights__intro .travel-flights__eyebrow {
-			font-size: 0.8125rem;
-		}
-
-		.travel-flights__lede {
-			font-size: 1.125rem;
-		}
-
 		.travel-flights__section-lede,
 		.travel-flights__banner-copy {
 			font-size: 1rem;

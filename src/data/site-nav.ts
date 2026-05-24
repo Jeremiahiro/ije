@@ -50,8 +50,7 @@ export const navItems: NavEntry[] = [
 		sublinks: [
 			sub("flights", "Flights", "Arrival airports and transport options", "/assets/travel.jpg"),
 			sub("hotels", "Hotels", "Recommended stays and booking info", "/assets/hotel.jpg"),
-			sub("visa", "Visa", "Entry requirements for Nigeria"),
-			sub("local-transport", "Local Transport", "Getting around during your stay"),
+			sub("visa", "Visa", "Entry requirements for Nigeria", "/assets/visa.jpg"),
 		],
 	},
 	{
@@ -76,7 +75,7 @@ export const navItems: NavEntry[] = [
 export const dedicatedSublinkSlugsBySection: Readonly<
 	Record<string, ReadonlySet<string>>
 > = {
-	travel: new Set(["flights", "hotels"]),
+	travel: new Set(["flights", "hotels", "visa"]),
 };
 
 export function hasDedicatedSublinkPage(section: string, slug: string): boolean {
