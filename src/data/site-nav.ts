@@ -59,9 +59,9 @@ export const navItems: NavEntry[] = [
 		label: "About",
 		path: "/about",
 		sublinks: [
-			sub("our-story", "Our Story", "How Jane & Jeremiah met"),
-			sub("wedding-party", "Wedding Party", "Bridesmaids, groomsmen, and family"),
-			sub("faq", "FAQ", "Common questions answered"),
+			sub("our-story", "Our Story", "How Jane & Jeremiah met", ""),
+			sub("wedding-party", "Wedding Party", "Bridesmaids, groomsmen, and family", ""),
+			sub("faq", "FAQ", "Common questions answered", ""),
 		],
 	},
 	{
@@ -76,6 +76,7 @@ export const dedicatedSublinkSlugsBySection: Readonly<
 	Record<string, ReadonlySet<string>>
 > = {
 	travel: new Set(["flights", "hotels", "visa"]),
+	about: new Set(["faq"]),
 };
 
 export function hasDedicatedSublinkPage(section: string, slug: string): boolean {
