@@ -2,12 +2,14 @@
 import ContentCard from "@/components/ContentCard.astro";
 import HeroPageSurface from "@/components/HeroPageSurface.astro";
 import TravelStepCard from "@/components/travel/TravelStepCard.astro";
-import {
-	domesticFlightStepCard,
-	internationalFlightStepCards,
-} from "@/data/travel-flights-steps";
+import { travelFlightsPage } from "@/data/travel-flights";
 
-const bgSrc = "/assets/travel.jpg";
+const {
+	backgroundImage: bgSrc,
+	hero,
+	international,
+	domestic,
+} = travelFlightsPage;
 ---
 
 <HeroPageSurface
@@ -16,50 +18,64 @@ const bgSrc = "/assets/travel.jpg";
 	ariaLabelledBy="travel-flights-heading"
 >
 	<header class="travel-flights__intro">
-		<p class="travel-flights__eyebrow">Travel information</p>
+		<p class="travel-flights__eyebrow">{hero.eyebrow}</p>
 
 		<h1 id="travel-flights-heading" class="travel-flights__title">
-			Flights
+			{hero.title}
 		</h1>
-		<p class="travel-flights__lede">
-			We want to help in making this trip as seamless as Nigeria can be! Please read this information carefully for travel recommendations and dates. 
-		</p>
-		<p class="travel-flights__lede">
-			Take special note of the days that we are able to assist with ground transport. Feel free to come in on any other day, but if you fly in outside of our recommended days then we will not be able to provide ground transport support. 
-		</p>
+		{
+			hero.ledes.map((lede) => (
+				<p class="travel-flights__lede">{lede}</p>
+			))
+		}
 	</header>
 
 	<ContentCard variant="secondary" class="travel-flights__intl-shell">
-		<h2 class="travel-flights__section-title">International guests</h2>
-		<p class="travel-flights__section-lede">
-			Arrive in Lagos, connect to Owerri, then we’ll help with ground
-			logistics for guests arriving from outside&nbsp;Nigeria.
-		</p>
+		<h2 class="travel-flights__section-title">{international.title}</h2>
+		{
+			international.lede ? (
+				<p class="travel-flights__section-lede">{international.lede}</p>
+			) : null
+		}
 
-		<ContentCard variant="primary" class="travel-flights__recommended-dates">
-			<p
-				class="travel-flights__eyebrow travel-flights__eyebrow--card travel-flights__eyebrow--inline"
-			>
-				<span aria-hidden="true">📅</span> Recommended arrival dates
-			</p>
-			<p class="travel-flights__banner-title">
-				Plan to arrive in Lagos between the 29th and 31st of December
-			</p>
-			<p class="travel-flights__banner-copy">
-				These are the two days we coordinate airport assistance,
-				ground transportation, and overall travel coordination for
-				international guests.
-			</p>
-			<p class="travel-flights__note">
-				Guests arriving outside those dates will need to arrange
-				their own local international transport to&nbsp;Abia&nbsp;State.
-			</p>
-		</ContentCard>
+		{
+			international.recommendedDates ? (
+				<ContentCard
+					variant="primary"
+					class="travel-flights__recommended-dates"
+				>
+					<p
+						class="travel-flights__eyebrow travel-flights__eyebrow--card travel-flights__eyebrow--inline"
+					>
+						{
+							international.recommendedDates.eyebrowIcon ? (
+								<span aria-hidden="true">
+									{international.recommendedDates.eyebrowIcon}
+								</span>
+							) : null
+						}{" "}
+						{international.recommendedDates.eyebrow}
+					</p>
+					<p class="travel-flights__banner-title">
+						{international.recommendedDates.title}
+					</p>
+					<p class="travel-flights__banner-copy">
+						{international.recommendedDates.copy}
+					</p>
+					<p class="travel-flights__note">
+						{international.recommendedDates.note}
+					</p>
+				</ContentCard>
+			) : null
+		}
 
 		<div class="travel-flights__steps" data-step-cards-section>
-			<ol class="travel-flights__steps-grid" aria-label="Trip steps">
+			<ol
+				class="travel-flights__steps-grid"
+				aria-label={international.stepsAriaLabel}
+			>
 				{
-					internationalFlightStepCards.map((step, index) => (
+					international.steps.map((step, index) => (
 						<li class="travel-flights__steps-item">
 							<TravelStepCard step={step} index={index} />
 						</li>
@@ -71,15 +87,23 @@ const bgSrc = "/assets/travel.jpg";
 
 	<ContentCard variant="secondary" class="travel-flights__domestic-shell">
 		<h2 class="travel-flights__section-title travel-flights__domestic-heading">
-			Travelling within Nigeria
+			{domestic.title}
 		</h2>
-		<p class="travel-flights__section-lede travel-flights__domestic-lede">
-			Flying domestically? You can skip Lagos and head straight to
-			Owerri.
-		</p>
 
-		<div class="travel-flights__steps travel-flights__steps--solo" data-step-cards-section>
-			<TravelStepCard step={domesticFlightStepCard} />
+		<div class="travel-flights__steps" data-step-cards-section>
+			<ol
+				class="travel-flights__steps-grid travel-flights__steps-grid--domestic"
+				aria-label={domestic.stepsAriaLabel}
+				data-card-count={domestic.steps.length}
+			>
+				{
+					domestic.steps.map((step, index) => (
+						<li class="travel-flights__steps-item">
+							<TravelStepCard step={step} index={index} />
+						</li>
+					))
+				}
+			</ol>
 		</div>
 	</ContentCard>
 </HeroPageSurface>
@@ -158,6 +182,11 @@ const bgSrc = "/assets/travel.jpg";
 		color: var(--text-muted);
 	}
 
+	.travel-flights__intro .travel-flights__eyebrow {
+		letter-spacing: 0.18em;
+		color: rgb(92 74 61 / 0.82);
+	}
+
 	.travel-flights__title {
 		margin: 0;
 		font-size: clamp(2.125rem, 5.5vw + 1rem, 3rem);
@@ -199,6 +228,7 @@ const bgSrc = "/assets/travel.jpg";
 		font-size: clamp(1.25rem, 2.5vw, 1.5rem);
 		font-weight: 600;
 		letter-spacing: -0.02em;
+		text-transform: uppercase;
 	}
 
 	.travel-flights__section-lede {
@@ -234,19 +264,21 @@ const bgSrc = "/assets/travel.jpg";
 		list-style: none;
 	}
 
+	.travel-flights__steps-grid--domestic {
+		width: 100%;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	.travel-flights__steps-grid--domestic[data-card-count="1"] {
+		grid-template-columns: minmax(0, 18rem);
+		justify-content: center;
+	}
+
 	.travel-flights__steps-item {
 		display: grid;
 		place-items: center;
 		height: var(--step-slot-height);
 		min-width: 0;
-	}
-
-	.travel-flights__steps--solo {
-		display: grid;
-		place-items: center;
-		height: var(--step-slot-height);
-		max-width: min(100%, 18rem);
-		margin-inline: auto;
 	}
 
 	.travel-flights__eyebrow--card {
@@ -313,15 +345,18 @@ const bgSrc = "/assets/travel.jpg";
 			height: auto;
 		}
 
-		.travel-flights__steps--solo {
-			height: auto;
-			max-width: 100%;
+		.travel-flights__steps-grid--domestic[data-card-count="2"] {
+			grid-template-columns: 1fr;
 		}
 	}
 
 	@media (min-width: 768px) {
 		.travel-flights__eyebrow {
 			font-size: 0.75rem;
+		}
+
+		.travel-flights__intro .travel-flights__eyebrow {
+			font-size: 0.8125rem;
 		}
 
 		.travel-flights__lede {
