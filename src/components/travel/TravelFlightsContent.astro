@@ -23,11 +23,7 @@ const {
 		<h1 id="travel-flights-heading" class="travel-flights__title">
 			{hero.title}
 		</h1>
-		{
-			hero.ledes.map((lede) => (
-				<p class="travel-flights__lede">{lede}</p>
-			))
-		}
+		{hero.ledes.map((lede) => <p class="travel-flights__lede">{lede}</p>)}
 	</header>
 
 	<ContentCard variant="secondary" class="travel-flights__intl-shell">
@@ -44,16 +40,12 @@ const {
 					variant="primary"
 					class="travel-flights__recommended-dates"
 				>
-					<p
-						class="travel-flights__eyebrow travel-flights__eyebrow--card travel-flights__eyebrow--inline"
-					>
-						{
-							international.recommendedDates.eyebrowIcon ? (
-								<span aria-hidden="true">
-									{international.recommendedDates.eyebrowIcon}
-								</span>
-							) : null
-						}{" "}
+					<p class="travel-flights__eyebrow travel-flights__eyebrow--card travel-flights__eyebrow--inline">
+						{international.recommendedDates.eyebrowIcon ? (
+							<span aria-hidden="true">
+								{international.recommendedDates.eyebrowIcon}
+							</span>
+						) : null}{" "}
 						{international.recommendedDates.eyebrow}
 					</p>
 					<p class="travel-flights__banner-title">
@@ -85,27 +77,32 @@ const {
 		</div>
 	</ContentCard>
 
-	<ContentCard variant="secondary" class="travel-flights__domestic-shell">
-		<h2 class="travel-flights__section-title travel-flights__domestic-heading">
-			{domestic.title}
-		</h2>
-
-		<div class="travel-flights__steps" data-step-cards-section>
-			<ol
-				class="travel-flights__steps-grid travel-flights__steps-grid--domestic"
-				aria-label={domestic.stepsAriaLabel}
-				data-card-count={domestic.steps.length}
+	{
+		domestic?.steps && (
+			<ContentCard
+				variant="secondary"
+				class="travel-flights__domestic-shell"
 			>
-				{
-					domestic.steps.map((step, index) => (
-						<li class="travel-flights__steps-item">
-							<TravelStepCard step={step} index={index} />
-						</li>
-					))
-				}
-			</ol>
-		</div>
-	</ContentCard>
+				<h2 class="travel-flights__section-title travel-flights__domestic-heading">
+					{domestic.title}
+				</h2>
+
+				<div class="travel-flights__steps" data-step-cards-section>
+					<ol
+						class="travel-flights__steps-grid travel-flights__steps-grid--domestic"
+						aria-label={domestic.stepsAriaLabel}
+						data-card-count={domestic.steps.length}
+					>
+						{domestic.steps.map((step, index) => (
+							<li class="travel-flights__steps-item">
+								<TravelStepCard step={step} index={index} />
+							</li>
+						))}
+					</ol>
+				</div>
+			</ContentCard>
+		)
+	}
 </HeroPageSurface>
 
 <script>
@@ -332,8 +329,10 @@ const {
 
 		:global(.travel-flights__intl-shell) .travel-flights__section-title,
 		:global(.travel-flights__intl-shell) .travel-flights__section-lede,
-		:global(.travel-flights__domestic-shell) .travel-flights__domestic-heading,
-		:global(.travel-flights__domestic-shell) .travel-flights__domestic-lede {
+		:global(.travel-flights__domestic-shell)
+			.travel-flights__domestic-heading,
+		:global(.travel-flights__domestic-shell)
+			.travel-flights__domestic-lede {
 			padding-inline: 0;
 		}
 

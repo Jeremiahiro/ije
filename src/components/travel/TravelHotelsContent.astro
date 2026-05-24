@@ -66,7 +66,7 @@ const jumpLinks = regions.map((r) => ({ id: r.id, label: r.jumpLabel }));
 <style>
 	:global(.travel-hotels.hero-page) {
 		overflow-x: visible;
-		--travel-stack-gap: clamp(0.75rem, 2.2vw, 1.25rem);
+		--travel-stack-gap: clamp(1rem, 2.6vw, 1.5rem);
 		--travel-block-gap: clamp(1rem, 3vw, 1.5rem);
 		--pill-nav-sticky-top: calc(
 			var(--site-header-height) + env(safe-area-inset-top, 0px) + 1.5rem
@@ -112,6 +112,7 @@ const jumpLinks = regions.map((r) => ({ id: r.id, label: r.jumpLabel }));
 		border-color: rgb(110 82 60 / 0.12);
 		background: rgb(255 255 255 / 0.32);
 		box-shadow: 0 16px 48px rgb(110 82 60 / 0.1);
+		padding: clamp(1rem, 2.4vw, 1.4rem);
 	}
 
 	:global(.travel-hotels__main-shell) .travel-hotels__region:last-of-type {
@@ -144,7 +145,7 @@ const jumpLinks = regions.map((r) => ({ id: r.id, label: r.jumpLabel }));
 	}
 
 	.travel-hotels__region-lede {
-		margin: 0.6rem 0 0.65rem;
+		margin: 0.65rem 0 1rem;
 		max-width: 44rem;
 		font-size: 0.9375rem;
 		line-height: 1.55;

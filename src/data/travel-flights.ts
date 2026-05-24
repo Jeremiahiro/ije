@@ -111,7 +111,7 @@ export const travelFlightsPage: TravelFlightsPageData = {
 		],
 	},
 	domestic: {
-		title: "For Guests Already in Nigeria",
+		title: "Getting to the Venues",
 		lede: "Both Ceremonies will be held in Umuahia, Abia State.",
 		stepsAriaLabel: "Domestic travel steps",
 		steps: [
@@ -119,9 +119,9 @@ export const travelFlightsPage: TravelFlightsPageData = {
 				tag: "2nd January, 2027",
 				title: "Traditional Marriage",
 				visual: "/assets/item.png",
-				footer: "Archbishop Onuoha's Compound, Okai Item, Bende LGA, Abia State",
+				footer: "Archbishop Onuoha's Country Home, Okai Item, Bende LGA, Abia State",
 				detailDescription:
-					"The traditional marriage ceremony takes place at Archbishop Onuoha's Compound in Okai Item, Bende LGA, Abia State.",
+					"The traditional marriage ceremony takes place at Archbishop Onuoha's Country Home in Okai Item, Bende LGA, Abia State.",
 			},
 			{
 				tag: "4th January, 2027",
@@ -136,4 +136,4 @@ export const travelFlightsPage: TravelFlightsPageData = {
 };
 
 export const internationalFlightStepCards = travelFlightsPage.international.steps;
-export const domesticFlightStepCards = travelFlightsPage.domestic.steps;
+export const domesticFlightStepCards = travelFlightsPage?.domestic.steps;
