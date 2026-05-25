@@ -122,6 +122,8 @@ export const travelFlightsPage: TravelFlightsPageData = {
 				footer: "Archbishop Onuoha's Country Home, Okai Item, Bende LGA, Abia State",
 				detailDescription:
 					"The traditional marriage ceremony takes place at Archbishop Onuoha's Country Home in Okai Item, Bende LGA, Abia State.",
+				actionLabel: "View map",
+				actionHref: "https://maps.app.goo.gl/a5tYqVVXab4BL5tE9",
 			},
 			{
 				tag: "4th January, 2027",
@@ -130,6 +132,8 @@ export const travelFlightsPage: TravelFlightsPageData = {
 				footer: "Methodist Theological Institute Umuahia",
 				detailDescription:
 					"The church wedding takes place at Methodist Theological Institute in Umuahia while reception follows at the International Conference Centre Umuahia.",
+				actionLabel: "View map",
+				actionHref: "https://maps.app.goo.gl/5CS31ViRC9K63Qev7",
 			},
 		],
 	},

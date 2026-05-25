@@ -11,9 +11,11 @@ interface Props {
 const { step, index = 0, class: className } = Astro.props;
 
 const subtitle = `Step ${String(index + 1).padStart(2, "0")}`;
-const actionLabel = step.actionLabel ?? "View details";
+const toggleLabel = "View details";
+const detailActionLabel = step.actionLabel ?? "Open link";
 const detailId = `travel-step-detail-${index}`;
 const videoVisual = isVideoVisual(step.visual) ? step.visual : null;
+const isExternalActionHref = step.actionHref?.startsWith("http");
 ---
 
 <article
@@ -76,23 +78,15 @@ const videoVisual = isVideoVisual(step.visual) ? step.visual : null;
 	</div>
 
 	<div class="travel-step-card__actions">
-		{
-			step.actionHref ? (
-				<a class="travel-step-card__action" href={step.actionHref}>
-					{actionLabel}
-				</a>
-			) : (
-				<button
-					class="travel-step-card__action"
-					type="button"
-					data-step-details-toggle
-					aria-expanded="false"
-					aria-controls={detailId}
-				>
-					{actionLabel}
-				</button>
-			)
-		}
+		<button
+			class="travel-step-card__action"
+			type="button"
+			data-step-details-toggle
+			aria-expanded="false"
+			aria-controls={detailId}
+		>
+			{toggleLabel}
+		</button>
 	</div>
 
 	<p class="travel-step-card__footer">{step.footer}</p>
@@ -113,6 +107,18 @@ const videoVisual = isVideoVisual(step.visual) ? step.visual : null;
 					<span aria-hidden="true">×</span>
 				</button>
 				<p class="travel-step-card__detail-copy">{step.detailDescription}</p>
+				{
+					step.actionHref ? (
+						<a
+							class="travel-step-card__detail-link"
+							href={step.actionHref}
+							target={isExternalActionHref ? "_blank" : undefined}
+							rel={isExternalActionHref ? "noopener noreferrer" : undefined}
+						>
+							{detailActionLabel}
+						</a>
+					) : null
+				}
 			</div>
 		</div>
 	</div>
@@ -532,6 +538,22 @@ const videoVisual = isVideoVisual(step.visual) ? step.visual : null;
 		line-height: 1.55;
 		color: var(--text-primary);
 		text-wrap: pretty;
+	}
+
+	.travel-step-card__detail-link {
+		margin-top: 0.9rem;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 0.45rem 0.95rem;
+		border-radius: 999px;
+		border: 1px solid rgb(110 82 60 / 0.28);
+		background: rgb(110 82 60 / 0.12);
+		color: #4e3b2c;
+		font-size: 0.8125rem;
+		font-weight: 600;
+		line-height: 1.2;
+		text-decoration: none;
 	}
 
 	.travel-step-card[data-details-open="true"] {
