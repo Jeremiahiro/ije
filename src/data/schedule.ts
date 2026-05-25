@@ -1,13 +1,14 @@
 export type ScheduleEvent = {
 	icon?: string;
 	title: string;
-	timeLabel: string;
+	timeLabel?: string;
 	venue: string;
 	location: string;
 	notes?: string;
 	colorsOfTheDay?: string;
 	mapHref?: string;
-	calendarHref?: string;
+	googleCalendarHref?: string;
+	appleCalendarHref?: string;
 };
 
 export type ScheduleDay = {
@@ -39,6 +40,43 @@ const makeGoogleCalendarHref = (
 	return `${googleCalendarBase}&${query.toString()}`;
 };
 
+const escapeIcsText = (value: string): string =>
+	value
+		.replace(/\\/g, "\\\\")
+		.replace(/\n/g, "\\n")
+		.replace(/,/g, "\\,")
+		.replace(/;/g, "\\;");
+
+const makeAppleCalendarHref = (
+	title: string,
+	location: string,
+	startUtc: string,
+	endUtc: string,
+	details?: string,
+): string => {
+	const uidBase = `${title}-${startUtc}`.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+	const uid = `${uidBase}@jane-jeremiah-wedding`;
+	const lines = [
+		"BEGIN:VCALENDAR",
+		"VERSION:2.0",
+		"PRODID:-//Jane & Jeremiah Wedding//Schedule//EN",
+		"CALSCALE:GREGORIAN",
+		"METHOD:PUBLISH",
+		"BEGIN:VEVENT",
+		`UID:${uid}`,
+		`DTSTAMP:${startUtc}`,
+		`DTSTART:${startUtc}`,
+		`DTEND:${endUtc}`,
+		`SUMMARY:${escapeIcsText(title)}`,
+		`LOCATION:${escapeIcsText(location)}`,
+		...(details ? [`DESCRIPTION:${escapeIcsText(details)}`] : []),
+		"END:VEVENT",
+		"END:VCALENDAR",
+	];
+	const ics = `${lines.join("\r\n")}\r\n`;
+	return `data:text/calendar;charset=utf-8,${encodeURIComponent(ics)}`;
+};
+
 export const schedulePageData: SchedulePageData = {
 	eyebrow: "Schedule",
 	title: "Wedding Celebrations",
@@ -50,12 +88,19 @@ export const schedulePageData: SchedulePageData = {
 					icon: "♥︎♥︎",
 					title: "Traditional Marriage (Ịgba Nkwụ)",
 					timeLabel: "11:00 am",
-					venue: "Okai Item",
+					venue: "Okai Item, Bende Local Government Area",
 					location:
 						"Archbishop Sunday Onuoha's Country Home, Okai Item, Abia State, Nigeria",
 					colorsOfTheDay: "Tan & Brown",
 					mapHref: "https://maps.app.goo.gl/a5tYqVVXab4BL5tE9",
-					calendarHref: makeGoogleCalendarHref(
+					googleCalendarHref: makeGoogleCalendarHref(
+						"Jane & Jeremiah's Traditional Marriage (Ịgba Nkwụ)",
+						"Archbishop Sunday Onuoha's Country Home, Okai Item, Abia State, Nigeria",
+						"20270102T100000Z",
+						"20270102T150000Z",
+						"Colors of the day: Tan & Brown",
+					),
+					appleCalendarHref: makeAppleCalendarHref(
 						"Jane & Jeremiah's Traditional Marriage (Ịgba Nkwụ)",
 						"Archbishop Sunday Onuoha's Country Home, Okai Item, Abia State, Nigeria",
 						"20270102T100000Z",
@@ -72,11 +117,18 @@ export const schedulePageData: SchedulePageData = {
 					icon: "♥︎♥︎",
 					title: "Church Wedding",
 					timeLabel: "11:00 am",
-					venue: "Rhema Chapel (MTI)",
+					venue: "Rhema Chapel, Methodist Theological Institute (MTI)",
 					location: "Mission Hill, Umuahia, Abia State, Nigeria",
 					colorsOfTheDay: "Emerald Green",
 					mapHref: "https://maps.app.goo.gl/5CS31ViRC9K63Qev7",
-					calendarHref: makeGoogleCalendarHref(
+					googleCalendarHref: makeGoogleCalendarHref(
+						"Jane & Jeremiah's Church Wedding",
+						"Rhema Chapel (MTI), Mission Hill, Umuahia, Abia State, Nigeria",
+						"20270104T100000Z",
+						"20270104T120000Z",
+						"Colors of the day: Emerald Green",
+					),
+					appleCalendarHref: makeAppleCalendarHref(
 						"Jane & Jeremiah's Church Wedding",
 						"Rhema Chapel (MTI), Mission Hill, Umuahia, Abia State, Nigeria",
 						"20270104T100000Z",
@@ -91,7 +143,13 @@ export const schedulePageData: SchedulePageData = {
 					venue: "International Conference Centre",
 					location: "Umuahia, Abia State, Nigeria",
 					mapHref: "https://maps.app.goo.gl/xccY3nSsnxXVcPDH7",
-					calendarHref: makeGoogleCalendarHref(
+					googleCalendarHref: makeGoogleCalendarHref(
+						"Jane & Jeremiah's Wedding Reception",
+						"International Conference Centre, Umuahia, Abia State, Nigeria",
+						"20270104T130000Z",
+						"20270104T160000Z",
+					),
+					appleCalendarHref: makeAppleCalendarHref(
 						"Jane & Jeremiah's Wedding Reception",
 						"International Conference Centre, Umuahia, Abia State, Nigeria",
 						"20270104T130000Z",
@@ -101,13 +159,19 @@ export const schedulePageData: SchedulePageData = {
 				{
 					icon: "✶",
 					title: "After Party",
-					timeLabel: "6:00 pm",
 					venue: "International Conference Centre",
 					location: "Umuahia, Abia State, Nigeria",
 					notes:
 						"Drinks are on deck all night, but feel free to BYOB if you have a favorite. Come ready for good vibes, great energy, and a night to remember.",
 					mapHref: "https://maps.app.goo.gl/xccY3nSsnxXVcPDH7",
-					calendarHref: makeGoogleCalendarHref(
+					googleCalendarHref: makeGoogleCalendarHref(
+						"Jane & Jeremiah's After Party",
+						"International Conference Centre, Umuahia, Abia State, Nigeria",
+						"20270104T170000Z",
+						"20270105T010000Z",
+						"Drinks are on deck all night, but feel free to BYOB if you have a favorite.",
+					),
+					appleCalendarHref: makeAppleCalendarHref(
 						"Jane & Jeremiah's After Party",
 						"International Conference Centre, Umuahia, Abia State, Nigeria",
 						"20270104T170000Z",

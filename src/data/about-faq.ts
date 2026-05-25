@@ -20,29 +20,14 @@ export const weddingNigeriaFaq: WeddingFaqItem[] = [
 			"Yes. Please check the Registry section on our website for links.",
 	},
 	{
-		question: "Are kids allowed?",
-		answer:
-			"We love your little ones, but to help us manage numbers, we kindly request that the event remain adults only unless otherwise stated on your invitation.",
-	},
-	{
 		question: "What are the colors of the day?",
 		answer:
-			"Bride’s family and friends: Peach, Cream, and Gold. Groom’s family and friends: Emerald Green.",
-	},
-	{
-		question: "Is RSVP required?",
-		answer:
-			"Yes, RSVP is really important to us. Whether you’re traveling down the street or across the country, your presence means the world to us.",
+			"Peach, Cream, and Gold - TBC",
 	},
 	{
 		question: "When should I RSVP by?",
 		answer:
 			"Please RSVP by 1st October 2026.",
-	},
-	{
-		question: "Can I bring a plus one?",
-		answer:
-			"If you are bringing a plus one, please make sure they RSVP as well.",
 	},
 	{
 		question: "Are the traditional wedding and white wedding on separate days?",
@@ -58,11 +43,6 @@ export const weddingNigeriaFaq: WeddingFaqItem[] = [
 		question: "Will food be served?",
 		answer:
 			"Yes. Expect a delicious mix of Nigerian traditional dishes and continental cuisine, along with drinks, desserts, and more.",
-	},
-	{
-		question: "Will there be liquor?",
-		answer:
-			"Yes, there will be an open bar with a selection of alcoholic and non-alcoholic beverages. Please drink responsibly and celebrate joyfully. If you would like to bring a special bottle, hand it to the bartender so they can serve it safely.",
 	},
 	{
 		question: "Do you have any hotel recommendations?",

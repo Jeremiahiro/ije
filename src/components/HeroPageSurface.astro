@@ -1,6 +1,6 @@
 ---
 interface Props {
-	bgSrc: string;
+	bgSrc?: string;
 	surfaceClass?: string;
 	ariaLabelledBy?: string;
 }
@@ -18,7 +18,7 @@ const { bgSrc, surfaceClass, ariaLabelledBy } = Astro.props;
 	<div
 		class="hero-page__bg"
 		aria-hidden="true"
-		style={`--hero-bg:url('${bgSrc}')`}
+		style={`--hero-bg:${bgSrc ? `url('${bgSrc}')` : "none"}`}
 	>
 	</div>
 	<div class="hero-page__scrim" aria-hidden="true"></div>

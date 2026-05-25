@@ -52,19 +52,19 @@ export const navItems: NavTopLink[] = [
 	{
 		kind: "link",
 		label: "Travel",
-		href: "/travel/flights",
+		href: "/travel",
 		target: "_self",
 	},
 	{
 		kind: "link",
 		label: "Registry",
-		href: "/registry",
-		target: "_self",
+		href: "https://www.zola.com/wedding/jeremiahandjane2026/registry",
+		target: "_blank",
 	},
 	{
 		kind: "link",
 		label: "FAQs",
-		href: "/about/faq",
+		href: "/faq",
 		target: "_self",
 	},
 	{

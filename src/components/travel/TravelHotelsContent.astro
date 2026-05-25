@@ -1,54 +1,39 @@
 ---
 import ContentCard from "@/components/ContentCard.astro";
 import TravelHotelCard from "@/components/travel/TravelHotelCard.astro";
-import TravelPageIntro from "@/components/travel/TravelPageIntro.astro";
-import PillNav from "@/components/PillNav.astro";
-import HeroPageSurface from "@/components/HeroPageSurface.astro";
 import {
 	travelHotelsPage,
 } from "@/data/travel-hotels";
 
-const bgSrc = "/assets/hotel.jpg";
 const { introLede, regions, pageTip } = travelHotelsPage;
-
-const jumpLinks = regions.map((r) => ({ id: r.id, label: r.jumpLabel }));
 ---
+<ContentCard variant="secondary" class="travel-hotels__main-shell">
 
-<HeroPageSurface
-	bgSrc={bgSrc}
-	surfaceClass="travel-hotels"
-	ariaLabelledBy="travel-hotels-heading"
->
-	<TravelPageIntro
-		eyebrow="Where to stay"
-		title="Hotels"
-		headingId="travel-hotels-heading"
-		ledes={[introLede]}
-	/>
-
-	<ContentCard variant="secondary" class="travel-hotels__main-shell">
-		<PillNav links={jumpLinks} aria-label="Cities" />
+	<h2 id="travel-hotels-section-title" class="travel-hotels__page-title">
+		Hotels
+	</h2>
+	<p class="travel-hotels__page-lede">{introLede}</p>
 
 		{
 			regions.map((region) => {
 				const headingId = `travel-hotels-${region.id}-title`;
 				return (
-					<ContentCard
+					<section
 						id={region.id}
 						class="travel-hotels__region"
 						aria-labelledby={headingId}
 					>
 						<p class="travel-hotels__region-eyebrow">{region.eyebrow}</p>
-						<h2 id={headingId} class="travel-hotels__region-title">
+						<h3 id={headingId} class="travel-hotels__region-title">
 							{region.title}
-						</h2>
+						</h3>
 						<p class="travel-hotels__region-lede">{region.lede}</p>
 						<div class="travel-hotels__grid">
 							{region.hotels.map((hotel) => (
 								<TravelHotelCard hotel={hotel} />
 							))}
 						</div>
-					</ContentCard>
+					</section>
 				);
 			})
 		}
@@ -59,25 +44,23 @@ const jumpLinks = regions.map((r) => ({ id: r.id, label: r.jumpLabel }));
 			{pageTip.eyebrow}
 		</p>
 		<p class="travel-hotels__tip-title">{pageTip.title}</p>
-		<p class="travel-hotels__tip-copy">{pageTip.body}</p>
-	</ContentCard>
-</HeroPageSurface>
+	<p class="travel-hotels__tip-copy">{pageTip.body}</p>
+</ContentCard>
 
 <style>
-	:global(.travel-hotels.hero-page) {
-		overflow-x: visible;
-		--travel-stack-gap: clamp(1rem, 2.6vw, 1.5rem);
-		--travel-block-gap: clamp(1rem, 3vw, 1.5rem);
-		--pill-nav-sticky-top: calc(
-			var(--site-header-height) + env(safe-area-inset-top, 0px) + 1.5rem
-		);
-		--travel-hotels-section-scroll-margin: calc(
-			var(--pill-nav-sticky-top) + 3.25rem
-		);
+	.travel-hotels__page-title {
+		margin: 0 0 0.5rem;
+		font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+		font-weight: 600;
+		letter-spacing: -0.02em;
 	}
 
-	:global(.travel-hotels.hero-page .travel-page-intro__lede) {
+	.travel-hotels__page-lede {
+		margin: 0 0 var(--travel-block-gap);
 		max-width: 42rem;
+		font-size: 0.9375rem;
+		line-height: 1.55;
+		color: var(--text-muted);
 	}
 
 	:global(.travel-hotels__main-shell) {
@@ -180,6 +163,7 @@ const jumpLinks = regions.map((r) => ({ id: r.id, label: r.jumpLabel }));
 	}
 
 	@media (min-width: 768px) {
+		.travel-hotels__page-lede,
 		.travel-hotels__region-lede,
 		.travel-hotels__tip-copy {
 			font-size: 1rem;
