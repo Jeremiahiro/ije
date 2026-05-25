@@ -64,7 +64,7 @@ export const navItems: NavTopLink[] = [
 	{
 		kind: "link",
 		label: "FAQs",
-		href: "/about/faq",
+		href: "/faq",
 		target: "_self",
 	},
 	{

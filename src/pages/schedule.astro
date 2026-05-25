@@ -33,7 +33,11 @@ const canonicalHref = new URL("/schedule", Astro.url.origin).href;
 											) : null
 										}
 										<h3>{event.title}</h3>
-										<p class="schedule-event-card__time">{event.timeLabel}</p>
+										{
+											event.timeLabel ? (
+												<p class="schedule-event-card__time">{event.timeLabel}</p>
+											) : null
+										}
 										<p class="schedule-event-card__venue">{event.venue}</p>
 										<p class="schedule-event-card__location">
 											{
@@ -68,9 +72,23 @@ const canonicalHref = new URL("/schedule", Astro.url.origin).href;
 												) : null
 											}
 											{
-												event.calendarHref ? (
-													<a href={event.calendarHref} target="_blank" rel="noopener noreferrer">
-														Add to calendar
+												event.googleCalendarHref ? (
+													<a
+														href={event.googleCalendarHref}
+														target="_blank"
+														rel="noopener noreferrer"
+													>
+														Google calendar
+													</a>
+												) : null
+											}
+											{
+												event.appleCalendarHref ? (
+													<a
+														href={event.appleCalendarHref}
+														download={`${event.title.toLowerCase().replace(/[^a-z0-9]+/g, "-")}.ics`}
+													>
+														Apple calendar
 													</a>
 												) : null
 											}
