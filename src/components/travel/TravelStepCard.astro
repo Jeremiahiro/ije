@@ -1,0 +1,652 @@
+---
+import type { TravelFlightStepCard } from "@/data/travel-flights";
+import { isVideoVisual } from "@/data/travel-flights";
+
+interface Props {
+	step: TravelFlightStepCard;
+	index?: number;
+	class?: string;
+}
+
+const { step, index = 0, class: className } = Astro.props;
+
+const subtitle = `Step ${String(index + 1).padStart(2, "0")}`;
+const actionLabel = step.actionLabel ?? "View details";
+const detailId = `travel-step-detail-${index}`;
+const videoVisual = isVideoVisual(step.visual) ? step.visual : null;
+---
+
+<article
+	class:list={["travel-step-card", className]}
+	data-step-card
+	tabindex="0"
+	aria-label={`${subtitle}: ${step.title}`}
+>
+	<span class="travel-step-card__tag">
+		{step.tag}
+	</span>
+
+	<div class="travel-step-card__header">
+		<p class="travel-step-card__subtitle">{subtitle}</p>
+		<h3 class="travel-step-card__title">{step.title}</h3>
+	</div>
+
+	<div class="travel-step-card__visual" aria-hidden="true">
+		<div class="travel-step-card__image-wrap">
+			{
+				videoVisual ? (
+					<>
+						<img
+							class="travel-step-card__media travel-step-card__poster"
+							src={videoVisual.poster}
+							srcset={videoVisual.posterSrcset}
+							sizes={videoVisual.posterSizes}
+							alt=""
+							loading="lazy"
+							decoding="async"
+						/>
+						<video
+							class="travel-step-card__media travel-step-card__video"
+							muted
+							loop
+							playsinline
+							preload="none"
+							data-step-video
+						>
+							{videoVisual.sources.map((source) => (
+								<source
+									src={source.src}
+									type={source.type ?? "video/mp4"}
+									{...(source.media ? { media: source.media } : {})}
+								/>
+							))}
+						</video>
+					</>
+				) : (
+					<img
+						class="travel-step-card__media"
+						src={step.visual as string}
+						alt=""
+						loading="lazy"
+						decoding="async"
+					/>
+				)
+			}
+		</div>
+	</div>
+
+	<div class="travel-step-card__actions">
+		{
+			step.actionHref ? (
+				<a class="travel-step-card__action" href={step.actionHref}>
+					{actionLabel}
+				</a>
+			) : (
+				<button
+					class="travel-step-card__action"
+					type="button"
+					data-step-details-toggle
+					aria-expanded="false"
+					aria-controls={detailId}
+				>
+					{actionLabel}
+				</button>
+			)
+		}
+	</div>
+
+	<p class="travel-step-card__footer">{step.footer}</p>
+
+	<div
+		class="travel-step-card__detail"
+		id={detailId}
+		aria-hidden="true"
+	>
+		<div class="travel-step-card__detail-card">
+			<div class="travel-step-card__detail-body">
+				<button
+					class="travel-step-card__detail-close"
+					type="button"
+					data-step-details-close
+					aria-label="Close details"
+				>
+					<span aria-hidden="true">×</span>
+				</button>
+				<p class="travel-step-card__detail-copy">{step.detailDescription}</p>
+			</div>
+		</div>
+	</div>
+</article>
+
+<script>
+	function setDetailTop(card: HTMLElement) {
+		const visual = card.querySelector<HTMLElement>(".travel-step-card__visual");
+		if (!visual) return;
+		card.style.setProperty("--detail-top", `${visual.offsetTop}px`);
+	}
+
+	function initStepCardVideo(card: HTMLElement) {
+		const video = card.querySelector<HTMLVideoElement>("[data-step-video]");
+		if (!video) return;
+
+		const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+		const mobileQuery = window.matchMedia("(max-width: 899px)");
+		let intersectionObserver: IntersectionObserver | undefined;
+
+		const shouldPlay = () => {
+			if (reduceMotion.matches) return false;
+			if (card.dataset.active === "true") return true;
+			if (card.dataset.detailsOpen === "true") return true;
+			return mobileQuery.matches && card.dataset.inView === "true";
+		};
+
+		const syncVideo = () => {
+			if (shouldPlay()) {
+				card.dataset.visualActive = "true";
+				void video.play().catch(() => {});
+				return;
+			}
+
+			delete card.dataset.visualActive;
+			video.pause();
+			video.currentTime = 0;
+		};
+
+		const setupIntersection = () => {
+			intersectionObserver?.disconnect();
+			delete card.dataset.inView;
+
+			if (!mobileQuery.matches) {
+				syncVideo();
+				return;
+			}
+
+			intersectionObserver = new IntersectionObserver(
+				(entries) => {
+					for (const entry of entries) {
+						if (entry.target !== card) continue;
+						if (entry.isIntersecting) {
+							card.dataset.inView = "true";
+						} else {
+							delete card.dataset.inView;
+						}
+					}
+				},
+				{ threshold: 0.45 },
+			);
+			intersectionObserver.observe(card);
+		};
+
+		const cardObserver = new MutationObserver(syncVideo);
+		cardObserver.observe(card, {
+			attributes: true,
+			attributeFilter: ["data-active", "data-details-open", "data-in-view"],
+		});
+
+		reduceMotion.addEventListener("change", syncVideo);
+		mobileQuery.addEventListener("change", () => {
+			setupIntersection();
+			syncVideo();
+		});
+
+		setupIntersection();
+		syncVideo();
+	}
+
+	function closeStepCardDetails(card: HTMLElement) {
+		if (card.dataset.detailsOpen !== "true") return;
+
+		const detail = card.querySelector<HTMLElement>(".travel-step-card__detail");
+		const toggle = card.querySelector<HTMLButtonElement>(
+			"[data-step-details-toggle]",
+		);
+
+		delete card.dataset.detailsOpen;
+		detail?.setAttribute("aria-hidden", "true");
+		toggle?.setAttribute("aria-expanded", "false");
+	}
+
+	function closeAllStepCardDetails(except?: HTMLElement) {
+		document
+			.querySelectorAll<HTMLElement>('[data-step-card][data-details-open="true"]')
+			.forEach((openCard) => {
+				if (openCard !== except) {
+					closeStepCardDetails(openCard);
+				}
+			});
+	}
+
+	function initStepCard(card: HTMLElement) {
+		const detail = card.querySelector<HTMLElement>(".travel-step-card__detail");
+		const toggle = card.querySelector<HTMLButtonElement>(
+			"[data-step-details-toggle]",
+		);
+		const closeBtn = card.querySelector<HTMLButtonElement>(
+			"[data-step-details-close]",
+		);
+
+		if (!detail) return;
+
+		setDetailTop(card);
+		new ResizeObserver(() => setDetailTop(card)).observe(card);
+		initStepCardVideo(card);
+
+		const open = () => {
+			closeAllStepCardDetails(card);
+			card.dataset.detailsOpen = "true";
+			detail.setAttribute("aria-hidden", "false");
+			toggle?.setAttribute("aria-expanded", "true");
+		};
+
+		const close = () => {
+			closeStepCardDetails(card);
+		};
+
+		toggle?.addEventListener("click", open);
+		closeBtn?.addEventListener("click", close);
+
+		card.addEventListener("keydown", (event) => {
+			if (event.key === "Escape" && card.dataset.detailsOpen === "true") {
+				close();
+				toggle?.focus();
+			}
+		});
+	}
+
+	document
+		.querySelectorAll<HTMLElement>("[data-step-card]")
+		.forEach(initStepCard);
+</script>
+
+<style>
+	.travel-step-card {
+		--step-ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+		--step-duration: 0.8s;
+		--step-card-border: rgb(214 178 138 / 0.55);
+		--step-card-shadow: 0 14px 36px rgb(110 82 60 / 0.1);
+		--step-card-shadow-hover: 0 20px 48px rgb(110 82 60 / 0.16);
+		--visual-height: clamp(6.5rem, 16vw, 8.5rem);
+		--visual-height-hover: clamp(10rem, 26vw, 13rem);
+		--visual-margin: clamp(0.85rem, 2vw, 1.1rem);
+		--step-card-padding: clamp(1.15rem, 3.5vw, 1.15rem);
+		--detail-top: 50%;
+
+		position: relative;
+		z-index: 1;
+		box-sizing: border-box;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		width: 100%;
+		padding: var(--step-card-padding);
+		border-radius: 1.35rem;
+		border: 1px solid var(--step-card-border);
+		box-shadow:
+			inset 0 1px 0 rgb(255 255 255 / 0.75),
+			var(--step-card-shadow);
+		text-align: center;
+		overflow: hidden;
+		transition:
+			box-shadow var(--step-duration) var(--step-ease),
+			border-color var(--step-duration) var(--step-ease);
+	}
+
+	.travel-step-card:focus-visible {
+		outline: 2px solid var(--focus-ring);
+		outline-offset: 3px;
+	}
+
+	.travel-step-card__tag {
+		position: absolute;
+		top: var(--step-card-padding);
+		left: var(--step-card-padding);
+		z-index: 4;
+		padding: 0.2rem 0.48rem;
+		border-radius: 999px;
+		border: 1px solid rgb(110 82 60 / 0.18);
+		background: rgb(255 255 255 / 0.55);
+		font-size: 0.5625rem;
+		font-weight: 600;
+		letter-spacing: 0.02em;
+		line-height: 1.2;
+		color: var(--text-muted);
+	}
+
+	.travel-step-card__header {
+		display: grid;
+		justify-items: center;
+		gap: 0.45rem;
+		width: 100%;
+		padding: 1.65rem 0.35rem 0.35rem;
+	}
+
+	.travel-step-card__subtitle {
+		margin: 0;
+		display: inline-flex;
+		padding: 0.18rem 0.58rem;
+		border-radius: 999px;
+		border: 1px solid rgb(110 82 60 / 0.28);
+		font-size: 0.5625rem;
+		font-weight: 600;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: rgb(92 74 61 / 0.88);
+	}
+
+	.travel-step-card__title {
+		margin: 0;
+		font-size: clamp(1.05rem, 2vw, 1.2rem);
+		font-weight: 600;
+		line-height: 1.25;
+		letter-spacing: -0.02em;
+		color: var(--text-primary);
+		text-wrap: balance;
+	}
+
+	.travel-step-card__visual {
+		position: relative;
+		flex-shrink: 0;
+		width: 100%;
+		height: var(--visual-height);
+		margin-block: var(--visual-margin);
+		overflow: hidden;
+		border-radius: 0.75rem;
+		transition: height var(--step-duration) var(--step-ease);
+	}
+
+	.travel-step-card__image-wrap {
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: 50%;
+		height: var(--visual-height-hover);
+		overflow: hidden;
+		border-radius: 0.75rem;
+		border: 1px solid rgb(110 82 60 / 0.12);
+		transform: translate3d(0, -50%, 0);
+	}
+
+	.travel-step-card__image-wrap::after {
+		content: "";
+		position: absolute;
+		inset: 0;
+		border-radius: inherit;
+		pointer-events: none;
+		box-shadow: inset 0 0 2.5rem rgb(245 232 214 / 0.55);
+	}
+
+	.travel-step-card__media {
+		position: absolute;
+		inset: 0;
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: center;
+		transform: scale(1.1) translate3d(0, 0, 0);
+		transform-origin: center center;
+		backface-visibility: hidden;
+		-webkit-backface-visibility: hidden;
+		transition:
+			transform var(--step-duration) var(--step-ease),
+			opacity var(--step-duration) var(--step-ease);
+	}
+
+	.travel-step-card__poster {
+		z-index: 2;
+		opacity: 1;
+	}
+
+	.travel-step-card__video {
+		z-index: 1;
+		opacity: 0;
+	}
+
+	.travel-step-card__actions {
+		position: relative;
+		z-index: 1;
+	}
+
+	.travel-step-card__action {
+		appearance: none;
+		box-sizing: border-box;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: auto;
+		margin-top: clamp(0.75rem, 2vw, 1.1rem);
+		padding: 0.45rem 0.95rem;
+		border-radius: 999px;
+		border: 1px solid rgb(110 82 60 / 0.28);
+		background: rgb(110 82 60 / 0.12);
+		color: #4e3b2c;
+		font: inherit;
+		font-size: 0.8125rem;
+		font-weight: 600;
+		line-height: 1.2;
+		text-decoration: none;
+		cursor: pointer;
+		transition:
+			background 0.15s ease,
+			border-color 0.15s ease,
+			color 0.15s ease;
+	}
+
+	.travel-step-card__footer {
+		position: relative;
+		z-index: 1;
+		margin: 0.65rem 0 0;
+		font-size: 0.75rem;
+		line-height: 1.45;
+		color: var(--text-muted);
+		text-wrap: pretty;
+	}
+
+	.travel-step-card__detail {
+		position: absolute;
+		inset-inline: 0;
+		top: var(--detail-top);
+		bottom: 0;
+		z-index: 3;
+		transform: translate3d(0, 100%, 0);
+		transition: transform var(--step-duration) var(--step-ease);
+		pointer-events: none;
+	}
+
+	.travel-step-card__detail-card {
+		position: relative;
+		box-sizing: border-box;
+		width: 100%;
+		height: 100%;
+		overflow: hidden;
+		border-radius: 0.75rem 0.75rem 1.35rem 1.35rem;
+		border: 1px solid var(--step-card-border);
+		background: rgb(255 251 243 / 0.97);
+		box-shadow:
+			inset 0 1px 0 rgb(255 255 255 / 0.75),
+			var(--step-card-shadow);
+		-webkit-backdrop-filter: blur(10px);
+		backdrop-filter: blur(10px);
+	}
+
+	.travel-step-card__detail-body {
+		position: relative;
+		box-sizing: border-box;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		height: 100%;
+		padding: clamp(1.5rem, 3.5vw, 1.75rem) clamp(1rem, 3vw, 1.25rem)
+			clamp(1.25rem, 3vw, 1.5rem);
+		text-align: center;
+		transform: translate3d(0, -105%, 0);
+		transition: transform var(--step-duration) var(--step-ease);
+	}
+
+	.travel-step-card[data-details-open="true"] .travel-step-card__detail-body {
+		transform: translate3d(0, 0, 0);
+		transition-delay: 0.14s;
+	}
+
+	.travel-step-card__detail-close {
+		position: absolute;
+		top: 0.75rem;
+		right: 0.75rem;
+		display: grid;
+		place-items: center;
+		width: 1.625rem;
+		height: 1.625rem;
+		padding: 0;
+		appearance: none;
+		border: 1px solid rgb(110 82 60 / 0.22);
+		border-radius: 999px;
+		background: rgb(255 255 255 / 0.55);
+		color: var(--text-muted);
+		font: inherit;
+		cursor: pointer;
+		transition:
+			background 0.15s ease,
+			color 0.15s ease;
+	}
+
+	.travel-step-card__detail-close span {
+		display: block;
+		font-size: 0.9375rem;
+		line-height: 1;
+		transform: translateY(-0.04em);
+	}
+
+	.travel-step-card__detail-close:hover {
+		background: rgb(255 255 255 / 0.82);
+		color: var(--text-primary);
+	}
+
+	.travel-step-card__detail-copy {
+		margin: 0;
+		width: 100%;
+		max-width: none;
+		padding-inline: 0.25rem;
+		font-size: clamp(0.9375rem, 2.4vw, 1.0625rem);
+		font-weight: 500;
+		line-height: 1.55;
+		color: var(--text-primary);
+		text-wrap: pretty;
+	}
+
+	.travel-step-card[data-details-open="true"] {
+		z-index: 4;
+		border-color: rgb(110 82 60 / 0.38);
+		box-shadow:
+			inset 0 1px 0 rgb(255 255 255 / 0.85),
+			var(--step-card-shadow-hover);
+	}
+
+	.travel-step-card[data-details-open="true"] .travel-step-card__visual {
+		height: var(--visual-height-hover);
+	}
+
+	.travel-step-card[data-visual-active="true"] .travel-step-card__poster {
+		opacity: 0;
+	}
+
+	.travel-step-card[data-visual-active="true"] .travel-step-card__video {
+		opacity: 1;
+	}
+
+	.travel-step-card[data-details-open="true"] .travel-step-card__media {
+		transform: scale(1.4) translate3d(0, 0, 0);
+	}
+
+	.travel-step-card[data-details-open="true"] .travel-step-card__detail {
+		transform: translate3d(0, 0, 0);
+		pointer-events: auto;
+	}
+
+	@media (max-width: 899px) {
+		.travel-step-card {
+			--visual-height: clamp(8.5rem, 45vw, 11rem);
+			--visual-height-hover: clamp(13rem, 58vw, 17rem);
+			--visual-margin: clamp(1rem, 3.5vw, 1.35rem);
+			--step-card-padding: clamp(1.5rem, 5vw, 1.85rem);
+			border-color: rgb(110 82 60 / 0.38);
+			box-shadow:
+				inset 0 1px 0 rgb(255 255 255 / 0.85),
+				var(--step-card-shadow-hover);
+		}
+
+		.travel-step-card__title {
+			font-size: clamp(1.15rem, 4.5vw, 1.35rem);
+		}
+
+		.travel-step-card__visual {
+			height: var(--visual-height-hover);
+		}
+
+		.travel-step-card__media {
+			transform: scale(1.24) translate3d(0, 0, 0);
+		}
+
+		.travel-step-card__action {
+			padding: 0.5rem 1.05rem;
+		}
+
+		.travel-step-card__footer {
+			font-size: 0.8125rem;
+		}
+
+		.travel-step-card__detail {
+			transform: translate3d(0, 100%, 0);
+		}
+
+		.travel-step-card__detail-body {
+			transform: translate3d(0, -105%, 0);
+			transition-delay: 0s;
+		}
+	}
+
+	@media (hover: hover) and (min-width: 900px) {
+		.travel-step-card[data-active="true"],
+		.travel-step-card:hover,
+		.travel-step-card:focus-within {
+			z-index: 2;
+			border-color: rgb(110 82 60 / 0.38);
+			box-shadow:
+				inset 0 1px 0 rgb(255 255 255 / 0.85),
+				var(--step-card-shadow-hover);
+		}
+
+		.travel-step-card[data-details-open="true"][data-active="true"],
+		.travel-step-card[data-details-open="true"]:hover,
+		.travel-step-card[data-details-open="true"]:focus-within {
+			z-index: 4;
+		}
+
+		.travel-step-card[data-active="true"] .travel-step-card__visual,
+		.travel-step-card:hover .travel-step-card__visual,
+		.travel-step-card:focus-within .travel-step-card__visual {
+			height: var(--visual-height-hover);
+		}
+
+		.travel-step-card[data-active="true"] .travel-step-card__media,
+		.travel-step-card:hover .travel-step-card__media,
+		.travel-step-card:focus-within .travel-step-card__media {
+			transform: scale(1.5) translate3d(0, 0, 0);
+		}
+	}
+
+	@media (hover: hover) {
+		.travel-step-card__action:hover {
+			background: rgb(110 82 60 / 0.18);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.travel-step-card__visual,
+		.travel-step-card__media,
+		.travel-step-card__detail,
+		.travel-step-card__detail-body {
+			transition: none;
+		}
+	}
+</style>

@@ -14,6 +14,10 @@ export default defineConfig({
     "/travel": "/travel/flights",
   },
 
+  server: {
+    allowedHosts: [".trycloudflare.com"],
+  },
+
   vite: {
     plugins: [tailwindcss()],
     resolve: {

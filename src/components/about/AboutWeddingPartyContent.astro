@@ -1,0 +1,233 @@
+---
+import ContentCard from "@/components/ContentCard.astro";
+import HeroPageSurface from "@/components/HeroPageSurface.astro";
+import TravelPageIntro from "@/components/travel/TravelPageIntro.astro";
+import { aboutWeddingPartyPage } from "@/data/about-wedding-party";
+
+const {
+	backgroundImage: bgSrc,
+	hero,
+	highlight,
+	quickTips,
+	note,
+} =
+	aboutWeddingPartyPage;
+---
+
+<HeroPageSurface
+	bgSrc={bgSrc}
+	surfaceClass="about-wedding-party"
+	ariaLabelledBy="about-wedding-party-heading"
+>
+	<div class="about-wedding-party__split">
+		<ContentCard variant="primary" class="about-wedding-party__info-card">
+			<div class="about-wedding-party__info-grid">
+				<div class="about-wedding-party__copy">
+					<TravelPageIntro
+						eyebrow={hero.eyebrow}
+						title={hero.title}
+						headingId="about-wedding-party-heading"
+						ledes={hero.ledes}
+						accentEyebrow
+						className="about-wedding-party__intro"
+					/>
+					<p class="about-wedding-party__highlight">{highlight}</p>
+					<p class="about-wedding-party__note">{note}</p>
+				</div>
+
+				<ul class="about-wedding-party__tips-list" aria-label="After party quick tips">
+					{quickTips.map((tip) => (
+						<li class="about-wedding-party__tip">
+							<p class="about-wedding-party__tip-label">{tip.label}</p>
+							<p class="about-wedding-party__tip-value">{tip.value}</p>
+						</li>
+					))}
+				</ul>
+			</div>
+		</ContentCard>
+
+		<ContentCard variant="secondary" class="about-wedding-party__image-card">
+			<img
+				class="about-wedding-party__image"
+				src={bgSrc}
+				alt="Jane and Jeremiah dancing at their wedding celebration"
+				loading="eager"
+			/>
+		</ContentCard>
+	</div>
+</HeroPageSurface>
+
+<style>
+	:global(.about-wedding-party.hero-page) {
+		--travel-stack-gap: clamp(0.9rem, 2vw, 1.35rem);
+	}
+
+	:global(.about-wedding-party .hero-page__bg) {
+		background-position: center 24%;
+		filter: saturate(1.02) contrast(1.03) brightness(0.92);
+	}
+
+	:global(.about-wedding-party .hero-page__scrim) {
+		background:
+			radial-gradient(
+				ellipse 85% 65% at 50% 12%,
+				rgb(0 0 0 / 0.08),
+				transparent 62%
+			),
+			linear-gradient(
+				180deg,
+				rgb(0 0 0 / 0.08) 0%,
+				rgb(30 22 16 / 0.14) 54%,
+				rgb(35 28 22 / 0.2) 100%
+			);
+	}
+
+	.about-wedding-party__split {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr);
+		gap: clamp(0.9rem, 2.5vw, 1.35rem);
+		align-items: stretch;
+		max-width: 72rem;
+		margin-inline: auto;
+	}
+
+	.about-wedding-party__info-card {
+		order: 1;
+		margin-top: 0;
+		background: linear-gradient(
+			140deg,
+			rgb(255 251 243 / 0.94) 0%,
+			rgb(247 238 225 / 0.86) 100%
+		);
+		border-color: rgb(214 178 138 / 0.48);
+		box-shadow: 0 16px 36px rgb(22 16 13 / 0.2);
+	}
+
+	.about-wedding-party__info-grid {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr);
+		gap: 0.95rem;
+		align-items: start;
+	}
+
+	.about-wedding-party__image-card {
+		order: 2;
+		margin-top: 0;
+		padding: clamp(0.55rem, 1.6vw, 0.75rem);
+		border-color: rgb(255 255 255 / 0.46);
+		background: rgb(255 255 255 / 0.22);
+		box-shadow: 0 18px 38px rgb(22 16 13 / 0.22);
+		overflow: hidden;
+	}
+
+	.about-wedding-party__image {
+		display: block;
+		width: 100%;
+		height: 100%;
+		min-height: 18rem;
+		object-fit: cover;
+		object-position: center 34%;
+		border-radius: clamp(1.1rem, 2.8vw, 1.8rem);
+	}
+
+	:global(.about-wedding-party__intro.travel-page-intro) {
+		margin: 0;
+		text-align: left;
+		max-width: none;
+	}
+
+	:global(.about-wedding-party__intro .travel-page-intro__eyebrow) {
+		color: rgb(92 74 61 / 0.85);
+	}
+
+	:global(.about-wedding-party__intro .travel-page-intro__title) {
+		color: rgb(58 46 38 / 0.98);
+		font-size: clamp(1.9rem, 4.4vw, 2.5rem);
+	}
+
+	:global(.about-wedding-party__intro .travel-page-intro__lede) {
+		max-width: 30rem;
+		margin-inline: 0;
+		font-size: 0.97rem;
+		color: var(--text-muted);
+		text-shadow: none;
+	}
+
+	.about-wedding-party__highlight {
+		margin: 0.85rem 0 0;
+		font-size: clamp(1rem, 2vw, 1.12rem);
+		font-weight: 600;
+		letter-spacing: -0.01em;
+		color: rgb(68 49 36 / 0.95);
+	}
+
+	.about-wedding-party__tips-list {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		display: grid;
+		grid-template-columns: minmax(0, 1fr);
+		gap: 0.6rem;
+	}
+
+	.about-wedding-party__tip {
+		margin: 0;
+		padding: 0.68rem 0.78rem;
+		border-radius: 0.65rem;
+		border: 1px solid rgb(110 82 60 / 0.2);
+		background: rgb(255 255 255 / 0.58);
+	}
+
+	.about-wedding-party__tip-label {
+		margin: 0;
+		font-size: 0.65rem;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.16em;
+		color: rgb(92 74 61 / 0.72);
+	}
+
+	.about-wedding-party__tip-value {
+		margin: 0.45rem 0 0;
+		font-size: 0.85rem;
+		line-height: 1.45;
+		color: var(--text-primary);
+	}
+
+	.about-wedding-party__note {
+		margin: 0.7rem 0 0;
+		padding: 0.6rem 0.75rem;
+		border-radius: 0.62rem;
+		border: 1px dashed rgb(110 82 60 / 0.26);
+		background: rgb(255 255 255 / 0.48);
+		font-size: 0.86rem;
+		line-height: 1.5;
+		color: var(--text-muted);
+	}
+
+	@media (min-width: 900px) {
+		.about-wedding-party__split {
+			grid-template-columns: 1fr 1fr;
+			align-items: stretch;
+		}
+
+		.about-wedding-party__info-card {
+			order: 2;
+		}
+
+		.about-wedding-party__image-card {
+			order: 1;
+		}
+
+		.about-wedding-party__image {
+			min-height: 30rem;
+		}
+	}
+
+	@media (min-width: 768px) {
+		.about-wedding-party__tip-value,
+		.about-wedding-party__note {
+			font-size: 1rem;
+		}
+	}
+</style>
