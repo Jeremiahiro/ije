@@ -292,6 +292,55 @@ const isCurrent = (href: string): boolean => {
 		}
 	}
 
+	@media (max-width: 767px) {
+		.app-header__menu-stack {
+			max-width: 100%;
+		}
+
+		.app-header__menu-panel {
+			max-width: 100%;
+			overflow: visible;
+		}
+
+		.app-header__nav {
+			min-width: 0;
+			overflow-x: auto;
+			overflow-y: hidden;
+			-webkit-overflow-scrolling: touch;
+			scrollbar-width: none;
+		}
+
+		.app-header__nav::-webkit-scrollbar {
+			display: none;
+		}
+
+		.app-header__nav-list {
+			min-width: max-content;
+			width: max-content;
+			flex-wrap: nowrap;
+			justify-content: flex-start;
+			gap: 0.0625rem;
+		}
+
+		.app-header__nav-link {
+			padding: 0.56rem 0.44rem;
+			font-size: 0.5625rem;
+			letter-spacing: 0.01em;
+			line-height: 1.15;
+			white-space: nowrap;
+		}
+
+		.app-header__nav-track {
+			width: max-content;
+			max-width: none;
+			padding: 0.125rem;
+		}
+
+		.app-header__logo-img {
+			height: 2.1rem;
+		}
+	}
+
 	@media (min-width: 1024px) {
 		.app-header {
 			--header-menu-stack-ease: cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -450,7 +499,7 @@ const isCurrent = (href: string): boolean => {
 	.app-header__cta {
 		@apply inline-flex shrink-0 items-center justify-center rounded-full border border-transparent text-center text-sm font-semibold no-underline;
 		box-sizing: border-box;
-		padding: 0.875rem 1.25rem;
+		padding: 0.62rem 0.82rem;
 		backface-visibility: hidden;
 		background-color: var(--header-tan);
 		color: #fff;
@@ -602,8 +651,8 @@ const isCurrent = (href: string): boolean => {
 		@apply inline-flex items-center justify-center whitespace-nowrap rounded-full border border-transparent no-underline;
 		box-sizing: border-box;
 		min-width: min-content;
-		padding: 0.875rem 1rem;
-		font-size: 0.75rem;
+		padding: 0.72rem 0.68rem;
+		font-size: 0.6875rem;
 		font-weight: 600;
 		line-height: 1.25;
 		color: var(--header-tan);
@@ -620,7 +669,7 @@ const isCurrent = (href: string): boolean => {
 
 	@media (min-width: 640px) {
 		.app-header__nav-link {
-			padding: 0.875rem 1.25rem;
+			padding: 0.78rem 0.9rem;
 		}
 	}
 
@@ -631,10 +680,6 @@ const isCurrent = (href: string): boolean => {
 
 		.app-header__nav-track {
 			margin-inline: auto;
-		}
-
-		.app-header__nav-list {
-			gap: 0.0625rem;
 		}
 
 		.app-header__nav-link {
@@ -695,18 +740,18 @@ const isCurrent = (href: string): boolean => {
 	.app-header__logo-img {
 		display: block;
 		width: auto;
-		height: 3rem;
+		height: 2rem;
 		object-fit: contain;
 		transition: height var(--header-transition-duration) var(--header-transition-ease);
 	}
 
 	@media (min-width: 1024px) {
 		.app-header__logo-img {
-			height: 2.5rem;
+			height: 3rem;
 		}
 
 		.app-header[data-scrolled] .app-header__logo-img {
-			height: 2.25rem;
+			height: 2rem;
 		}
 	}
 

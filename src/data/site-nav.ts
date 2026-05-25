@@ -1,6 +1,39 @@
 /** Shared nav + routes for Header and static pages */
 export const siteTitleSuffix = "Jane & Jeremiah";
+export const bride = "Jane Onuoha";
+export const groom = "Jeremiah Iromaka";
 export const defaultPageDescription = `${siteTitleSuffix} · Wedding details coming soon.`;
+
+export type HomeEventPreview = {
+	title: string;
+	dateLabel: string;
+	location: string;
+	href: string;
+};
+
+export const homePageContent = {
+	subheading:
+		"We are so grateful to celebrate with you. Here are the key details for our wedding celebrations in Abia State, Nigeria.",
+	primaryCta: {
+		label: "RSVP",
+		href: "/rsvp",
+	},
+	events: [
+		{
+			title: "Traditional Marriage (Ịgba Nkwụ)",
+			dateLabel: "January 2, 2027",
+			location:
+				"Archbishop Onuoha's Country Home, Okai-Item, Bende LGA in Abia State, Nigeria.",
+			href: "/schedule",
+		},
+		{
+			title: "Church Wedding",
+			dateLabel: "January 4, 2027",
+			location: "Rhema Chapel, Mission Hill, Eziama Ossah, Umuahia, Abia State.",
+			href: "/schedule",
+		},
+	] as HomeEventPreview[],
+};
 
 export type NavTopLink = {
 	kind: "link";
@@ -19,19 +52,25 @@ export const navItems: NavTopLink[] = [
 	{
 		kind: "link",
 		label: "Travel",
-		href: "/travel",
+		href: "/travel/flights",
 		target: "_self",
 	},
 	{
 		kind: "link",
-		label: "Visa",
-		href: "/visa",
+		label: "Registry",
+		href: "/registry",
 		target: "_self",
 	},
 	{
 		kind: "link",
-		label: "Things To Do",
-		href: "/things-to-do",
+		label: "FAQs",
+		href: "/about/faq",
+		target: "_self",
+	},
+	{
+		kind: "link",
+		label: "RSVP",
+		href: "/rsvp",
 		target: "_self",
 	},
 	{
@@ -39,12 +78,6 @@ export const navItems: NavTopLink[] = [
 		label: "Asoebi",
 		href: "/asoebi",
 		target: "_self",
-	},
-	{
-		kind: "link",
-		label: "Registry",
-		href: "/registry",
-		target: "_blank",
 	},
 ];
 
