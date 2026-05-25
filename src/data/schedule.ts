@@ -12,6 +12,7 @@ export type ScheduleEvent = {
 };
 
 export type ScheduleDay = {
+	id: string;
 	dayLabel: string;
 	events: ScheduleEvent[];
 };
@@ -82,6 +83,7 @@ export const schedulePageData: SchedulePageData = {
 	title: "Wedding Celebrations",
 	days: [
 		{
+			id: "traditional-marriage",
 			dayLabel: "Saturday, January 2, 2027",
 			events: [
 				{
@@ -90,19 +92,19 @@ export const schedulePageData: SchedulePageData = {
 					timeLabel: "11:00 am",
 					venue: "Okai Item, Bende Local Government Area",
 					location:
-						"Archbishop Sunday Onuoha's Country Home, Okai Item, Abia State, Nigeria",
+						"Onuoha's Country Home, Okai Item, Abia State, Nigeria",
 					colorsOfTheDay: "Tan & Brown",
 					mapHref: "https://maps.app.goo.gl/a5tYqVVXab4BL5tE9",
 					googleCalendarHref: makeGoogleCalendarHref(
 						"Jane & Jeremiah's Traditional Marriage (Ịgba Nkwụ)",
-						"Archbishop Sunday Onuoha's Country Home, Okai Item, Abia State, Nigeria",
+						"Onuoha's Country Home, Okai Item, Abia State, Nigeria",
 						"20270102T100000Z",
 						"20270102T150000Z",
 						"Colors of the day: Tan & Brown",
 					),
 					appleCalendarHref: makeAppleCalendarHref(
 						"Jane & Jeremiah's Traditional Marriage (Ịgba Nkwụ)",
-						"Archbishop Sunday Onuoha's Country Home, Okai Item, Abia State, Nigeria",
+						"Onuoha's Country Home, Okai Item, Abia State, Nigeria",
 						"20270102T100000Z",
 						"20270102T150000Z",
 						"Colors of the day: Tan & Brown",
@@ -111,26 +113,27 @@ export const schedulePageData: SchedulePageData = {
 			],
 		},
 		{
+			id: "church-wedding",
 			dayLabel: "Monday, January 4, 2027",
 			events: [
 				{
 					icon: "♥︎♥︎",
 					title: "Church Wedding",
 					timeLabel: "11:00 am",
-					venue: "Rhema Chapel, Methodist Theological Institute (MTI)",
-					location: "Mission Hill, Umuahia, Abia State, Nigeria",
+					venue: "Methodist Theological Institute (MTI)",
+					location: "Michael Okpara Boulevard, Umuahia, Abia State, Nigeria",
 					colorsOfTheDay: "Emerald Green",
 					mapHref: "https://maps.app.goo.gl/5CS31ViRC9K63Qev7",
 					googleCalendarHref: makeGoogleCalendarHref(
 						"Jane & Jeremiah's Church Wedding",
-						"Rhema Chapel (MTI), Mission Hill, Umuahia, Abia State, Nigeria",
+						"Methodist Theological Institute (MTI), Michael Okpara Boulevard, Umuahia, Abia State, Nigeria",
 						"20270104T100000Z",
 						"20270104T120000Z",
 						"Colors of the day: Emerald Green",
 					),
 					appleCalendarHref: makeAppleCalendarHref(
 						"Jane & Jeremiah's Church Wedding",
-						"Rhema Chapel (MTI), Mission Hill, Umuahia, Abia State, Nigeria",
+						"Methodist Theological Institute (MTI), Michael Okpara Boulevard, Umuahia, Abia State, Nigeria",
 						"20270104T100000Z",
 						"20270104T120000Z",
 						"Colors of the day: Emerald Green",

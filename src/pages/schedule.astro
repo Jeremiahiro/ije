@@ -19,7 +19,7 @@ const canonicalHref = new URL("/schedule", Astro.url.origin).href;
 		<section class="schedule-page__events" aria-label="Event schedule">
 			{
 				schedulePageData.days.map((day) => (
-					<section class="schedule-day">
+					<section class="schedule-day" id={day.id}>
 						<h2 class="schedule-day__title">{day.dayLabel}</h2>
 						<div class="schedule-day__events">
 							{
@@ -146,6 +146,9 @@ const canonicalHref = new URL("/schedule", Astro.url.origin).href;
 		width: 100%;
 		justify-items: center;
 		position: relative;
+		scroll-margin-top: calc(
+			var(--site-header-height) + env(safe-area-inset-top, 0px) + 1rem
+		);
 	}
 
 	.schedule-day:not(:first-child) {
