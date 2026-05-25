@@ -1,39 +1,21 @@
 ---
 import ContentCard from "@/components/ContentCard.astro";
-import HeroPageSurface from "@/components/HeroPageSurface.astro";
-import TravelPageIntro from "@/components/travel/TravelPageIntro.astro";
 import TravelStepCard from "@/components/travel/TravelStepCard.astro";
 import { travelFlightsPage } from "@/data/travel-flights";
 
-const {
-	backgroundImage: bgSrc,
-	hero,
-	international,
-	domestic,
-} = travelFlightsPage;
+const { international, domestic } = travelFlightsPage;
 ---
 
-<HeroPageSurface
-	bgSrc={bgSrc}
-	surfaceClass="travel-flights"
-	ariaLabelledBy="travel-flights-heading"
->
-	<TravelPageIntro
-		eyebrow={hero.eyebrow}
-		title={hero.title}
-		headingId="travel-flights-heading"
-		ledes={hero.ledes}
-		accentEyebrow
-	/>
+<ContentCard variant="secondary" class="travel-flights__intl-shell">
 
-	<ContentCard variant="secondary" class="travel-flights__intl-shell">
-		<h2 class="travel-flights__section-title">{international.title}</h2>
+	<div class="travel-page__outside-nigeria">
+		<h2 class="travel-page__section-title">{international.title}</h2>
 		{
 			international.lede ? (
-				<p class="travel-flights__section-lede">{international.lede}</p>
+				<p class="travel-page__section-lede">{international.lede}</p>
 			) : null
 		}
-
+	</div>
 		{
 			international.recommendedDates ? (
 				<ContentCard
@@ -83,7 +65,7 @@ const {
 				variant="secondary"
 				class="travel-flights__domestic-shell"
 			>
-				<h2 class="travel-flights__section-title travel-flights__domestic-heading">
+				<h2 class="travel-flights__domestic-heading">
 					{domestic.title}
 				</h2>
 
@@ -103,7 +85,6 @@ const {
 			</ContentCard>
 		)
 	}
-</HeroPageSurface>
 
 <script>
 	const desktopCardsQuery = window.matchMedia(
@@ -160,21 +141,6 @@ const {
 </script>
 
 <style>
-	:global(.travel-flights.hero-page) {
-		--travel-stack-gap: clamp(1rem, 2.5vw, 1.75rem);
-		--travel-block-gap: clamp(1rem, 3vw, 1.5rem);
-	}
-
-	:global(.travel-flights.hero-page .travel-page-intro) {
-		margin: 0 auto clamp(2rem, 5vw, 3rem);
-	}
-
-	:global(.travel-flights.hero-page .travel-page-intro__lede) {
-		max-width: 42rem;
-	}
-
-	:global(.travel-flights__intl-shell) .travel-flights__section-title,
-	:global(.travel-flights__intl-shell) .travel-flights__section-lede,
 	:global(.travel-flights__domestic-shell) .travel-flights__domestic-heading,
 	:global(.travel-flights__domestic-shell) .travel-flights__domestic-lede {
 		padding-inline: clamp(1rem, 4vw, 2.75rem);
@@ -192,19 +158,12 @@ const {
 		width: 100%;
 	}
 
-	.travel-flights__section-title {
+	.travel-flights__domestic-heading {
 		margin: 0 0 0.5rem;
 		font-size: clamp(1.25rem, 2.5vw, 1.5rem);
 		font-weight: 600;
 		letter-spacing: -0.02em;
 		text-transform: uppercase;
-	}
-
-	.travel-flights__section-lede {
-		margin: 0 0 var(--travel-block-gap);
-		font-size: 0.9375rem;
-		line-height: 1.55;
-		color: var(--text-muted);
 	}
 
 	.travel-flights__domestic-lede {
@@ -299,8 +258,6 @@ const {
 			border-radius: clamp(1.35rem, 5vw, 2rem);
 		}
 
-		:global(.travel-flights__intl-shell) .travel-flights__section-title,
-		:global(.travel-flights__intl-shell) .travel-flights__section-lede,
 		:global(.travel-flights__domestic-shell)
 			.travel-flights__domestic-heading,
 		:global(.travel-flights__domestic-shell)
@@ -322,7 +279,6 @@ const {
 	}
 
 	@media (min-width: 768px) {
-		.travel-flights__section-lede,
 		.travel-flights__banner-copy {
 			font-size: 1rem;
 		}

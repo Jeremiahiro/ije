@@ -18,10 +18,6 @@ const distanceLabel =
 		? "Distance to airport"
 		: "Distance to venue";
 
-const guestIntel = (hotel.guestIntel ?? []).filter(
-	(g) => g.title.trim().length > 0 && g.body.trim().length > 0,
-);
-
 const externalRel = "noopener noreferrer";
 ---
 
@@ -44,40 +40,6 @@ const externalRel = "noopener noreferrer";
 				<dd class="travel-hotel-card__fact-value">{hotel.distance}</dd>
 			</div>
 		</dl>
-
-		{
-			guestIntel.length ? (
-				<div class="travel-hotel-card__intel" aria-label="Insider tips">
-					{guestIntel.map((item) => (
-						<div
-							class:list={[
-								"travel-hotel-card__intel-item",
-								item.kind === "tip" &&
-									"travel-hotel-card__intel-item--tip",
-							]}
-						>
-							<p class="travel-hotel-card__intel-title">
-								{item.kind === "tip" ? (
-									<>
-										<span class="travel-hotel-card__intel-icon" aria-hidden="true">
-											💡
-										</span>
-									</>
-								) : null}
-								<span>{item.title}</span>
-							</p>
-							<p
-								class:list={[
-									"travel-hotel-card__intel-body",
-								]}
-							>
-								{item.body}
-							</p>
-						</div>
-					))}
-				</div>
-			) : null
-		}
 	</div>
 
 	{
@@ -173,46 +135,6 @@ const externalRel = "noopener noreferrer";
 		font-size: 0.9rem;
 		line-height: 1.5;
 		color: var(--text-primary);
-	}
-
-	.travel-hotel-card__intel {
-		margin: 1.3rem 0 1.55rem;
-		display: grid;
-		gap: 0.75rem;
-	}
-
-	.travel-hotel-card__intel-item {
-		margin: 0;
-		padding: 0.9rem 1rem;
-		border-radius: 0.75rem;
-		border: 1px solid rgb(110 82 60 / 0.14);
-		background: rgb(255 255 255 / 0.38);
-	}
-
-	.travel-hotel-card__intel-item--tip {
-		background: rgb(255 255 255 / 0.42);
-	}
-
-	.travel-hotel-card__intel-title {
-		margin: 0;
-		display: flex;
-		align-items: center;
-		gap: 0.35rem;
-		font-size: 0.8125rem;
-		font-weight: 600;
-		letter-spacing: 0.02em;
-		color: var(--text-primary);
-	}
-
-	.travel-hotel-card__intel-icon {
-		flex-shrink: 0;
-	}
-
-	.travel-hotel-card__intel-body {
-		margin: 0.35rem 0 0;
-		font-size: 0.875rem;
-		line-height: 1.52;
-		color: var(--text-muted);
 	}
 
 	.travel-hotel-card__actions {

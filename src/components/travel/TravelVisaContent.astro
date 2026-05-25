@@ -1,62 +1,75 @@
 ---
 import ContentCard from "@/components/ContentCard.astro";
-import HeroPageSurface from "@/components/HeroPageSurface.astro";
-import TravelPageIntro from "@/components/travel/TravelPageIntro.astro";
 import { travelVisaPage } from "@/data/travel-visa";
 
-const { backgroundImage: bgSrc, hero, basics, applyCard } = travelVisaPage;
+const { hero, basics, applyCard } = travelVisaPage;
 
 const externalRel = "noopener noreferrer";
 ---
 
-<HeroPageSurface
-	bgSrc={bgSrc}
-	surfaceClass="travel-visa"
-	ariaLabelledBy="travel-visa-heading"
->
-	<TravelPageIntro eyebrow={hero.eyebrow} title={hero.title} headingId="travel-visa-heading" ledes={hero.ledes} />
+<ContentCard variant="primary" class="travel-visa__apply-card">
+	<h2 id="travel-visa-section-title" class="travel-visa__page-title">
+		{hero.title}
+	</h2>
+	{hero.ledes.map((lede) => <p class="travel-visa__page-lede">{lede}</p>)}
 
-	<ContentCard variant="primary" class="travel-visa__apply-card">
-		<p class="travel-visa__apply-eyebrow travel-visa__eyebrow--inline">
-			{applyCard.eyebrow}
-		</p>
-		<p class="travel-visa__apply-title">{applyCard.title}</p>
-		<p class="travel-visa__apply-copy">{applyCard.copy}</p>
-		<div class="travel-visa__actions">
-			{
-				applyCard.links.map((link) => (
-					<a
-						class:list={[
-							"travel-visa__btn",
-							link.variant === "primary"
-								? "travel-visa__btn--primary"
-								: "travel-visa__btn--secondary",
-						]}
-						href={link.href}
-						target="_blank"
-						rel={externalRel}
-					>
-						{link.label}
-					</a>
-				))
-			}
-		</div>
-		<p class="travel-visa__note">{applyCard.note}</p>
-	</ContentCard>
+	<p class="travel-visa__apply-eyebrow travel-visa__eyebrow--inline">
+		{applyCard.eyebrow}
+	</p>
+	<p class="travel-visa__apply-title">{applyCard.title}</p>
+	<p class="travel-visa__apply-copy">{applyCard.copy}</p>
+	<div class="travel-visa__actions">
+		{
+			applyCard.links.map((link) => (
+				<a
+					class:list={[
+						"travel-visa__btn",
+						link.variant === "primary"
+							? "travel-visa__btn--primary"
+							: "travel-visa__btn--secondary",
+					]}
+					href={link.href}
+					target="_blank"
+					rel={externalRel}
+				>
+					{link.label}
+				</a>
+			))
+		}
+	</div>
+	<p class="travel-visa__note">{applyCard.note}</p>
 
 	<ContentCard variant="secondary" class="travel-visa__main-shell">
 		<h2 class="travel-visa__section-title">{basics.title}</h2>
 		<p class="travel-visa__section-lede">{basics.lede}</p>
 		<ul class="travel-visa__checklist">
-			{basics.points.map((point) => <li class="travel-visa__checklist-item">{point}</li>)}
+			{
+				basics.points.map((point) => (
+					<li class="travel-visa__checklist-item">{point}</li>
+				))
+			}
 		</ul>
 	</ContentCard>
-</HeroPageSurface>
+</ContentCard>
 
 <style>
-	:global(.travel-visa.hero-page) {
-		--travel-stack-gap: clamp(1rem, 2.6vw, 1.5rem);
-		--travel-block-gap: clamp(1rem, 3vw, 1.5rem);
+	.travel-visa__page-title {
+		margin: 0 0 0.5rem;
+		font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+		font-weight: 600;
+		letter-spacing: -0.02em;
+	}
+
+	.travel-visa__page-lede {
+		margin: 0 0 var(--travel-block-gap);
+		max-width: 42rem;
+		font-size: 0.9375rem;
+		line-height: 1.55;
+		color: var(--text-muted);
+	}
+
+	.travel-visa__page-lede:last-of-type {
+		margin-bottom: var(--travel-block-gap);
 	}
 
 	:global(.travel-visa__main-shell) {
@@ -224,7 +237,7 @@ const externalRel = "noopener noreferrer";
 	}
 
 	@media (min-width: 768px) {
-	
+		.travel-visa__page-lede,
 		.travel-visa__section-lede,
 		.travel-visa__apply-copy {
 			font-size: 1rem;

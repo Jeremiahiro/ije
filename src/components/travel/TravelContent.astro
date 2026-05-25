@@ -1,0 +1,110 @@
+---
+import HeroPageSurface from "@/components/HeroPageSurface.astro";
+import PillNav from "@/components/PillNav.astro";
+import TravelFlightsContent from "@/components/travel/TravelFlightsContent.astro";
+import TravelHotelsContent from "@/components/travel/TravelHotelsContent.astro";
+import TravelPageIntro from "@/components/travel/TravelPageIntro.astro";
+import TravelVisaContent from "@/components/travel/TravelVisaContent.astro";
+import { travelFlightsPage } from "@/data/travel-flights";
+
+const { hero } = travelFlightsPage;
+
+const sectionNav = [
+	{ id: "flights", label: "Flights" },
+	{ id: "hotels", label: "Hotels" },
+	{ id: "visa", label: "Visa" },
+] as const;
+---
+
+<HeroPageSurface
+	surfaceClass="travel-page"
+	ariaLabelledBy="travel-heading"
+>
+	<TravelPageIntro
+		eyebrow={hero.eyebrow}
+		title={hero.title}
+		headingId="travel-heading"
+		ledes={hero.ledes}
+		accentEyebrow
+	/>
+
+	<PillNav
+		links={sectionNav}
+		aria-label="Travel sections"
+		class="travel-page__section-nav"
+	/>
+
+	<section
+		id="flights"
+		class="travel-page__section"
+		aria-labelledby="travel-flights-section-title"
+	>
+		<h2 id="travel-flights-section-title" class="travel-page__visually-hidden">
+			Flights
+		</h2>
+		
+		<TravelFlightsContent />
+	</section>
+
+	<section
+		id="hotels"
+		class="travel-page__section"
+		aria-labelledby="travel-hotels-section-title"
+	>
+		<TravelHotelsContent />
+	</section>
+
+	<section
+		id="visa"
+		class="travel-page__section"
+		aria-labelledby="travel-visa-section-title"
+	>
+		<TravelVisaContent />
+	</section>
+</HeroPageSurface>
+
+<style>
+	:global(.travel-page.hero-page) {
+		overflow-x: visible;
+		--travel-stack-gap: clamp(1rem, 2.5vw, 1.75rem);
+		--travel-block-gap: clamp(1rem, 3vw, 1.5rem);
+		--pill-nav-sticky-top: calc(
+			var(--site-header-height) + env(safe-area-inset-top, 0px) + 1.5rem
+		);
+		--travel-section-scroll-margin: calc(
+			var(--pill-nav-sticky-top) + 3.25rem
+		);
+		--travel-hotels-section-scroll-margin: calc(
+			var(--pill-nav-sticky-top) + 3.25rem
+		);
+	}
+
+	:global(.travel-page.hero-page .travel-page-intro) {
+		margin: 0 auto clamp(2rem, 5vw, 3rem);
+	}
+
+	:global(.travel-page.hero-page .travel-page-intro__lede) {
+		max-width: 42rem;
+	}
+
+	.travel-page__section {
+		scroll-margin-top: var(--travel-section-scroll-margin);
+	}
+
+	.travel-page__section + .travel-page__section {
+		margin-top: var(--travel-block-gap);
+	}
+
+	.travel-page__visually-hidden {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		padding: 0;
+		margin: -1px;
+		overflow: hidden;
+		clip: rect(0, 0, 0, 0);
+		white-space: nowrap;
+		border: 0;
+	}
+
+</style>

@@ -1,11 +1,3 @@
-export type GuestIntelKind = "tip";
-
-export type GuestIntel = {
-	title: string;
-	body: string;
-	kind?: GuestIntelKind;
-};
-
 export type Hotel = {
 	name: string;
 	description: string;
@@ -14,13 +6,11 @@ export type Hotel = {
 	distanceKind: "airport" | "venue";
 	website?: string;
 	mapUrl?: string;
-	guestIntel?: GuestIntel[];
 };
 
 /** URL fragment / anchor id — use lowercase letters, digits, hyphen only */
 export type HotelRegion = {
 	id: string;
-	jumpLabel: string;
 	eyebrow: string;
 	title: string;
 	lede: string;
@@ -44,7 +34,6 @@ const data: TravelHotelsPageData = {
 	regions: [
 		{
 			id: "lagos",
-			jumpLabel: "Lagos",
 			eyebrow: "✈️ Lagos — recommended hotels (arrival)",
 			title: "For guests arriving into Lagos before travelling onward",
 			lede: "Short listings focused on airport access, transit comfort, and a smooth first night in Nigeria.",
@@ -60,13 +49,6 @@ const data: TravelHotelsPageData = {
 					website: "https://shoregatehotels.com/",
 					mapUrl:
 						"https://www.google.com/maps/search/?api=1&query=Shoregate+Hotels+Ikeja+GRA+Lagos",
-					guestIntel: [
-						{
-							title: "Before you arrive",
-							kind: "tip",
-							body: "Reach out to the hotel to arrange airport pickup and share your ETA; Lagos traffic makes timing worth double-checking.",
-						},
-					],
 				},
 				{
 					name: "Lagos Marriott Hotel Ikeja",
@@ -80,20 +62,12 @@ const data: TravelHotelsPageData = {
 						"https://www.marriott.com/en-us/hotels/loslg-lagos-marriott-hotel-ikeja/",
 					mapUrl:
 						"https://www.google.com/maps/search/?api=1&query=Lagos+Marriott+Hotel+Ikeja+122+Joel+Ogunnaike",
-					guestIntel: [
-						{
-							title: "Good to know",
-							kind: "tip",
-							body: "Same Joel Ogunnaike street as Shoregate—easy to compare if you’re weighing both.",
-						},
-					],
 				},
 			],
 		},
 		{
 			id: "umuahia",
-			jumpLabel: "Umuahia",
-			eyebrow: "🌿 Umuahia — wedding location hotels",
+			eyebrow: "🌿 Umuahia",
 			title: "For the ceremony and local events",
 			lede: "Stays centred on convenience, security, and proximity to weekend gatherings. We’ll keep refreshing this list as details are confirmed.",
 			hotels: [
@@ -107,13 +81,6 @@ const data: TravelHotelsPageData = {
 					website: "https://hotelroyaldamgrete.com/",
 					mapUrl:
 						"https://www.google.com/maps/search/?api=1&query=Hotel+Royal+Damgrete+Factory+Road+GRA+Umuahia",
-					guestIntel: [
-						{
-							title: "Location tip",
-							kind: "tip",
-							body: "Situated inside the GRA area, which is generally quieter and more secure than busier parts of town.",
-						},
-					],
 				},
 				{
 					name: "Rixos Continental Resort",
@@ -126,13 +93,6 @@ const data: TravelHotelsPageData = {
 					website: "https://hotels.ng/hotel/1448253-rixos-continental-hotel",
 					mapUrl:
 						"https://www.google.com/maps/search/?api=1&query=Rixos+Continental+Resort+No+1A+Rixos+Avenue+CBN+Junction+off+Bende+Road+Umuahia",
-					guestIntel: [
-						{
-							title: "Location tip",
-							kind: "tip",
-							body: "Frequently listed as being very near the International Conference Center, making event-day movement easier.",
-						},
-					],
 				},
 			],
 		},
