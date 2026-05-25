@@ -1,17 +1,15 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import ComingSoon from "@/components/ComingSoon.astro";
-import { defaultPageDescription, siteTitleSuffix } from "@/data/site-nav";
+import RegistryContent from "@/components/registry/RegistryContent.astro";
+import { siteTitleSuffix } from "@/data/site-nav";
 
+const pageTitle = "Registry";
+const description =
+	"Gift options for guests joining Jane & Jeremiah from Nigeria, the UK, and the US, including fund and registry pathways.";
 const title = `Registry · ${siteTitleSuffix}`;
 const canonicalHref = new URL("/registry", Astro.url.origin).href;
 ---
 
-<BaseLayout
-	title={title}
-	description={defaultPageDescription}
-	canonicalHref={canonicalHref}
-	htmlClass="coming-soon-page"
->
-	<ComingSoon heading="Registry" />
+<BaseLayout title={title} description={description} canonicalHref={canonicalHref}>
+	<RegistryContent />
 </BaseLayout>

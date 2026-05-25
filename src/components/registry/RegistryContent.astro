@@ -1,0 +1,301 @@
+---
+import ContentCard from "@/components/ContentCard.astro";
+import HeroPageSurface from "@/components/HeroPageSurface.astro";
+import TravelPageIntro from "@/components/travel/TravelPageIntro.astro";
+import { registryPage } from "@/data/registry";
+
+const {
+	backgroundImage: bgSrc,
+	hero,
+	introNote,
+	fundOptions,
+	traditionalOptions,
+	physicalGiftOptions,
+	closingNote,
+} = registryPage;
+---
+
+<HeroPageSurface bgSrc={bgSrc} surfaceClass="registry-page" ariaLabelledBy="registry-heading">
+	<TravelPageIntro
+		eyebrow={hero.eyebrow}
+		title={hero.title}
+		headingId="registry-heading"
+		ledes={hero.ledes}
+		className="registry-page__intro"
+		accentEyebrow
+	/>
+
+	<ContentCard variant="primary" class="registry-page__notice">
+		<p>{introNote}</p>
+	</ContentCard>
+
+	<ContentCard variant="secondary" class="registry-page__section-card">
+		<h2 class="registry-page__section-title">Funds</h2>
+		<div class="registry-page__grid">
+			{
+				fundOptions.map((option) => (
+					<article class="registry-page__option">
+						<div class="registry-page__option-head">
+							<p class="registry-page__currency">{option.currency}</p>
+							<h3 class="registry-page__option-title">{option.title}</h3>
+						</div>
+						<p class="registry-page__option-copy">{option.copy}</p>
+						{option.tags?.length ? (
+							<ul class="registry-page__tag-list" aria-label={`${option.title} tags`}>
+								{option.tags.map((tag) => <li class="registry-page__tag">{tag}</li>)}
+							</ul>
+						) : null}
+						<div class="registry-page__actions">
+							{option.links.map((link) =>
+								link.href ? (
+									<a
+										href={link.href}
+										class:list={[
+											"registry-page__btn",
+											link.variant === "primary"
+												? "registry-page__btn--primary"
+												: "registry-page__btn--secondary",
+										]}
+									>
+										{link.label}
+									</a>
+								) : (
+									<span class="registry-page__placeholder">{link.label}</span>
+								),
+							)}
+						</div>
+					</article>
+				))
+			}
+		</div>
+	</ContentCard>
+
+	<ContentCard variant="secondary" class="registry-page__section-card">
+		<h2 class="registry-page__section-title">Traditional Gifting</h2>
+		<div class="registry-page__grid">
+			{
+				traditionalOptions.map((option) => (
+					<article class="registry-page__option">
+						<div class="registry-page__option-head">
+							<p class="registry-page__currency">{option.currency}</p>
+							<h3 class="registry-page__option-title">{option.title}</h3>
+						</div>
+						<p class="registry-page__option-copy">{option.copy}</p>
+						{option.tags?.length ? (
+							<ul class="registry-page__tag-list" aria-label={`${option.title} tags`}>
+								{option.tags.map((tag) => <li class="registry-page__tag">{tag}</li>)}
+							</ul>
+						) : null}
+						<div class="registry-page__actions">
+							{option.links.map((link) =>
+								link.href ? (
+									<a
+										href={link.href}
+										class:list={[
+											"registry-page__btn",
+											link.variant === "primary"
+												? "registry-page__btn--primary"
+												: "registry-page__btn--secondary",
+										]}
+									>
+										{link.label}
+									</a>
+								) : (
+									<span class="registry-page__placeholder">{link.label}</span>
+								),
+							)}
+						</div>
+					</article>
+				))
+			}
+		</div>
+	</ContentCard>
+
+	<ContentCard variant="secondary" class="registry-page__section-card">
+		<h2 class="registry-page__section-title">Physical Gifts</h2>
+		<div class="registry-page__grid">
+			{
+				physicalGiftOptions.map((option) => (
+					<article class="registry-page__option">
+						<div class="registry-page__option-head">
+							<p class="registry-page__currency">{option.currency}</p>
+							<h3 class="registry-page__option-title">{option.title}</h3>
+						</div>
+						<p class="registry-page__option-copy">{option.copy}</p>
+						{option.tags?.length ? (
+							<ul class="registry-page__tag-list" aria-label={`${option.title} tags`}>
+								{option.tags.map((tag) => <li class="registry-page__tag">{tag}</li>)}
+							</ul>
+						) : null}
+						<div class="registry-page__actions">
+							{option.links.map((link) =>
+								link.href ? (
+									<a
+										href={link.href}
+										class:list={[
+											"registry-page__btn",
+											link.variant === "primary"
+												? "registry-page__btn--primary"
+												: "registry-page__btn--secondary",
+										]}
+									>
+										{link.label}
+									</a>
+								) : (
+									<span class="registry-page__placeholder">{link.label}</span>
+								),
+							)}
+						</div>
+					</article>
+				))
+			}
+		</div>
+	</ContentCard>
+
+	<ContentCard variant="primary" class="registry-page__closing">
+		<p>{closingNote}</p>
+	</ContentCard>
+</HeroPageSurface>
+
+<style>
+	:global(.registry-page.hero-page) {
+		--travel-stack-gap: clamp(0.95rem, 2.4vw, 1.5rem);
+	}
+
+	:global(.registry-page .hero-page__bg) {
+		background-position: center 38%;
+		filter: saturate(0.88) contrast(1.02) brightness(0.9);
+	}
+
+	:global(.registry-page__intro.travel-page-intro) {
+		margin-bottom: clamp(1rem, 2.8vw, 1.5rem);
+	}
+
+	.registry-page__notice,
+	.registry-page__closing {
+		margin-top: 0;
+		border-color: rgb(214 178 138 / 0.46);
+		box-shadow: 0 14px 36px rgb(78 59 44 / 0.14);
+	}
+
+	.registry-page__notice p,
+	.registry-page__closing p {
+		margin: 0;
+		line-height: 1.6;
+		color: var(--text-muted);
+	}
+
+	:global(.registry-page__section-card.content-card--secondary) {
+		margin-top: 0;
+		border-color: rgb(110 82 60 / 0.16);
+		background: rgb(255 255 255 / 0.3);
+		box-shadow: 0 16px 44px rgb(78 59 44 / 0.12);
+	}
+
+	.registry-page__section-title {
+		margin: 0 0 0.9rem;
+		font-size: clamp(1.15rem, 2.2vw, 1.4rem);
+		font-weight: 600;
+		letter-spacing: -0.01em;
+	}
+
+	.registry-page__grid {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr);
+		gap: 0.8rem;
+	}
+
+	.registry-page__option {
+		border: 1px solid rgb(110 82 60 / 0.2);
+		border-radius: 0.95rem;
+		background: rgb(255 255 255 / 0.44);
+		padding: 0.9rem;
+	}
+
+	.registry-page__option-head {
+		display: grid;
+		gap: 0.15rem;
+	}
+
+	.registry-page__currency {
+		margin: 0;
+		font-size: 0.68rem;
+		font-weight: 700;
+		letter-spacing: 0.2em;
+		text-transform: uppercase;
+		color: rgb(92 74 61 / 0.75);
+	}
+
+	.registry-page__option-title {
+		margin: 0;
+		font-size: 1.03rem;
+	}
+
+	.registry-page__option-copy {
+		margin: 0.55rem 0 0;
+		font-size: 0.94rem;
+		line-height: 1.55;
+		color: var(--text-muted);
+	}
+
+	.registry-page__tag-list {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.45rem;
+		list-style: none;
+		margin: 0.72rem 0 0;
+		padding: 0;
+	}
+
+	.registry-page__tag {
+		padding: 0.2rem 0.5rem;
+		border-radius: 999px;
+		font-size: 0.72rem;
+		color: rgb(92 74 61 / 0.9);
+		border: 1px solid rgb(110 82 60 / 0.22);
+		background: rgb(255 255 255 / 0.6);
+	}
+
+	.registry-page__actions {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+		gap: 0.55rem;
+		margin-top: 0.85rem;
+	}
+
+	.registry-page__btn,
+	.registry-page__placeholder {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 0.68rem;
+		padding: 0.65rem 0.8rem;
+		font-size: 0.88rem;
+		font-weight: 700;
+		text-decoration: none;
+	}
+
+	.registry-page__btn--primary {
+		background: #6e523c;
+		border: 1px solid #6e523c;
+		color: #fff;
+	}
+
+	.registry-page__btn--secondary {
+		background: rgb(255 255 255 / 0.92);
+		border: 1px solid rgb(110 82 60 / 0.35);
+		color: #4e3b2c;
+	}
+
+	.registry-page__placeholder {
+		border: 1px dashed rgb(110 82 60 / 0.32);
+		background: rgb(255 255 255 / 0.52);
+		color: rgb(92 74 61 / 0.92);
+	}
+
+	@media (min-width: 900px) {
+		.registry-page__grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+</style>
