@@ -2,87 +2,51 @@
 export const siteTitleSuffix = "Jane & Jeremiah";
 export const defaultPageDescription = `${siteTitleSuffix} · Wedding details coming soon.`;
 
-const navImageSrc = "/assets/travel.jpg";
-
-export type NavSubPage = {
-	slug: string;
-	title: string;
-	description?: string;
-	image?: string;
-};
-
-export type NavSublinksSection = {
-	kind: "sublinks";
-	id: string;
-	label: string;
-	path: string;
-	sublinks: NavSubPage[];
-};
-
 export type NavTopLink = {
 	kind: "link";
 	href: string;
 	label: string;
+	target: "_self" | "_blank";
 };
 
-export type NavEntry = NavSublinksSection | NavTopLink;
-
-function sub(
-	slug: string,
-	title: string,
-	description?: string,
-	image: string = navImageSrc,
-): NavSubPage {
-	return { slug, title, description, image };
-}
-
-export const navItems: NavEntry[] = [
+export const navItems: NavTopLink[] = [
+	{
+		kind: "link",
+		label: "Schedule",
+		href: "/schedule",
+		target: "_self",
+	},
+	{
+		kind: "link",
+		label: "Travel",
+		href: "/travel",
+		target: "_self",
+	},
+	{
+		kind: "link",
+		label: "Visa",
+		href: "/visa",
+		target: "_self",
+	},
+	{
+		kind: "link",
+		label: "Things To Do",
+		href: "/things-to-do",
+		target: "_self",
+	},
 	{
 		kind: "link",
 		label: "Asoebi",
 		href: "/asoebi",
-	},
-	{
-		kind: "sublinks",
-		id: "travel",
-		label: "Travel",
-		path: "/travel",
-		sublinks: [
-			sub("flights", "Flights", "Arrival airports and transport options", "/assets/travel.jpg"),
-			sub("hotels", "Hotels", "Recommended stays and booking info", "/assets/hotel.jpg"),
-			sub("visa", "Visa", "Entry requirements for Nigeria", "/assets/visa.jpg"),
-		],
-	},
-	{
-		kind: "sublinks",
-		id: "about",
-		label: "About",
-		path: "/about",
-		sublinks: [
-			sub("our-story", "Our Story", "How Jane & Jeremiah met", ""),
-			sub("wedding-party", "Wedding Party", "Late-night music, dancing, and celebration", ""),
-			sub("faq", "FAQ", "Common questions answered", ""),
-		],
+		target: "_self",
 	},
 	{
 		kind: "link",
-		href: "/registry",
 		label: "Registry",
+		href: "/registry",
+		target: "_blank",
 	},
 ];
-
-/** Section path segment (no leading slash) → sublink slugs implemented as dedicated pages */
-export const dedicatedSublinkSlugsBySection: Readonly<
-	Record<string, ReadonlySet<string>>
-> = {
-	travel: new Set(["flights", "hotels", "visa"]),
-	about: new Set(["wedding-party", "faq"]),
-};
-
-export function hasDedicatedSublinkPage(section: string, slug: string): boolean {
-	const set = dedicatedSublinkSlugsBySection[section];
-	return set?.has(slug) ?? false;
-}
 
 export function navHref(path: string, slug: string): string {
 	return `${path.replace(/\/$/, "")}/${slug}`;

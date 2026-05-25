@@ -1,5 +1,16 @@
 @import "tailwindcss";
 
+@font-face {
+	font-family: "Abigail";
+	src:
+		local("Abigail"),
+		url("/assets/abigail_3/Abigail.ttf") format("truetype"),
+		url("/assets/abigail_3/Abigail.otf") format("opentype");
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+}
+
 :root {
 	--site-header-height: 3.5rem;
 	--site-footer-reveal: 30dvh;
@@ -11,6 +22,8 @@
 	--page-tan-deep: rgba(110, 82, 60, 0.16);
 	--text-primary: #3a2e26;
 	--text-muted: #5c4a3d;
+	--font-body: "Libre Baskerville", Georgia, Cambria, "Times New Roman", serif;
+	--font-display: "Abigail", "Brush Script MT", cursive;
 
 	--wrapper-padding-inline: clamp(1rem, 4vw, 2.25rem);
 	--wrapper-max-width: min(80rem);
@@ -30,12 +43,19 @@ html {
 body {
 	margin: 0;
 	min-height: 100%;
+	font-family: var(--font-body);
 	color: var(--text-primary);
 	background-color: var(--page-bg);
 	background-image:
 		radial-gradient(ellipse 92% 78% at 8% 6%, var(--page-tan-glow), transparent 54%),
 		radial-gradient(ellipse 88% 72% at 96% 94%, var(--page-tan-deep), transparent 58%),
 		linear-gradient(168deg, #eceae6 0%, var(--page-bg-mid) 42%, #ebe7e1 100%);
+}
+
+h1,
+h2,
+h3 {
+	font-family: var(--font-display);
 }
 
 .site-shell {

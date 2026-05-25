@@ -1,13 +1,9 @@
 ---
-import { navHref, navItems, type NavEntry } from "@/data/site-nav";
+import { navItems } from "@/data/site-nav";
 
 const brandAlt = "J & J";
 const logoSrc = "/assets/logo-n.png";
 const cta = { href: "/rsvp", label: "RSVP" } as const;
-
-const navSublinkPanels = navItems.filter(
-	(item): item is Extract<NavEntry, { kind: "sublinks" }> => item.kind === "sublinks",
-);
 
 const pathname = Astro.url.pathname;
 const isCurrent = (href: string): boolean => {
@@ -51,40 +47,21 @@ const isCurrent = (href: string): boolean => {
 						<span class="app-header__nav-highlight" aria-hidden="true"></span>
 						<ul class="app-header__nav-list">
 							{
-								navItems.map((item) =>
-									item.kind === "sublinks" ? (
-										<li class="app-header__nav-item">
-											<button
-												type="button"
-												class:list={[
-													"app-header__nav-link",
-													"app-header__nav-link--disclosure",
-													{ "app-header__nav-link--active": isCurrent(item.path) },
-												]}
-												id={`app-header-nav-trigger-${item.id}`}
-												data-nav-sublinks-trigger={item.id}
-												aria-expanded="false"
-												aria-controls={`app-header-sublinks-${item.id}`}
-												aria-haspopup="true"
-											>
-												{item.label}
-												<span class="app-header__disclosure-chevron" aria-hidden="true"></span>
-											</button>
-										</li>
-									) : (
-										<li class="app-header__nav-item">
-											<a
-												class:list={[
-													"app-header__nav-link",
-													{ "app-header__nav-link--active": isCurrent(item.href) },
-												]}
-												href={item.href}
-											>
-												{item.label}
-											</a>
-										</li>
-									),
-								)
+								navItems.map((item) => (
+									<li class="app-header__nav-item">
+										<a
+											class:list={[
+												"app-header__nav-link",
+												{ "app-header__nav-link--active": isCurrent(item.href) },
+											]}
+											href={item.href}
+											target={item.target}
+											rel={item.target === "_blank" ? "noopener noreferrer" : undefined}
+										>
+											{item.label}
+										</a>
+									</li>
+								))
 							}
 						</ul>
 					</div>
@@ -93,53 +70,6 @@ const isCurrent = (href: string): boolean => {
 					<span class="app-header__close-icon" aria-hidden="true"></span>
 				</button>
 			</div>
-			{
-				navSublinkPanels.map((panel) => (
-					<div
-						class="app-header__nav-sublinks"
-						data-nav-sublinks-panel={panel.id}
-						id={`app-header-sublinks-${panel.id}`}
-						role="region"
-						aria-labelledby={`app-header-nav-trigger-${panel.id}`}
-					>
-						<div class="app-header__nav-sublinks-clip">
-							<div class="app-header__nav-sublinks-motion">
-								<ul class="app-header__nav-sublinks-list">
-									{panel.sublinks.map(({ slug, title, description, image }) => (
-										<li>
-											<a
-												class:list={[
-													"app-header__nav-sublinks-row",
-													{ "app-header__nav-sublinks-row--no-thumb": !image },
-												]}
-												href={navHref(panel.path, slug)}
-											>
-												{image ? (
-													<img
-														class="app-header__nav-sublinks-thumb"
-														src={image}
-														alt=""
-														width="52"
-														height="52"
-														loading="lazy"
-														decoding="async"
-													/>
-												) : null}
-												<span class="app-header__nav-sublinks-copy">
-													<span class="app-header__nav-sublinks-title">{title}</span>
-													{description ? (
-														<span class="app-header__nav-sublinks-desc">{description}</span>
-													) : null}
-												</span>
-											</a>
-										</li>
-									))}
-								</ul>
-							</div>
-						</div>
-					</div>
-				))
-			}
 			</div>
 		</div>
 	</div>
@@ -175,57 +105,13 @@ const isCurrent = (href: string): boolean => {
 		const openBtn = root.querySelector("#app-header-menu-open");
 		const closeBtn = root.querySelector("#app-header-menu-close");
 		const stack = root.querySelector("#app-header-menu-stack");
-		const triggers = root.querySelectorAll("[data-nav-sublinks-trigger]");
-		const panels = root.querySelectorAll("[data-nav-sublinks-panel]");
 		if (!openBtn || !closeBtn) return;
 
 		const mqDesktop = matchMedia("(min-width: 1024px)");
 		const isDesktop = () => mqDesktop.matches;
 
 		const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
-		const useSublinksHover = () => matchMedia("(hover: hover) and (pointer: fine)").matches;
 		const prefersCoarsePointer = () => matchMedia("(hover: none) and (pointer: coarse)").matches;
-
-		let subCloseT = 0;
-		const cancelSubClose = () => {
-			if (subCloseT) clearTimeout(subCloseT);
-			subCloseT = 0;
-		};
-		const scheduleSubClose = () => {
-			cancelSubClose();
-			subCloseT = window.setTimeout(() => {
-				subCloseT = 0;
-				const a = document.activeElement;
-				if (a instanceof Element && root.contains(a) && sublinksId(a)) return;
-				setSublinks(null);
-			}, 160);
-		};
-
-		function sublinksId(el) {
-			if (!(el instanceof Element)) return null;
-			const t = el.closest("[data-nav-sublinks-trigger]");
-			if (t) return t.getAttribute("data-nav-sublinks-trigger");
-			const p = el.closest("[data-nav-sublinks-panel]");
-			return p ? p.getAttribute("data-nav-sublinks-panel") : null;
-		}
-
-		function setSublinks(id) {
-			cancelSubClose();
-			if (!id) {
-				delete root.dataset.navSublinksOpen;
-				triggers.forEach((b) => b.setAttribute("aria-expanded", "false"));
-				panels.forEach((p) => p.removeAttribute("data-open"));
-				return;
-			}
-			root.dataset.navSublinksOpen = id;
-			triggers.forEach((b) => {
-				b.setAttribute("aria-expanded", b.getAttribute("data-nav-sublinks-trigger") === id ? "true" : "false");
-			});
-			panels.forEach((p) => {
-				const pid = p.getAttribute("data-nav-sublinks-panel");
-				pid === id ? p.setAttribute("data-open", "true") : p.removeAttribute("data-open");
-			});
-		}
 
 		function setMenuAria(open) {
 			openBtn.setAttribute("aria-label", open ? "Close menu" : "Open menu");
@@ -235,9 +121,6 @@ const isCurrent = (href: string): boolean => {
 			if (stack instanceof HTMLElement) stack.classList.add("app-header__menu-stack--jump");
 			delete root.dataset.menuOpen;
 			delete root.dataset.menuExit;
-			delete root.dataset.navSublinksOpen;
-			triggers.forEach((b) => b.setAttribute("aria-expanded", "false"));
-			panels.forEach((p) => p.removeAttribute("data-open"));
 			openBtn.setAttribute("aria-expanded", "false");
 			setMenuAria(false);
 			if (stack instanceof HTMLElement) {
@@ -255,7 +138,6 @@ const isCurrent = (href: string): boolean => {
 			if (!open && isDesktop()) return;
 			if (open) {
 				delete root.dataset.menuExit;
-				setSublinks(null);
 				if (stack instanceof HTMLElement) stack.classList.remove("app-header__menu-stack--jump");
 				root.dataset.menuOpen = "true";
 				openBtn.setAttribute("aria-expanded", "true");
@@ -289,22 +171,6 @@ const isCurrent = (href: string): boolean => {
 				if (e.propertyName !== "transform" || e.target !== stack || root.dataset.menuExit !== "true") return;
 				finishMenuClose();
 			});
-			stack.addEventListener(
-				"pointerdown",
-				(e) => {
-					if (!(e.target instanceof Element)) return;
-					if (e.target.closest("[data-nav-sublinks-trigger]")) {
-						cancelSubClose();
-						return;
-					}
-					const panel = e.target.closest("[data-nav-sublinks-panel]");
-					if (!panel) return;
-					cancelSubClose();
-					const sid = panel.getAttribute("data-nav-sublinks-panel");
-					if (sid) setSublinks(sid);
-				},
-				true,
-			);
 		}
 
 		openBtn.addEventListener("click", () => {
@@ -319,88 +185,10 @@ const isCurrent = (href: string): boolean => {
 			if (e.target.closest("#app-header-menu-stack a[href]")) setMenuOpen(false);
 		});
 
-		triggers.forEach((btn) => {
-			const id = btn.getAttribute("data-nav-sublinks-trigger");
-			if (!id) return;
-			btn.addEventListener(
-				"mousedown",
-				(e) => {
-					if (e.button !== 0) return;
-					btn.dataset.preSublinksOpen = root.dataset.navSublinksOpen ?? "";
-				},
-				true,
-			);
-			btn.addEventListener("click", (e) => {
-				e.stopPropagation();
-				const pre = btn.dataset.preSublinksOpen;
-				delete btn.dataset.preSublinksOpen;
-				if (pre === undefined) {
-					setSublinks(root.dataset.navSublinksOpen === id ? null : id);
-					return;
-				}
-				if (pre === id) setSublinks(null);
-				else setSublinks(id);
-			});
-			btn.addEventListener("mouseenter", () => useSublinksHover() && setSublinks(id));
-			btn.addEventListener("mouseleave", () => useSublinksHover() && scheduleSubClose());
-		});
-
-		panels.forEach((panel) => {
-			const id = panel.getAttribute("data-nav-sublinks-panel");
-			if (!id) return;
-			panel.addEventListener("mouseenter", () => useSublinksHover() && setSublinks(id));
-			panel.addEventListener("mouseleave", () => useSublinksHover() && scheduleSubClose());
-		});
-
-		root.addEventListener("focusin", (e) => {
-			if (root.dataset.menuOpen !== "true") return;
-			const target = e.target instanceof Element ? e.target : null;
-			if (!target) return;
-			const triggerEl = target.closest("[data-nav-sublinks-trigger]");
-			if (triggerEl) {
-				const tid = triggerEl.getAttribute("data-nav-sublinks-trigger");
-				if (!tid) return;
-				const rel = e.relatedTarget;
-				if (rel instanceof Element) {
-					const prevT = rel.closest("[data-nav-sublinks-trigger]");
-					if (prevT && prevT !== triggerEl) setSublinks(tid);
-					else if (rel.closest("[data-nav-sublinks-panel]")) setSublinks(tid);
-				}
-				return;
-			}
-			const id = sublinksId(target);
-			if (id) setSublinks(id);
-		});
-		root.addEventListener("focusout", () => {
-			if (root.dataset.menuOpen !== "true") return;
-			requestAnimationFrame(() => {
-				const a = document.activeElement;
-				if (!(a instanceof Node) || !root.contains(a)) {
-					setSublinks(null);
-					return;
-				}
-				if (a instanceof Element && a.closest("[data-nav-sublinks-trigger]")) return;
-				const id = sublinksId(a);
-				setSublinks(id);
-			});
-		});
-
-		document.addEventListener(
-			"click",
-			(e) => {
-				if (!root.dataset.navSublinksOpen) return;
-				const t = e.target;
-				if (!(t instanceof Node) || (stack instanceof HTMLElement && stack.contains(t))) return;
-				setSublinks(null);
-			},
-			true,
-		);
-
 		window.addEventListener("keydown", (e) => {
 			if (e.key !== "Escape" || root.dataset.menuOpen !== "true") return;
 			e.preventDefault();
-			if (root.dataset.navSublinksOpen) setSublinks(null);
-			else if (!isDesktop()) setMenuOpen(false);
+			if (!isDesktop()) setMenuOpen(false);
 		});
 
 		function applyLayoutMode() {
@@ -448,17 +236,15 @@ const isCurrent = (href: string): boolean => {
 		--header-idle-glass-duration: 520ms;
 		--header-idle-glass-ease: cubic-bezier(0.4, 0, 0.2, 1);
 		--header-menu-slide-duration: 560ms;
-		--header-panel-ease: cubic-bezier(0.34, 1.56, 0.64, 1);
 		--header-menu-stack-ease: cubic-bezier(0.34, 1.56, 0.64, 1);
 		--header-menu-stack-duration: var(--header-menu-slide-duration);
-		--header-menu-radius: 40px;
 		--header-menu-stack-hide-y: calc(-100% - 1rem);
 		--header-idle-split-duration: var(--header-menu-stack-duration);
 		--header-idle-split-ease: var(--header-menu-stack-ease);
 
 		@apply absolute inset-x-0 top-0 z-50 w-full bg-transparent;
 		padding-top: max(1rem, env(safe-area-inset-top, 0px));
-		font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+		font-family: var(--font-body);
 		-webkit-text-size-adjust: 100%;
 		text-size-adjust: 100%;
 	}
@@ -653,16 +439,6 @@ const isCurrent = (href: string): boolean => {
 			transform var(--header-idle-split-duration) var(--header-idle-split-ease);
 	}
 
-	.app-header__nav-logo {
-		@apply flex shrink-0 items-center no-underline;
-	}
-
-	@media (max-width: 1023px) {
-		.app-header__menu-panel .app-header__nav-list > li:has(> .app-header__nav-logo) {
-			display: none;
-		}
-	}
-
 	.app-header[data-scrolled]:not([data-menu-open="true"]) .app-header__bar .app-header__logo {
 		background-color: var(--header-glass-bg);
 		border-color: var(--header-glass-border);
@@ -751,147 +527,6 @@ const isCurrent = (href: string): boolean => {
 		-webkit-backdrop-filter: blur(var(--header-glass-blur));
 		box-shadow: 0 2px 16px rgb(110 82 60 / 0.1);
 		align-items: center;
-	}
-
-	.app-header__nav-sublinks {
-		position: relative;
-		width: 100%;
-		margin-top: 0.5rem;
-		display: grid;
-		grid-template-rows: 0fr;
-		transition: grid-template-rows var(--header-menu-slide-duration) var(--header-panel-ease);
-	}
-
-	.app-header__nav-sublinks[data-open="true"]::before {
-		content: "";
-		position: absolute;
-		left: 0;
-		right: 0;
-		bottom: 100%;
-		height: 0.625rem;
-	}
-
-	.app-header__nav-sublinks[data-open="true"] {
-		grid-template-rows: 1fr;
-	}
-
-	.app-header__nav-sublinks-clip {
-		min-height: 0;
-		overflow: hidden;
-		border-radius: var(--header-menu-radius);
-	}
-
-	.app-header__nav-sublinks-motion {
-		transform: translateY(calc(-100% - 0.65rem));
-		opacity: 0;
-		pointer-events: none;
-		transition:
-			transform var(--header-menu-slide-duration) var(--header-panel-ease),
-			opacity 380ms var(--header-panel-ease);
-	}
-
-	.app-header__nav-sublinks[data-open="true"] .app-header__nav-sublinks-motion {
-		transform: translateY(0);
-		opacity: 1;
-		pointer-events: auto;
-	}
-
-	.app-header__nav-sublinks-list {
-		list-style: none;
-		margin: 0;
-		padding: 0.45rem;
-		display: flex;
-		flex-direction: column;
-		gap: 0.25rem;
-		border-radius: var(--header-menu-radius);
-		border: 1px solid var(--header-glass-border);
-		background: var(--header-glass-bg);
-		backdrop-filter: blur(var(--header-glass-blur));
-		-webkit-backdrop-filter: blur(var(--header-glass-blur));
-		box-shadow: 0 12px 36px rgb(110 82 60 / 0.15);
-	}
-
-	.app-header__nav-sublinks-row {
-		display: flex;
-		align-items: center;
-		gap: 0.65rem;
-		padding: 0.45rem 0.55rem;
-		border-radius: 40px;
-		text-decoration: none;
-		color: var(--header-tan);
-		border: 1px solid transparent;
-		touch-action: manipulation;
-		transition:
-			background-color var(--header-transition-duration) var(--header-transition-ease),
-			border-color var(--header-transition-duration) var(--header-transition-ease);
-	}
-
-	.app-header__nav-sublinks-row:hover {
-		background: rgb(255 255 255 / 0.48);
-		border-color: var(--header-glass-border);
-	}
-
-	.app-header__nav-sublinks-row--no-thumb {
-		padding-left: 0.7rem;
-	}
-
-	.app-header__nav-sublinks-thumb {
-		width: 3.25rem;
-		height: 3.25rem;
-		object-fit: cover;
-		object-position: center 35%;
-		transform: scale(1.12);
-		transform-origin: center;
-		border-radius: calc(var(--header-menu-radius) * 0.65);
-		flex-shrink: 0;
-	}
-
-	.app-header__nav-sublinks-copy {
-		display: flex;
-		min-width: 0;
-		flex: 1;
-		flex-direction: column;
-		gap: 0.12rem;
-		text-align: left;
-	}
-
-	.app-header__nav-sublinks-title {
-		font-size: 0.9375rem;
-		font-weight: 700;
-		line-height: 1.2;
-	}
-
-	.app-header__nav-sublinks-desc {
-		font-size: 0.8125rem;
-		font-weight: 500;
-		line-height: 1.38;
-		color: rgb(110 82 60 / 0.85);
-	}
-
-	.app-header__nav-link--disclosure {
-		@apply gap-0.5;
-		cursor: pointer;
-		font-family: inherit;
-		background: transparent;
-		margin: 0;
-		text-align: inherit;
-		touch-action: manipulation;
-	}
-
-	.app-header__disclosure-chevron {
-		display: block;
-		width: 0.4rem;
-		height: 0.4rem;
-		flex-shrink: 0;
-		margin-left: 0.2rem;
-		border-right: 2px solid currentColor;
-		border-bottom: 2px solid currentColor;
-		transform: translateY(-2px) rotate(45deg);
-		transition: transform 200ms var(--header-transition-ease);
-	}
-
-	.app-header__nav-link--disclosure[aria-expanded="true"] .app-header__disclosure-chevron {
-		transform: translateY(2px) rotate(225deg);
 	}
 
 	.app-header__nav-item {
@@ -990,14 +625,26 @@ const isCurrent = (href: string): boolean => {
 	}
 
 	@media (min-width: 1024px) {
+		.app-header__nav {
+			justify-content: center;
+		}
+
+		.app-header__nav-track {
+			margin-inline: auto;
+		}
+
+		.app-header__nav-list {
+			gap: 0.0625rem;
+		}
+
 		.app-header__nav-link {
-			padding: 1rem 1.5rem;
-			font-size: 0.9375rem;
+			padding: 0.82rem 1.02rem;
+			font-size: 0.8125rem;
 		}
 
 		.app-header__cta {
-			padding: 1rem 1.35rem;
-			font-size: 0.9375rem;
+			padding: 0.82rem 1.1rem;
+			font-size: 0.8125rem;
 		}
 	}
 
@@ -1054,6 +701,10 @@ const isCurrent = (href: string): boolean => {
 	}
 
 	@media (min-width: 1024px) {
+		.app-header__logo-img {
+			height: 2.5rem;
+		}
+
 		.app-header[data-scrolled] .app-header__logo-img {
 			height: 2.25rem;
 		}
@@ -1174,32 +825,14 @@ const isCurrent = (href: string): boolean => {
 		transform: translateY(-3.5px) rotate(-45deg);
 	}
 
-	.app-header__sr-only {
-		@apply absolute -m-px h-px w-px overflow-hidden whitespace-nowrap border-0 p-0;
-		clip: rect(0, 0, 0, 0);
-	}
-
 	@media (prefers-reduced-motion: reduce) {
 		.app-header {
 			--header-transition-duration: 0.01ms;
 			--header-menu-slide-duration: 0.01ms;
-			--header-panel-ease: linear;
 			--header-idle-glass-duration: 0.01ms;
 			--header-idle-glass-ease: linear;
 			--header-menu-stack-ease: linear;
 			--header-menu-stack-duration: 0.01ms;
-		}
-
-		.app-header__nav-sublinks {
-			transition: none;
-		}
-
-		.app-header__nav-sublinks-motion {
-			transition: none;
-		}
-
-		.app-header__disclosure-chevron {
-			transition: none;
 		}
 
 		.app-header__idle .app-header__logo,
