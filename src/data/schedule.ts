@@ -89,7 +89,7 @@ export const schedulePageData: SchedulePageData = {
 				{
 					icon: "♥︎♥︎",
 					title: "Traditional Marriage (Ịgba Nkwụ)",
-					timeLabel: "11:00 am",
+					timeLabel: "1:00 pm",
 					venue: "Okai Item, Bende Local Government Area",
 					location:
 						"Onuoha's Country Home, Okai Item, Abia State, Nigeria",
