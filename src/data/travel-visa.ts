@@ -32,15 +32,15 @@ export const travelVisaPage: TravelVisaPageData = {
 		title: "Visa Information",
 		ledes: [
 			"Most guests travelling from outside Nigeria will need a valid visa before departure. Start with the official application portal below.",
-			"For wedding attendance, most guests should check the Short Visit category, especially the Tourism Visa (F5A), on the Nigerian Immigration site.",
+			"For wedding attendance, most guests should check the Short Visit category, especially the Visiting (Single Entry) Visa (F6A), on the Nigerian Immigration site.",
 			"Always confirm current requirements with the Nigerian embassy or consulate serving your country.",
 		],
 	},
 	basics: {
-		title: "Basic visa checklist",
+		title: "Basic Visa Checklist",
 		lede: "Apply early, select the correct visa type, and make sure your details match your passport exactly.",
 		points: [
-			"Use the official portal and review Short Visit options, including Tourism Visa (F5A), if your trip is for wedding attendance/tourism.",
+			"Use the official portal and review Short Visit options, including Visiting (Single Entry) Visa (F6A), if your trip is for wedding attendance/visiting.",
 			"Visa fee: USD 160. Complete payment on the official portal and keep your payment receipt.",
 			"Passport checklist: valid for at least 6 months on the date you submit your application, with at least 2 blank visa pages for endorsement.",
 			"Bring two recent passport photos (usually 35x40mm, white background) and make sure your name/date-of-birth details match your passport exactly.",
@@ -53,8 +53,8 @@ export const travelVisaPage: TravelVisaPageData = {
 	},
 	applyCard: {
 		eyebrow: "Official resources",
-		title: "Apply through the official visa portal",
-		copy: "Start your application using the official portal and confirm the exact Short Visit visa type (such as Tourism Visa F5A) before submitting.",
+		title: "Apply Through the Official Visa Portal",
+		copy: "Start your application using the official portal and confirm the exact Short Visit visa type (such as Visiting (Single Entry) Visa F6A) before submitting.",
 		links: [
 			{
 				label: "Start Visa Application",
@@ -62,8 +62,8 @@ export const travelVisaPage: TravelVisaPageData = {
 				variant: "primary",
 			},
 			{
-				label: "Tourism Visa (F5A) Details",
-				href: "https://immigration.gov.ng/info-center/tourism-visa-f5a/",
+				label: "Visiting (Single Entry) Visa (F6A) Details",
+				href: "https://immigration.gov.ng/info-center/",
 				variant: "secondary",
 			},
 			{
@@ -72,6 +72,6 @@ export const travelVisaPage: TravelVisaPageData = {
 				variant: "secondary",
 			},
 		],
-		note: "Current NIS guidance lists Tourism Visa F5A as a short-visit option for tourism/wedding-type travel. Requirements vary by nationality and mission, so confirm final eligibility, subtype, supporting documents, and photo specs with the embassy or consulate serving your country before submission.",
+		note: "Current NIS guidance lists Visiting (Single Entry) Visa F6A as a short-visit option for visiting/wedding-type travel. Requirements vary by nationality and mission, so confirm final eligibility, subtype, supporting documents, and photo specs with the embassy or consulate serving your country before submission.",
 	},
 };

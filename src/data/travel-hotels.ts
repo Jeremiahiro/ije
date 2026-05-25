@@ -44,7 +44,7 @@ const data: TravelHotelsPageData = {
 						"Ikeja GRA property with a rooftop terrace, pool, and 24-hour restaurant (African and continental). A strong pick for a comfortable first night after you land.",
 					location: "29 Joel Ogunnaike St, Ikeja GRA, Ikeja",
 					distance:
-						"~15–30 mins to Murtala Muhammed International (traffic dependent)",
+						"~15–30 mins to Murtala Muhammed International",
 					distanceKind: "airport",
 					website: "https://shoregatehotels.com/",
 					mapUrl:
@@ -56,7 +56,7 @@ const data: TravelHotelsPageData = {
 						"Full-service Marriott in Ikeja GRA with several restaurants and bars, an outdoor pool, fitness centre, and spa—polished comfort for a first night after landing.",
 					location: "122 Joel Ogunnaike St, Ikeja GRA, Ikeja",
 					distance:
-						"~15–30 mins to Murtala Muhammed International (traffic dependent)",
+						"~15–30 mins to Murtala Muhammed International",
 					distanceKind: "airport",
 					website:
 						"https://www.marriott.com/en-us/hotels/loslg-lagos-marriott-hotel-ikeja/",

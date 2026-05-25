@@ -69,8 +69,8 @@ export const navItems: NavTopLink[] = [
 	},
 	{
 		kind: "link",
-		label: "RSVP",
-		href: "/rsvp",
+		label: "Things to Do",
+		href: "/things-to-do",
 		target: "_self",
 	},
 	{

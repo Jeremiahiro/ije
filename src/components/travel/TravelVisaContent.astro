@@ -13,9 +13,6 @@ const externalRel = "noopener noreferrer";
 	</h2>
 	{hero.ledes.map((lede) => <p class="travel-visa__page-lede">{lede}</p>)}
 
-	<p class="travel-visa__apply-eyebrow travel-visa__eyebrow--inline">
-		{applyCard.eyebrow}
-	</p>
 	<p class="travel-visa__apply-title">{applyCard.title}</p>
 	<p class="travel-visa__apply-copy">{applyCard.copy}</p>
 	<div class="travel-visa__actions">
@@ -37,7 +34,6 @@ const externalRel = "noopener noreferrer";
 			))
 		}
 	</div>
-	<p class="travel-visa__note">{applyCard.note}</p>
 
 	<ContentCard variant="secondary" class="travel-visa__main-shell">
 		<h2 class="travel-visa__section-title">{basics.title}</h2>
@@ -62,7 +58,6 @@ const externalRel = "noopener noreferrer";
 
 	.travel-visa__page-lede {
 		margin: 0 0 var(--travel-block-gap);
-		max-width: 42rem;
 		font-size: 0.9375rem;
 		line-height: 1.55;
 		color: var(--text-muted);
@@ -124,21 +119,6 @@ const externalRel = "noopener noreferrer";
 
 	.travel-visa__apply-card {
 		margin-top: 0;
-	}
-
-	.travel-visa__apply-eyebrow {
-		margin: 0 0 0.85rem;
-	}
-
-	.travel-visa__eyebrow--inline {
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
-		text-transform: none;
-		letter-spacing: 0.2em;
-		font-size: 0.6875rem;
-		font-weight: 700;
-		color: rgb(92 74 61 / 0.78);
 	}
 
 	.travel-visa__apply-title {
@@ -217,17 +197,6 @@ const externalRel = "noopener noreferrer";
 	.travel-visa__btn:focus-visible {
 		outline: 2px solid #4e3b2c;
 		outline-offset: 2px;
-	}
-
-	.travel-visa__note {
-		margin: 1rem 0 0;
-		padding: 0.75rem 1rem;
-		border-radius: 0.75rem;
-		border: 1px dashed rgb(110 82 60 / 0.22);
-		background: rgb(255 255 255 / 0.42);
-		font-size: 0.875rem;
-		line-height: 1.55;
-		color: var(--text-muted);
 	}
 
 	@media (max-width: 899px) {
