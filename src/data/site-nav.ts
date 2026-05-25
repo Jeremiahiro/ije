@@ -23,14 +23,14 @@ export const homePageContent = {
 			title: "Traditional Marriage (Ịgba Nkwụ)",
 			dateLabel: "January 2, 2027",
 			location:
-				"Archbishop Onuoha's Country Home, Okai-Item, Bende LGA in Abia State, Nigeria.",
-			href: "/schedule",
+				"Onuoha's Country Home, Okai-Item, Bende Local Government Area in Abia State, Nigeria.",
+			href: "/schedule#traditional-marriage",
 		},
 		{
 			title: "Church Wedding",
 			dateLabel: "January 4, 2027",
-			location: "Rhema Chapel, Mission Hill, Eziama Ossah, Umuahia, Abia State.",
-			href: "/schedule",
+			location: "Methodist Theological Institute (MTI), Michael Okpara Boulevard, Umuahia, Abia State.",
+			href: "/schedule#church-wedding",
 		},
 	] as HomeEventPreview[],
 };
