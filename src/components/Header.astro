@@ -316,24 +316,10 @@ const isCurrent = (href: string): boolean => {
 
 		.app-header__nav-list {
 			min-width: max-content;
-			width: max-content;
-			flex-wrap: nowrap;
-			justify-content: flex-start;
-			gap: 0.0625rem;
-		}
-
-		.app-header__nav-link {
-			padding: 0.56rem 0.44rem;
-			font-size: 0.5625rem;
-			letter-spacing: 0.01em;
-			line-height: 1.15;
-			white-space: nowrap;
 		}
 
 		.app-header__nav-track {
 			width: max-content;
-			max-width: none;
-			padding: 0.125rem;
 		}
 
 		.app-header__logo-img {
@@ -651,8 +637,8 @@ const isCurrent = (href: string): boolean => {
 		@apply inline-flex items-center justify-center whitespace-nowrap rounded-full border border-transparent no-underline;
 		box-sizing: border-box;
 		min-width: min-content;
-		padding: 0.72rem 0.68rem;
-		font-size: 0.6875rem;
+		padding: 0.72rem 0.58rem;
+		font-size: 0.5875rem;
 		font-weight: 600;
 		line-height: 1.25;
 		color: var(--header-tan);
@@ -670,6 +656,28 @@ const isCurrent = (href: string): boolean => {
 	@media (min-width: 640px) {
 		.app-header__nav-link {
 			padding: 0.78rem 0.9rem;
+		}
+	}
+
+	@media (max-width: 767px) {
+		.app-header__nav-list {
+			width: max-content;
+			flex-wrap: nowrap;
+			justify-content: flex-start;
+			gap: 0.0625rem;
+		}
+
+		.app-header__nav-link {
+			padding: 0.56rem 0.44rem;
+			font-size: 0.5625rem;
+			letter-spacing: 0.01em;
+			line-height: 1.15;
+			white-space: nowrap;
+		}
+
+		.app-header__nav-track {
+			max-width: none;
+			padding: 0.125rem;
 		}
 	}
 
