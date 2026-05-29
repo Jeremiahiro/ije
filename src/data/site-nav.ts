@@ -1,7 +1,7 @@
 /** Shared nav + routes for Header and static pages */
 export const siteTitleSuffix = "Jane & Jeremiah";
 export const bride = "Jane Onuoha";
-export const groom = "Jeremiah Iromaka-Amajo";
+export const groom = "Jeremiah Iromaka-Amajọ";
 export const defaultPageDescription = `${siteTitleSuffix} · Wedding details coming soon.`;
 
 export const registryHref =

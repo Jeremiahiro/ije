@@ -84,13 +84,7 @@ export const travelFlightsPage: TravelFlightsPageData = {
 			{
 				tag: "International",
 				title: "Arrive in Lagos",
-				visual: {
-					kind: "video",
-					poster: "/assets/lagos.png",
-					sources: [
-						{ src: "/assets/lagos.mp4", type: "video/mp4" },
-					],
-				},
+				visual: "/assets/lagos.png",
 				footer: "Murtala Muhammed International Airport",
 				detailDescription: `Fly into Lagos on your international flight. Plan to arrive between December 29 and 31, 2026 for the Traditional Marriage or January 2, 2027 for the Church Wedding — these are the only days we will coordinate airport assistance and ground transportation for guests traveling from outside${nbsp}Nigeria.`,
 			},

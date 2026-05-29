@@ -6,25 +6,25 @@ import Header from "@/components/Header.astro";
 import SiteGate from "@/components/SiteGate.astro";
 
 interface Props {
-	title: string;
-	description?: string;
-	canonicalHref?: string;
-	ogTitle?: string;
-	ogDescription?: string;
-	ogUrl?: string;
-	htmlClass?: string;
-	bodyClass?: string;
+  title: string;
+  description?: string;
+  canonicalHref?: string;
+  ogTitle?: string;
+  ogDescription?: string;
+  ogUrl?: string;
+  htmlClass?: string;
+  bodyClass?: string;
 }
 
 const {
-	title,
-	description,
-	canonicalHref = Astro.url.href,
-	ogTitle,
-	ogDescription,
-	ogUrl = canonicalHref,
-	htmlClass,
-	bodyClass,
+  title,
+  description,
+  canonicalHref = Astro.url.href,
+  ogTitle,
+  ogDescription,
+  ogUrl = canonicalHref,
+  htmlClass,
+  bodyClass,
 } = Astro.props;
 
 const resolvedOgTitle = ogTitle ?? title;
@@ -33,44 +33,44 @@ const resolvedOgDescription = ogDescription ?? description;
 
 <!doctype html>
 <html lang="en" class:list={[htmlClass]}>
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-		<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-		<link rel="icon" href="/favicon.ico" sizes="any" />
-		<meta
-			name="viewport"
-			content="width=device-width, initial-scale=1, maximum-scale=1"
-		/>
-		<meta name="generator" content={Astro.generator} />
-		<title>{title}</title>
-		{description ? <meta name="description" content={description} /> : null}
-		<link rel="canonical" href={canonicalHref} />
-		{
-			resolvedOgDescription ? (
-				<>
-					<meta property="og:type" content="website" />
-					<meta property="og:title" content={resolvedOgTitle} />
-					<meta property="og:description" content={resolvedOgDescription} />
-					<meta property="og:url" content={ogUrl} />
-				</>
-			) : null
-		}
-		<link rel="preconnect" href="https://fonts.googleapis.com" />
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link
-			href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap"
-			rel="stylesheet"
-		/>
-		<slot name="head" />
-		<Analytics />
-	</head>
-	<body class:list={[bodyClass]}>
-		<SiteGate />
-		<Header />
-		<div class="site-shell">
-			<slot />
-		</div>
-		<Footer />
-	</body>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1"
+    />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    {description ? <meta name="description" content={description} /> : null}
+    <link rel="canonical" href={canonicalHref} />
+    {
+      resolvedOgDescription ? (
+        <>
+          <meta property="og:type" content="website" />
+          <meta property="og:title" content={resolvedOgTitle} />
+          <meta property="og:description" content={resolvedOgDescription} />
+          <meta property="og:url" content={ogUrl} />
+        </>
+      ) : null
+    }
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Caudex:ital,wght@0,400;0,700;1,400;1,700&family=Manrope:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <slot name="head" />
+    <Analytics />
+  </head>
+  <body class:list={[bodyClass]}>
+    <SiteGate />
+    <Header />
+    <div class="site-shell">
+      <slot />
+    </div>
+    <Footer />
+  </body>
 </html>
