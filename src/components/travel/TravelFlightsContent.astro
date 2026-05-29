@@ -12,7 +12,7 @@ const { international, domestic } = travelFlightsPage;
 		<h2 class="travel-page__section-title">{international.title}</h2>
 		{
 			international.lede ? (
-				<p class="travel-page__section-lede">{international.lede}</p>
+				<p class="travel-page__section-lede copy-preserve-breaks">{international.lede}</p>
 			) : null
 		}
 	</div>
@@ -33,10 +33,10 @@ const { international, domestic } = travelFlightsPage;
 					<p class="travel-flights__banner-title">
 						{international.recommendedDates.title}
 					</p>
-					<p class="travel-flights__banner-copy">
+					<p class="travel-flights__banner-copy copy-preserve-breaks">
 						{international.recommendedDates.copy}
 					</p>
-					<p class="travel-flights__note">
+					<p class="travel-flights__note copy-preserve-breaks">
 						{international.recommendedDates.note}
 					</p>
 				</ContentCard>
@@ -235,7 +235,6 @@ const { international, domestic } = travelFlightsPage;
 	}
 
 	.travel-flights__banner-copy {
-		max-width: 48rem;
 		font-size: 0.9375rem;
 		line-height: 1.55;
 		color: var(--text-muted);

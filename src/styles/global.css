@@ -1,114 +1,123 @@
 @import "tailwindcss";
 
-@font-face {
-	font-family: "Abigail";
-	src:
-		local("Abigail"),
-		url("/assets/abigail_3/Abigail.ttf") format("truetype"),
-		url("/assets/abigail_3/Abigail.otf") format("opentype");
-	font-style: normal;
-	font-weight: 400;
-	font-display: swap;
-}
-
 :root {
-	--site-header-height: 3.5rem;
-	--site-footer-reveal: 30dvh;
-	--footer-overlap: 12px;
-	--focus-ring: #6e523c;
-	--page-bg: #e9e7e4;
-	--page-bg-mid: #e3e0db;
-	--page-tan-glow: rgba(201, 168, 124, 0.32);
-	--page-tan-deep: rgba(110, 82, 60, 0.16);
-	--text-primary: #3a2e26;
-	--text-muted: #5c4a3d;
-	--font-body: "Libre Baskerville", Georgia, Cambria, "Times New Roman", serif;
-	--font-display: "Abigail", "Brush Script MT", cursive;
+  --site-header-height: 3.5rem;
+  --site-footer-reveal: 30dvh;
+  --footer-overlap: 12px;
+  --focus-ring: #6e523c;
+  --page-bg: #e9e7e4;
+  --page-bg-mid: #e3e0db;
+  --page-tan-glow: rgba(201, 168, 124, 0.32);
+  --page-tan-deep: rgba(110, 82, 60, 0.16);
+  --text-primary: #3a2e26;
+  --text-muted: #5c4a3d;
+  --font-body: "Manrope", "Avenir Next", Avenir, "Segoe UI", sans-serif;
+  --font-heading: "Caudex", Georgia, Cambria, "Times New Roman", serif;
 
-	--wrapper-padding-inline: clamp(1rem, 4vw, 2.25rem);
-	--wrapper-max-width: min(80rem);
-	--wrapper-lg-max-width: min(90rem, 1440px);
+  --wrapper-padding-inline: clamp(1rem, 4vw, 2.25rem);
+  --wrapper-max-width: min(80rem);
+  --wrapper-lg-max-width: min(90rem, 1440px);
 }
 
 @media (min-width: 768px) {
-	:root {
-		--site-footer-reveal: 50dvh;
-	}
+  :root {
+    --site-footer-reveal: 50dvh;
+  }
 }
 
 html {
-	background-color: var(--page-bg);
+  background-color: var(--page-bg);
 }
 
 body {
-	margin: 0;
-	min-height: 100%;
-	font-family: var(--font-body);
-	color: var(--text-primary);
-	background-color: var(--page-bg);
-	background-image:
-		radial-gradient(ellipse 92% 78% at 8% 6%, var(--page-tan-glow), transparent 54%),
-		radial-gradient(ellipse 88% 72% at 96% 94%, var(--page-tan-deep), transparent 58%),
-		linear-gradient(168deg, #eceae6 0%, var(--page-bg-mid) 42%, #ebe7e1 100%);
+  margin: 0;
+  min-height: 100%;
+  font-family: var(--font-body);
+  color: var(--text-primary);
+  background-color: var(--page-bg);
+  background-image:
+    radial-gradient(
+      ellipse 92% 78% at 8% 6%,
+      var(--page-tan-glow),
+      transparent 54%
+    ),
+    radial-gradient(
+      ellipse 88% 72% at 96% 94%,
+      var(--page-tan-deep),
+      transparent 58%
+    ),
+    linear-gradient(168deg, #eceae6 0%, var(--page-bg-mid) 42%, #ebe7e1 100%);
 }
 
 h1,
 h2,
 h3 {
-	font-family: var(--font-display);
+  font-family: var(--font-heading);
 }
 
 .site-shell {
-	position: relative;
-	z-index: 1;
-	min-height: 100vh;
-	min-height: 100dvh;
-	margin-bottom: calc(var(--site-footer-reveal) - var(--footer-overlap));
-	background-color: var(--page-bg);
-	background-image:
-		radial-gradient(ellipse 92% 78% at 8% 6%, var(--page-tan-glow), transparent 54%),
-		radial-gradient(ellipse 88% 72% at 96% 94%, var(--page-tan-deep), transparent 58%),
-		linear-gradient(168deg, #eceae6 0%, var(--page-bg-mid) 42%, #ebe7e1 100%);
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  min-height: 100dvh;
+  margin-bottom: calc(var(--site-footer-reveal) - var(--footer-overlap));
+  background-color: var(--page-bg);
+  background-image:
+    radial-gradient(
+      ellipse 92% 78% at 8% 6%,
+      var(--page-tan-glow),
+      transparent 54%
+    ),
+    radial-gradient(
+      ellipse 88% 72% at 96% 94%,
+      var(--page-tan-deep),
+      transparent 58%
+    ),
+    linear-gradient(168deg, #eceae6 0%, var(--page-bg-mid) 42%, #ebe7e1 100%);
 }
 
 .wrapper,
 .wrapper-lg {
-	box-sizing: border-box;
-	width: 100%;
-	margin-inline: auto;
-	padding-inline: var(--wrapper-padding-inline);
+  box-sizing: border-box;
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: var(--wrapper-padding-inline);
 }
 
 .wrapper {
-	max-width: min(var(--wrapper-max-width), 100%);
+  max-width: min(var(--wrapper-max-width), 100%);
 }
 
 .wrapper-lg {
-	max-width: min(var(--wrapper-lg-max-width), 100%);
+  max-width: min(var(--wrapper-lg-max-width), 100%);
 }
 
 @media (max-width: 899px) {
-	:root {
-		--wrapper-padding-inline: clamp(0.875rem, 3.75vw, 1.25rem);
-	}
+  :root {
+    --wrapper-padding-inline: clamp(0.875rem, 3.75vw, 1.25rem);
+  }
 }
 
 html.coming-soon-page .site-shell {
-	flex: 1 1 auto;
-	min-height: 0;
-	display: flex;
-	flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 :where(a, button) {
-	-webkit-tap-highlight-color: transparent;
+  -webkit-tap-highlight-color: transparent;
 }
 
 :where(a, button):focus:not(:focus-visible) {
-	outline: none;
+  outline: none;
 }
 
 :where(a, button):focus-visible {
-	outline: 2px solid var(--focus-ring);
-	outline-offset: 2px;
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.copy-preserve-breaks {
+  white-space: pre-line;
 }

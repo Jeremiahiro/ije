@@ -27,7 +27,9 @@ const {
 >
 	<p class="travel-page-intro__eyebrow">{eyebrow}</p>
 	<h1 id={headingId} class="travel-page-intro__title">{title}</h1>
-	{ledes.map((lede) => <p class="travel-page-intro__lede">{lede}</p>)}
+	{
+		ledes.map((lede) => <p class="travel-page-intro__lede copy-preserve-breaks">{lede}</p>)
+	}
 </header>
 
 <style>

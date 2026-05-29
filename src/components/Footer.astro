@@ -1,277 +1,288 @@
 ---
 import { siteTitleSuffix } from "@/data/site-nav";
 
-const year = new Date().getFullYear();
+const year = 2027;
 const brandMiddle = siteTitleSuffix.slice(1);
 ---
 
 <footer class="site-footer" aria-label="Site">
-	<div class="site-footer__inner">
-		<p class="site-footer__brand" aria-label={siteTitleSuffix}>
-			<span class="site-footer__brand-stage">
-				<span class="site-footer__brand-row">
-					<span class="site-footer__brand-lead">J</span>
-					<span class="site-footer__brand-segment site-footer__brand-segment--full">{brandMiddle}</span>
-					<span class="site-footer__brand-segment site-footer__brand-segment--initials" aria-hidden="true">
-						&#x2665;&#xFE0E;J
-					</span>
-				</span>
-			</span>
-		</p>
-		<p class="site-footer__meta">&copy; {year} · With love</p>
-	</div>
+  <div class="site-footer__inner">
+    <p class="site-footer__brand" aria-label={siteTitleSuffix}>
+      <span class="site-footer__brand-stage">
+        <span class="site-footer__brand-row">
+          <span class="site-footer__brand-lead">J</span>
+          <span
+            class="site-footer__brand-segment site-footer__brand-segment--full"
+            >{brandMiddle}</span
+          >
+          <span
+            class="site-footer__brand-segment site-footer__brand-segment--initials"
+            aria-hidden="true"
+          >
+            &#x2665;&#xFE0E;J
+          </span>
+        </span>
+      </span>
+    </p>
+    <p class="site-footer__meta">&copy; {year} · With love</p>
+  </div>
 </footer>
 
 <style>
-	.site-footer {
-		--footer-tan: #6e523c;
-		font-style: italic;
-		position: fixed;
-		inset-inline: 0;
-		bottom: 0;
-		z-index: 0;
-		height: var(--site-footer-reveal);
-		overflow: hidden;
-		padding: 1.25rem 1.25rem calc(1.25rem + env(safe-area-inset-bottom, 0px));
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		color: var(--footer-tan);
-		background-color: rgb(233 231 228);
-		background-image:
-			linear-gradient(
-				180deg,
-				rgb(255 252 247 / 0.82) 0%,
-				rgb(233 228 220 / 0.75) 42%,
-				rgb(220 212 202 / 0.7) 100%
-			),
-			url("/assets/for-footer.jpeg");
-		background-size: cover;
-		background-position: center, top;
-		background-repeat: no-repeat;
-		box-shadow: 0 -12px 40px -8px rgb(110 82 60 / 0.12);
-	}
+  .site-footer {
+    --footer-tan: #6e523c;
+    position: fixed;
+    inset-inline: 0;
+    bottom: 0;
+    z-index: 0;
+    height: var(--site-footer-reveal);
+    overflow: hidden;
+    padding: 1.25rem 1.25rem calc(1.25rem + env(safe-area-inset-bottom, 0px));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: var(--footer-tan);
+    background-color: rgb(233 231 228);
+    background-image:
+      linear-gradient(
+        180deg,
+        rgb(255 252 247 / 0.82) 0%,
+        rgb(233 228 220 / 0.75) 42%,
+        rgb(220 212 202 / 0.7) 100%
+      ),
+      url("/assets/for-footer.jpeg");
+    background-size: cover;
+    background-position: center, top;
+    background-repeat: no-repeat;
+    box-shadow: 0 -12px 40px -8px rgb(110 82 60 / 0.12);
+  }
 
-	.site-footer__inner {
-		position: relative;
-		z-index: 1;
-		flex: 1 1 auto;
-		width: 100%;
-		max-width: min(100%, 48rem);
-		height: 100%;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		min-height: 0;
-	}
+  .site-footer__inner {
+    position: relative;
+    z-index: 1;
+    flex: 1 1 auto;
+    width: 100%;
+    max-width: min(100%, 48rem);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 0;
+  }
 
-	.site-footer__inner::before {
-		content: "";
-		flex: 1 1 auto;
-		min-height: 0;
-		width: 100%;
-	}
+  .site-footer__inner::before {
+    content: "";
+    flex: 1 1 auto;
+    min-height: 0;
+    width: 100%;
+  }
 
-	.site-footer__brand {
-		position: absolute;
-		inset-inline: 0;
-		top: 50%;
-		z-index: 2;
-		display: flex;
-		justify-content: center;
-		width: 100%;
-		margin: 0;
-		padding-inline: 0.75rem;
-		opacity: 0;
-		transform: translateY(calc(-50% - 130%));
-		transition:
-			transform 1.05s cubic-bezier(0.22, 1, 0.36, 1),
-			opacity 0.65s ease;
-	}
+  .site-footer__brand {
+    position: absolute;
+    inset-inline: 0;
+    top: 50%;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin: 0;
+    padding-inline: 0.75rem;
+    opacity: 0;
+    transform: translateY(calc(-50% - 130%));
+    transition:
+      transform 1.05s cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 0.65s ease;
+  }
 
-	.site-footer__brand--revealed {
-		opacity: 1;
-		transform: translateY(-50%);
-	}
+  .site-footer__brand--revealed {
+    opacity: 1;
+    transform: translateY(-50%);
+  }
 
-	.site-footer__brand-stage {
-		--brand-cycle: 6s;
-		--brand-stage-width: 20rem;
-		--brand-full-width: 18rem;
-		--brand-initials-width: 4rem;
-		position: relative;
-		display: block;
-		width: var(--brand-stage-width);
-		max-width: 100%;
-		height: 1.25em;
-		font-family: var(--font-display);
-		font-size: clamp(2.25rem, min(11vw, 100vw / 9.5), 4.75rem);
-		line-height: 1.25;
-		color: #3a281c;
-		letter-spacing: 0.03em;
-	}
+  .site-footer__brand-stage {
+    --brand-cycle: 6s;
+    --brand-stage-width: 20rem;
+    --brand-full-width: 18rem;
+    --brand-initials-width: 4rem;
+    position: relative;
+    display: block;
+    width: var(--brand-stage-width);
+    max-width: 100%;
+    height: 1.25em;
+    font-family: var(--font-heading);
+    font-size: clamp(2.25rem, min(11vw, 100vw / 9.5), 4.75rem);
+    line-height: 1.25;
+    color: #3a281c;
+    letter-spacing: 0.03em;
+  }
 
-	.site-footer__brand-row {
-		position: absolute;
-		left: 50%;
-		top: 0;
-		transform: translateX(-50%);
-		display: inline-flex;
-		align-items: baseline;
-		white-space: nowrap;
-	}
+  .site-footer__brand-row {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+    display: inline-flex;
+    align-items: baseline;
+    white-space: nowrap;
+  }
 
-	.site-footer__brand-segment {
-		overflow: hidden;
-		max-width: 0;
-		animation-duration: var(--brand-cycle);
-		animation-timing-function: ease-in-out;
-		animation-iteration-count: infinite;
-	}
+  .site-footer__brand-segment {
+    overflow: hidden;
+    max-width: 0;
+    animation-duration: var(--brand-cycle);
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+  }
 
-	.site-footer__brand-segment--full {
-		animation-name: site-footer-brand-full;
-	}
+  .site-footer__brand-segment--full {
+    animation-name: site-footer-brand-full;
+  }
 
-	.site-footer__brand-segment--initials {
-		animation-name: site-footer-brand-initials;
-	}
+  .site-footer__brand-segment--initials {
+    animation-name: site-footer-brand-initials;
+  }
 
-	@keyframes site-footer-brand-full {
-		0%,
-		22%,
-		78%,
-		100% {
-			max-width: var(--brand-full-width);
-		}
+  @keyframes site-footer-brand-full {
+    0%,
+    22%,
+    78%,
+    100% {
+      max-width: var(--brand-full-width);
+    }
 
-		34%,
-		66% {
-			max-width: 0;
-		}
-	}
+    34%,
+    66% {
+      max-width: 0;
+    }
+  }
 
-	@keyframes site-footer-brand-initials {
-		0%,
-		22%,
-		78%,
-		100% {
-			max-width: 0;
-		}
+  @keyframes site-footer-brand-initials {
+    0%,
+    22%,
+    78%,
+    100% {
+      max-width: 0;
+    }
 
-		34%,
-		66% {
-			max-width: var(--brand-initials-width);
-		}
-	}
+    34%,
+    66% {
+      max-width: var(--brand-initials-width);
+    }
+  }
 
-	.site-footer__meta {
-		flex: 0 0 auto;
-		position: relative;
-		z-index: 1;
-		margin: 0;
-		font-size: 0.75rem;
-		font-weight: 500;
-		color: rgb(110 82 60 / 0.72);
-	}
+  .site-footer__meta {
+    flex: 0 0 auto;
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: rgb(110 82 60 / 0.72);
+  }
 
-	@media (prefers-reduced-motion: reduce) {
-		.site-footer__brand {
-			opacity: 1;
-			transform: translateY(-50%);
-			transition: none;
-		}
+  @media (prefers-reduced-motion: reduce) {
+    .site-footer__brand {
+      opacity: 1;
+      transform: translateY(-50%);
+      transition: none;
+    }
 
-		.site-footer__brand-segment--full {
-			max-width: var(--brand-full-width);
-			animation: none;
-		}
+    .site-footer__brand-segment--full {
+      max-width: var(--brand-full-width);
+      animation: none;
+    }
 
-		.site-footer__brand-segment--initials {
-			display: none;
-		}
-	}
+    .site-footer__brand-segment--initials {
+      display: none;
+    }
+  }
 </style>
 
 <script>
-	function measureUnclippedWidth(el: HTMLElement) {
-		const previousAnimation = el.style.animation;
-		const previousMaxWidth = el.style.maxWidth;
-		el.style.animation = "none";
-		el.style.maxWidth = "none";
-		const width = Math.ceil(el.getBoundingClientRect().width);
-		el.style.maxWidth = previousMaxWidth;
-		el.style.animation = previousAnimation;
-		return width;
-	}
+  function measureUnclippedWidth(el: HTMLElement) {
+    const previousAnimation = el.style.animation;
+    const previousMaxWidth = el.style.maxWidth;
+    el.style.animation = "none";
+    el.style.maxWidth = "none";
+    const width = Math.ceil(el.getBoundingClientRect().width);
+    el.style.maxWidth = previousMaxWidth;
+    el.style.animation = previousAnimation;
+    return width;
+  }
 
-	function measureBrandStage(stage: HTMLElement) {
-		const lead = stage.querySelector(".site-footer__brand-lead");
-		const full = stage.querySelector(".site-footer__brand-segment--full");
-		const initials = stage.querySelector(".site-footer__brand-segment--initials");
-		if (
-			!(lead instanceof HTMLElement) ||
-			!(full instanceof HTMLElement) ||
-			!(initials instanceof HTMLElement)
-		) {
-			return;
-		}
+  function measureBrandStage(stage: HTMLElement) {
+    const lead = stage.querySelector(".site-footer__brand-lead");
+    const full = stage.querySelector(".site-footer__brand-segment--full");
+    const initials = stage.querySelector(
+      ".site-footer__brand-segment--initials",
+    );
+    if (
+      !(lead instanceof HTMLElement) ||
+      !(full instanceof HTMLElement) ||
+      !(initials instanceof HTMLElement)
+    ) {
+      return;
+    }
 
-		const leadWidth = measureUnclippedWidth(lead);
-		const fullWidth = measureUnclippedWidth(full);
-		const initialsWidth = measureUnclippedWidth(initials);
+    const leadWidth = measureUnclippedWidth(lead);
+    const fullWidth = measureUnclippedWidth(full);
+    const initialsWidth = measureUnclippedWidth(initials);
 
-		stage.style.setProperty("--brand-full-width", `${fullWidth}px`);
-		stage.style.setProperty("--brand-initials-width", `${initialsWidth}px`);
-		stage.style.setProperty(
-			"--brand-stage-width",
-			`${Math.ceil(leadWidth + Math.max(fullWidth, initialsWidth))}px`,
-		);
-	}
+    stage.style.setProperty("--brand-full-width", `${fullWidth}px`);
+    stage.style.setProperty("--brand-initials-width", `${initialsWidth}px`);
+    stage.style.setProperty(
+      "--brand-stage-width",
+      `${Math.ceil(leadWidth + Math.max(fullWidth, initialsWidth))}px`,
+    );
+  }
 
-	function initFooter() {
-		const footer = document.querySelector(".site-footer");
-		const shell = document.querySelector(".site-shell");
-		if (!(footer instanceof HTMLElement) || !(shell instanceof HTMLElement)) return;
+  function initFooter() {
+    const footer = document.querySelector(".site-footer");
+    const shell = document.querySelector(".site-shell");
+    if (!(footer instanceof HTMLElement) || !(shell instanceof HTMLElement))
+      return;
 
-		const brand = footer.querySelector(".site-footer__brand");
-		const stage = footer.querySelector(".site-footer__brand-stage");
-		if (!(brand instanceof HTMLElement) || !(stage instanceof HTMLElement)) return;
+    const brand = footer.querySelector(".site-footer__brand");
+    const stage = footer.querySelector(".site-footer__brand-stage");
+    if (!(brand instanceof HTMLElement) || !(stage instanceof HTMLElement))
+      return;
 
-		let revealed = false;
-		let resizeFrame = 0;
+    let revealed = false;
+    let resizeFrame = 0;
 
-		const queueMeasure = () => {
-			cancelAnimationFrame(resizeFrame);
-			resizeFrame = requestAnimationFrame(() => {
-				measureBrandStage(stage);
-			});
-		};
+    const queueMeasure = () => {
+      cancelAnimationFrame(resizeFrame);
+      resizeFrame = requestAnimationFrame(() => {
+        measureBrandStage(stage);
+      });
+    };
 
-		const updateReveal = () => {
-			const isRevealed = shell.getBoundingClientRect().bottom <= footer.getBoundingClientRect().top + 32;
-			if (isRevealed === revealed) return;
+    const updateReveal = () => {
+      const isRevealed =
+        shell.getBoundingClientRect().bottom <=
+        footer.getBoundingClientRect().top + 32;
+      if (isRevealed === revealed) return;
 
-			revealed = isRevealed;
-			brand.classList.toggle("site-footer__brand--revealed", revealed);
-		};
+      revealed = isRevealed;
+      brand.classList.toggle("site-footer__brand--revealed", revealed);
+    };
 
-		const onResize = () => {
-			queueMeasure();
-			updateReveal();
-		};
+    const onResize = () => {
+      queueMeasure();
+      updateReveal();
+    };
 
-		void document.fonts.ready.then(queueMeasure);
-		queueMeasure();
-		updateReveal();
+    void document.fonts.ready.then(queueMeasure);
+    queueMeasure();
+    updateReveal();
 
-		window.addEventListener("scroll", updateReveal, { passive: true });
-		window.addEventListener("resize", onResize, { passive: true });
-	}
+    window.addEventListener("scroll", updateReveal, { passive: true });
+    window.addEventListener("resize", onResize, { passive: true });
+  }
 
-	if (document.readyState === "loading") {
-		document.addEventListener("DOMContentLoaded", initFooter, { once: true });
-	} else {
-		initFooter();
-	}
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initFooter, { once: true });
+  } else {
+    initFooter();
+  }
 </script>

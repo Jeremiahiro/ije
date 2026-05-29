@@ -12,7 +12,7 @@ const { introLede, regions } = travelHotelsPage;
 	<h2 id="travel-hotels-section-title" class="travel-hotels__page-title">
 		Hotels
 	</h2>
-	<p class="travel-hotels__page-lede">{introLede}</p>
+	<p class="travel-hotels__page-lede copy-preserve-breaks">{introLede}</p>
 
 		{
 			regions.map((region) => {
@@ -27,7 +27,7 @@ const { introLede, regions } = travelHotelsPage;
 						<h3 id={headingId} class="travel-hotels__region-title">
 							{region.title}
 						</h3>
-						<p class="travel-hotels__region-lede">{region.lede}</p>
+						<p class="travel-hotels__region-lede copy-preserve-breaks">{region.lede}</p>
 						<div class="travel-hotels__grid">
 							{region.hotels.map((hotel) => (
 								<TravelHotelCard hotel={hotel} />

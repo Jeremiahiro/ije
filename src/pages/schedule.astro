@@ -5,296 +5,291 @@ import { schedulePageData } from "@/data/schedule";
 
 const title = `Schedule · ${siteTitleSuffix}`;
 const description =
-	"Ceremony schedule for Jane Onuoha and Jeremiah Iromaka, including event dates and venues in Abia State, Nigeria.";
+  "Ceremony schedule for Jane Onuoha and Jeremiah Iromaka-Amajọ, including event dates and venues in Abia State, Nigeria.";
 const canonicalHref = new URL("/schedule", Astro.url.origin).href;
 ---
 
-<BaseLayout title={title} description={description} canonicalHref={canonicalHref}>
-	<main class="schedule-page wrapper" aria-labelledby="schedule-title">
-		<header class="schedule-page__header">
-			<p class="schedule-page__eyebrow">{schedulePageData.eyebrow}</p>
-			<h1 id="schedule-title">{schedulePageData.title}</h1>
-		</header>
+<BaseLayout
+  title={title}
+  description={description}
+  canonicalHref={canonicalHref}
+>
+  <main class="schedule-page wrapper" aria-labelledby="schedule-title">
+    <header class="schedule-page__header">
+      <p class="schedule-page__eyebrow">{schedulePageData.eyebrow}</p>
+      <h1 id="schedule-title">{schedulePageData.title}</h1>
+    </header>
 
-		<section class="schedule-page__events" aria-label="Event schedule">
-			{
-				schedulePageData.days.map((day) => (
-					<section class="schedule-day" id={day.id}>
-						<h2 class="schedule-day__title">{day.dayLabel}</h2>
-						<div class="schedule-day__events">
-							{
-								day.events.map((event) => (
-									<article class="schedule-event-card">
-										{
-											event.icon ? (
-												<p class="schedule-event-card__icon" aria-hidden="true">
-													{event.icon}
-												</p>
-											) : null
-										}
-										<h3>{event.title}</h3>
-										{
-											event.timeLabel ? (
-												<p class="schedule-event-card__time">{event.timeLabel}</p>
-											) : null
-										}
-										<p class="schedule-event-card__venue">{event.venue}</p>
-										<p class="schedule-event-card__location">
-											{
-												event.mapHref ? (
-													<a
-														class="schedule-event-card__location-link"
-														href={event.mapHref}
-														target="_blank"
-														rel="noopener noreferrer"
-													>
-														{event.location}
-													</a>
-												) : (
-													event.location
-												)
-											}
-										</p>
-										{
-											event.colorsOfTheDay ? (
-												<p class="schedule-event-card__colors">
-													Colors of the day: {event.colorsOfTheDay}
-												</p>
-											) : null
-										}
-										{event.notes ? <p class="schedule-event-card__notes">{event.notes}</p> : null}
-										<div class="schedule-event-card__actions">
-											{
-												event.mapHref ? (
-													<a href={event.mapHref} target="_blank" rel="noopener noreferrer">
-														Map
-													</a>
-												) : null
-											}
-											{
-												event.googleCalendarHref ? (
-													<a
-														href={event.googleCalendarHref}
-														target="_blank"
-														rel="noopener noreferrer"
-													>
-														Google calendar
-													</a>
-												) : null
-											}
-											{
-												event.appleCalendarHref ? (
-													<a
-														href={event.appleCalendarHref}
-														download={`${event.title.toLowerCase().replace(/[^a-z0-9]+/g, "-")}.ics`}
-													>
-														Apple calendar
-													</a>
-												) : null
-											}
-										</div>
-									</article>
-								))
-							}
-						</div>
-					</section>
-				))
-			}
-		</section>
-	</main>
+    <section class="schedule-page__events" aria-label="Event schedule">
+      {
+        schedulePageData.days.map((day) => (
+          <section class="schedule-day" id={day.id}>
+            <h2 class="schedule-day__title">{day.dayLabel}</h2>
+            <div class="schedule-day__events">
+              {day.events.map((event) => (
+                <article class="schedule-event-card">
+                  {event.icon ? (
+                    <p class="schedule-event-card__icon" aria-hidden="true">
+                      {event.icon}
+                    </p>
+                  ) : null}
+                  <h3>{event.title}</h3>
+                  {event.timeLabel ? (
+                    <p class="schedule-event-card__time">{event.timeLabel}</p>
+                  ) : null}
+                  <p class="schedule-event-card__venue">{event.venue}</p>
+                  <p class="schedule-event-card__location">
+                    {event.mapHref ? (
+                      <a
+                        class="schedule-event-card__location-link"
+                        href={event.mapHref}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {event.location}
+                      </a>
+                    ) : (
+                      event.location
+                    )}
+                  </p>
+                  {event.colorsOfTheDay ? (
+                    <p class="schedule-event-card__colors">
+                      Colors of the day: {event.colorsOfTheDay}
+                    </p>
+                  ) : null}
+                  {event.notes ? (
+                    <p class="schedule-event-card__notes copy-preserve-breaks">
+                      {event.notes}
+                    </p>
+                  ) : null}
+                  <div class="schedule-event-card__actions">
+                    {event.mapHref ? (
+                      <a
+                        href={event.mapHref}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Map
+                      </a>
+                    ) : null}
+                    {event.googleCalendarHref ? (
+                      <a
+                        href={event.googleCalendarHref}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Google calendar
+                      </a>
+                    ) : null}
+                    {event.appleCalendarHref ? (
+                      <a
+                        href={event.appleCalendarHref}
+                        download={`${event.title.toLowerCase().replace(/[^a-z0-9]+/g, "-")}.ics`}
+                      >
+                        Apple calendar
+                      </a>
+                    ) : null}
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+        ))
+      }
+    </section>
+  </main>
 </BaseLayout>
 
 <style>
-	.schedule-page {
-		padding-top: clamp(6.75rem, 13vw, 10rem);
-		padding-bottom: clamp(3rem, 6vw, 5rem);
-		display: grid;
-		gap: clamp(3.2rem, 8vw, 5rem);
-	}
+  .schedule-page {
+    padding-top: clamp(6.75rem, 13vw, 10rem);
+    padding-bottom: clamp(3rem, 6vw, 5rem);
+    display: grid;
+    gap: clamp(3.2rem, 8vw, 5rem);
+  }
 
-	.schedule-page__header {
-		text-align: center;
-	}
+  .schedule-page__header {
+    text-align: center;
+  }
 
-	.schedule-page__eyebrow {
-		margin: 0;
-		font-size: 0.75rem;
-		font-weight: 700;
-		letter-spacing: 0.16em;
-		text-transform: uppercase;
-		color: rgb(92 74 61 / 0.75);
-	}
+  .schedule-page__eyebrow {
+    margin: 0;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgb(92 74 61 / 0.75);
+  }
 
-	.schedule-page__header h1 {
-		margin: 1.2rem 0 0;
-		font-size: clamp(2.1rem, 7vw, 4rem);
-		line-height: 0.95;
-		color: #3f2e22;
-	}
+  .schedule-page__header h1 {
+    margin: 1.2rem 0 0;
+    font-size: clamp(2.1rem, 7vw, 4rem);
+    line-height: 0.95;
+    color: #3f2e22;
+  }
 
-	.schedule-page__events {
-		display: flex;
-		flex-direction: column;
-		gap: clamp(3rem, 6vw, 4rem);
-		width: 100%;
-		text-align: center;
-	}
+  .schedule-page__events {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(3rem, 6vw, 4rem);
+    width: 100%;
+    text-align: center;
+  }
 
-	.schedule-day {
-		display: grid;
-		gap: 1.8rem;
-		width: 100%;
-		justify-items: center;
-		position: relative;
-		scroll-margin-top: calc(
-			var(--site-header-height) + env(safe-area-inset-top, 0px) + 1rem
-		);
-	}
+  .schedule-day {
+    display: grid;
+    gap: 1.8rem;
+    width: 100%;
+    justify-items: center;
+    position: relative;
+    scroll-margin-top: calc(
+      var(--site-header-height) + env(safe-area-inset-top, 0px) + 1rem
+    );
+  }
 
-	.schedule-day:not(:first-child) {
-		padding-top: clamp(1.5rem, 4vw, 2.25rem);
-	}
+  .schedule-day:not(:first-child) {
+    padding-top: clamp(1.5rem, 4vw, 2.25rem);
+  }
 
-	.schedule-day:not(:first-child)::before {
-		content: "";
-		position: absolute;
-		top: 0;
-		left: 50%;
-		transform: translateX(-50%);
-		width: min(100%, 22rem);
-		height: 1px;
-		background: linear-gradient(
-			to right,
-			rgb(110 82 60 / 0),
-			rgb(110 82 60 / 0.35),
-			rgb(110 82 60 / 0)
-		);
-	}
+  .schedule-day:not(:first-child)::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(100%, 22rem);
+    height: 1px;
+    background: linear-gradient(
+      to right,
+      rgb(110 82 60 / 0),
+      rgb(110 82 60 / 0.35),
+      rgb(110 82 60 / 0)
+    );
+  }
 
-	.schedule-day__title {
-		margin: 0;
-		font-family: var(--font-display);
-		font-size: clamp(2rem, 5vw, 2.75rem);
-		font-weight: 400;
-		line-height: 1.05;
-		color: #3a2e26;
-	}
+  .schedule-day__title {
+    margin: 0;
+    font-family: var(--font-heading);
+    font-size: clamp(2rem, 5vw, 2.75rem);
+    font-weight: 400;
+    line-height: 1.05;
+    color: #3a2e26;
+  }
 
-	.schedule-day__events {
-		display: grid;
-		gap: 1.75rem;
-		width: 100%;
-	}
+  .schedule-day__events {
+    display: grid;
+    gap: 1.75rem;
+    width: 100%;
+  }
 
-	.schedule-event-card {
-		padding: 1.95rem 1.7rem 1.7rem;
-		border-radius: 1rem;
-		width: 100%;
-		text-align: center;
-	}
+  .schedule-event-card {
+    padding: 1.95rem 1.7rem 1.7rem;
+    border-radius: 1rem;
+    width: 100%;
+    text-align: center;
+  }
 
-	.schedule-event-card__icon {
-		margin: 0 0 0.85rem;
-		font-size: 1.12rem;
-		line-height: 1;
-		color: #6e523c;
-	}
+  .schedule-event-card__icon {
+    margin: 0 0 0.85rem;
+    font-size: 1.12rem;
+    line-height: 1;
+    color: #6e523c;
+  }
 
-	.schedule-event-card h3 {
-		margin: 0;
-		font-family: var(--font-body);
-		font-size: clamp(1.15rem, 3.3vw, 1.35rem);
-		line-height: 1.35;
-		color: #3a2e26;
-	}
+  .schedule-event-card h3 {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: clamp(1.15rem, 3.3vw, 1.35rem);
+    line-height: 1.35;
+    color: #3a2e26;
+  }
 
-	.schedule-event-card__time {
-		margin: 0.95rem 0 0;
-		font-size: 0.92rem;
-		font-weight: 700;
-		letter-spacing: 0.02em;
-		color: #6e523c;
-	}
+  .schedule-event-card__time {
+    margin: 0.95rem 0 0;
+    font-size: 0.92rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: #6e523c;
+  }
 
-	.schedule-event-card__venue {
-		margin: 1rem 0 0;
-		font-size: 0.95rem;
-		font-weight: 700;
-		color: rgb(58 46 38 / 0.92);
-	}
+  .schedule-event-card__venue {
+    margin: 1rem 0 0;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: rgb(58 46 38 / 0.92);
+  }
 
-	.schedule-event-card__location,
-	.schedule-event-card__notes {
-		margin: 0.35rem 0 0;
-		font-size: 0.75rem;
-		line-height: 1.7;
-		color: rgb(58 46 38 / 0.88);
-	}
+  .schedule-event-card__location,
+  .schedule-event-card__notes {
+    margin: 0.35rem 0 0;
+    font-size: 0.75rem;
+    line-height: 1.7;
+    color: rgb(58 46 38 / 0.88);
+  }
 
-	.schedule-event-card__location {
-		font-style: italic;
-		font-weight: 600;
-	}
+  .schedule-event-card__location {
+    font-style: italic;
+    font-weight: 600;
+  }
 
-	.schedule-event-card__colors {
-		margin: 0.95rem 0 0;
-		font-size: 0.68rem;
-		font-weight: 700;
-		letter-spacing: 0.06em;
-		text-transform: uppercase;
-		color: rgb(110 82 60 / 0.82);
-	}
+  .schedule-event-card__colors {
+    margin: 0.95rem 0 0;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgb(110 82 60 / 0.82);
+  }
 
-	.schedule-event-card__location-link {
-		color: inherit;
-		font-style: inherit;
-		text-decoration: underline;
-		text-decoration-color: rgb(91 66 50 / 0.5);
-		text-underline-offset: 0.14em;
-	}
+  .schedule-event-card__location-link {
+    color: inherit;
+    font-style: inherit;
+    text-decoration: underline;
+    text-decoration-color: rgb(91 66 50 / 0.5);
+    text-underline-offset: 0.14em;
+  }
 
-	.schedule-event-card__actions {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.75rem;
-		margin-top: 1.45rem;
-		justify-content: center;
-	}
+  .schedule-event-card__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.45rem;
+    justify-content: center;
+  }
 
-	.schedule-event-card__actions a {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		min-width: 10.75rem;
-		box-sizing: border-box;
-		padding: 0.78rem 1.25rem;
-		border: 1px solid transparent;
-		border-radius: 9999px;
-		background: rgb(255 252 247 / 0.55);
-		color: #6e523c;
-		font-size: 0.78rem;
-		font-weight: 700;
-		letter-spacing: 0.06em;
-		text-transform: uppercase;
-		text-decoration: none;
-		transition:
-			background-color 180ms ease,
-			transform 180ms ease,
-			box-shadow 180ms ease;
-	}
+  .schedule-event-card__actions a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 10.75rem;
+    box-sizing: border-box;
+    padding: 0.78rem 1.25rem;
+    border: 1px solid transparent;
+    border-radius: 9999px;
+    background: rgb(255 252 247 / 0.55);
+    color: #6e523c;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition:
+      background-color 180ms ease,
+      transform 180ms ease,
+      box-shadow 180ms ease;
+  }
 
-	.schedule-event-card__actions a:focus-visible {
-		outline: none;
-		box-shadow: 0 0 0 2px rgb(110 82 60 / 0.28);
-	}
+  .schedule-event-card__actions a:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px rgb(110 82 60 / 0.28);
+  }
 
-	@media (hover: hover) and (pointer: fine) {
-		.schedule-event-card__actions a:hover {
-			background: #6e523c;
-			color: #fff;
-			transform: translateY(-1px);
-			box-shadow: 0 8px 20px rgb(110 82 60 / 0.2);
-		}
-	}
-
+  @media (hover: hover) and (pointer: fine) {
+    .schedule-event-card__actions a:hover {
+      background: #6e523c;
+      color: #fff;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 20px rgb(110 82 60 / 0.2);
+    }
+  }
 </style>

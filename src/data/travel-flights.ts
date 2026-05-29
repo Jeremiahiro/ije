@@ -76,21 +76,17 @@ export const travelFlightsPage: TravelFlightsPageData = {
 		recommendedDates: {
 			eyebrowIcon: "📅",
 			eyebrow: "Recommended arrival dates",
-			title: "Plan to arrive in Lagos between December 29–31, 2026 or January 2, 2027",
-			copy: "These are the only days we coordinate airport assistance, ground transportation, and overall travel coordination for international guests.",
+			title: "Plan to arrive in Lagos between December 29–31, 2026",
+			copy: `These are the only days we coordinate airport assistance, ground transportation, and overall travel coordination for international guests.
+			
+			If you plan to only attend the Church Wedding, we are able to coordinate your transportation if you arrive on January 2, 2027.`,
 			note: `Guests arriving outside those dates will need to arrange their own local transport to${nbsp}Abia${nbsp}State.`,
 		},
 		steps: [
 			{
 				tag: "International",
 				title: "Arrive in Lagos",
-				visual: {
-					kind: "video",
-					poster: "/assets/lagos.png",
-					sources: [
-						{ src: "/assets/lagos.mp4", type: "video/mp4" },
-					],
-				},
+				visual: "/assets/lagos.png",
 				footer: "Murtala Muhammed International Airport",
 				detailDescription: `Fly into Lagos on your international flight. Plan to arrive between December 29 and 31, 2026 for the Traditional Marriage or January 2, 2027 for the Church Wedding — these are the only days we will coordinate airport assistance and ground transportation for guests traveling from outside${nbsp}Nigeria.`,
 			},

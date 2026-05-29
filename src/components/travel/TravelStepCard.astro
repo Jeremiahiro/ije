@@ -106,7 +106,9 @@ const isExternalActionHref = step.actionHref?.startsWith("http");
 				>
 					<span aria-hidden="true">×</span>
 				</button>
-				<p class="travel-step-card__detail-copy">{step.detailDescription}</p>
+				<p class="travel-step-card__detail-copy copy-preserve-breaks">
+					{step.detailDescription}
+				</p>
 				{
 					step.actionHref ? (
 						<a
