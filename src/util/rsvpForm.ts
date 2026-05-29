@@ -227,7 +227,7 @@ export const validateRsvpForm = (raw: ReturnType<typeof parseRsvpFormData>): Rsv
 	};
 };
 
-/** Plain row shape for a future Supabase `insert`. */
+/** Normalized RSVP row sent to the Google Sheet webhook. */
 export const buildRsvpRecord = (values: RsvpFormValues): RsvpRecord => ({
 	country_residence: values.country_residence,
 	other_country: values.other_country.trim() ? values.other_country.trim() : null,
