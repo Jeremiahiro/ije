@@ -5,7 +5,7 @@ import {
 	travelHotelsPage,
 } from "@/data/travel-hotels";
 
-const { introLede, regions, pageTip } = travelHotelsPage;
+const { introLede, regions } = travelHotelsPage;
 ---
 <ContentCard variant="secondary" class="travel-hotels__main-shell">
 
@@ -38,14 +38,6 @@ const { introLede, regions, pageTip } = travelHotelsPage;
 			})
 		}
 	</ContentCard>
-
-	<ContentCard variant="primary" class="travel-hotels__tip">
-		<p class="travel-hotels__tip-eyebrow travel-hotels__eyebrow--inline">
-			{pageTip.eyebrow}
-		</p>
-		<p class="travel-hotels__tip-title">{pageTip.title}</p>
-	<p class="travel-hotels__tip-copy">{pageTip.body}</p>
-</ContentCard>
 
 <style>
 	.travel-hotels__page-title {
@@ -118,14 +110,6 @@ const { introLede, regions, pageTip } = travelHotelsPage;
 		margin-block: 0;
 	}
 
-	.travel-hotels__tip {
-		margin-top: clamp(0.25rem, 2vw, 0.75rem);
-	}
-
-	.travel-hotels__tip-eyebrow {
-		margin: 0 0 0.85rem;
-	}
-
 	.travel-hotels__eyebrow--inline {
 		display: flex;
 		align-items: center;
@@ -135,20 +119,6 @@ const { introLede, regions, pageTip } = travelHotelsPage;
 		font-size: 0.6875rem;
 		font-weight: 700;
 		color: rgb(92 74 61 / 0.78);
-	}
-
-	.travel-hotels__tip-title {
-		margin: 0;
-		font-size: clamp(1.05rem, 2vw, 1.2rem);
-		font-weight: 600;
-		color: var(--text-primary);
-	}
-
-	.travel-hotels__tip-copy {
-		margin: 0.65rem 0 0;
-		font-size: 0.9375rem;
-		line-height: 1.55;
-		color: var(--text-muted);
 	}
 
 	@media (max-width: 899px) {
@@ -163,8 +133,7 @@ const { introLede, regions, pageTip } = travelHotelsPage;
 
 	@media (min-width: 768px) {
 		.travel-hotels__page-lede,
-		.travel-hotels__region-lede,
-		.travel-hotels__tip-copy {
+		.travel-hotels__region-lede {
 			font-size: 1rem;
 		}
 	}

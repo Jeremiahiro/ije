@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
+import { thingsToDoRegions } from "@/data/things-to-do";
 import { siteTitleSuffix } from "@/data/site-nav";
 
 const pageTitle = "Things to Do";
@@ -7,25 +8,6 @@ const title = `${pageTitle} · ${siteTitleSuffix}`;
 const description =
 	"A curated list of places to visit in Lagos and Umuahia.";
 const canonicalHref = new URL("/things-to-do", Astro.url.origin).href;
-
-const listItems = [
-	{
-		title: "Nike Art Gallery",
-		location: "2 Nike Art Gallery Road, Lekki, Lagos, Nigeria",
-	},
-	{
-		title: "Lekki Conservation Centre",
-		location: "Km 19 Lekki - Epe Expressway, Lekki, Lagos, Nigeria",
-	},
-	{
-		title: "De Latinos Lounge, Bar & Events Center",
-		location: "BCA Road, Umuahia, Abia State, Nigeria",
-	},
-	{
-		title: "National War Museum, Umuahia",
-		location: "Road, Umuahia, Abia State, Nigeria",
-	},
-];
 ---
 
 <BaseLayout title={title} description={description} canonicalHref={canonicalHref}>
@@ -34,16 +16,31 @@ const listItems = [
 			<h1 id="things-title">Things to Do</h1>
 		</header>
 
-		<section class="things-page__list" aria-label="Wedding location list">
+		<div class="things-page__regions">
 			{
-				listItems.map((item) => (
-					<article class="things-item">
-						<h2>{item.title}</h2>
-						<p class="things-item__location">{item.location}</p>
-					</article>
+				thingsToDoRegions.map((section) => (
+					<section
+						class="things-page__region"
+						id={section.id}
+						aria-labelledby={`things-${section.id}-title`}
+					>
+						<h2 id={`things-${section.id}-title`} class="things-page__region-title">
+							{section.region}
+						</h2>
+						<div class="things-page__list" aria-label={`Places in ${section.region}`}>
+							{
+								section.items.map((item) => (
+									<article class="things-item">
+										<h3>{item.title}</h3>
+										<p class="things-item__location">{item.location}</p>
+									</article>
+								))
+							}
+						</div>
+					</section>
 				))
 			}
-		</section>
+		</div>
 	</main>
 </BaseLayout>
 
@@ -67,12 +64,56 @@ const listItems = [
 		color: #3f2e22;
 	}
 
-	.things-page__list {
+	.things-page__regions {
 		display: grid;
-		gap: 0.95rem;
+		gap: clamp(2rem, 5vw, 2.75rem);
 		max-width: 44rem;
 		width: 100%;
 		margin-inline: auto;
+	}
+
+	.things-page__region {
+		display: grid;
+		gap: 1.25rem;
+		width: 100%;
+		justify-items: center;
+		position: relative;
+	}
+
+	.things-page__region:not(:first-child) {
+		padding-top: clamp(1.5rem, 4vw, 2.25rem);
+	}
+
+	.things-page__region:not(:first-child)::before {
+		content: "";
+		position: absolute;
+		top: 0;
+		left: 50%;
+		transform: translateX(-50%);
+		width: min(100%, 22rem);
+		height: 1px;
+		background: linear-gradient(
+			to right,
+			rgb(110 82 60 / 0),
+			rgb(110 82 60 / 0.35),
+			rgb(110 82 60 / 0)
+		);
+	}
+
+	.things-page__region-title {
+		margin: 0;
+		font-family: var(--font-display);
+		font-size: clamp(2rem, 5vw, 2.75rem);
+		font-weight: 400;
+		line-height: 1.05;
+		color: #3a2e26;
+		text-align: center;
+	}
+
+	.things-page__list {
+		display: grid;
+		gap: 0.95rem;
+		width: 100%;
 	}
 
 	.things-item {
@@ -83,7 +124,7 @@ const listItems = [
 		text-align: center;
 	}
 
-	.things-item h2 {
+	.things-item h3 {
 		margin: 0;
 		font-size: clamp(1.65rem, 4.4vw, 2.2rem);
 		line-height: 1.05;

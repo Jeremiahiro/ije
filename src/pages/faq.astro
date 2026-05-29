@@ -1,5 +1,5 @@
 ---
-import AboutFaqContent from "@/components/about/AboutFaqContent.astro";
+import FaqContent from "@/components/faq/FaqContent.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { siteTitleSuffix } from "@/data/site-nav";
 
@@ -11,5 +11,5 @@ const canonicalHref = new URL("/faq", Astro.url.origin).href;
 ---
 
 <BaseLayout title={title} description={description} canonicalHref={canonicalHref}>
-	<AboutFaqContent />
+	<FaqContent />
 </BaseLayout>

@@ -20,11 +20,6 @@ export type HotelRegion = {
 export type TravelHotelsPageData = {
 	introLede: string;
 	regions: HotelRegion[];
-	pageTip: {
-		eyebrow: string;
-		title: string;
-		body: string;
-	};
 };
 
 /** Full hotels page copy and listings. */
@@ -35,13 +30,13 @@ const data: TravelHotelsPageData = {
 		{
 			id: "lagos",
 			eyebrow: "✈️ Lagos — recommended hotels (arrival)",
-			title: "For guests arriving into Lagos before travelling onward",
+			title: "For guests arriving into Lagos before traveling onward",
 			lede: "Short listings focused on airport access, transit comfort, and a smooth first night in Nigeria.",
 			hotels: [
 				{
 					name: "Shoregate Hotels",
 					description:
-						"Ikeja GRA property with a rooftop terrace, pool, and 24-hour restaurant (African and continental). A strong pick for a comfortable first night after you land.",
+						"Ikeja GRA property with a rooftop terrace, pool, and 24-hour restaurant.",
 					location: "29 Joel Ogunnaike St, Ikeja GRA, Ikeja",
 					distance:
 						"~15–30 mins to Murtala Muhammed International",
@@ -53,7 +48,7 @@ const data: TravelHotelsPageData = {
 				{
 					name: "Lagos Marriott Hotel Ikeja",
 					description:
-						"Full-service Marriott in Ikeja GRA with several restaurants and bars, an outdoor pool, fitness centre, and spa—polished comfort for a first night after landing.",
+						"Full-service Marriott in Ikeja GRA with several restaurants and bars, an outdoor pool, fitness center, and spa.",
 					location: "122 Joel Ogunnaike St, Ikeja GRA, Ikeja",
 					distance:
 						"~15–30 mins to Murtala Muhammed International",
@@ -69,12 +64,12 @@ const data: TravelHotelsPageData = {
 			id: "umuahia",
 			eyebrow: "🌿 Umuahia",
 			title: "For the ceremony and local events",
-			lede: "Stays centred on convenience, security, and proximity to weekend gatherings. We’ll keep refreshing this list as details are confirmed.",
+			lede: "Stays centered on convenience, security, and proximity to the wedding venue.",
 			hotels: [
 				{
 					name: "Hotel Royal Damgrete",
 					description:
-						"Upscale GRA hotel with spacious rooms, strong security, and poolside dining—a well-established choice for wedding guests.",
+						"Upscale GRA hotel with spacious rooms, strong security, and poolside dining.",
 					location: "Factory Road, GRA, Umuahia",
 					distance: "~10–20 mins to wedding venue",
 					distanceKind: "venue",
@@ -85,10 +80,9 @@ const data: TravelHotelsPageData = {
 				{
 					name: "Rixos Continental Resort",
 					description:
-						"Large full-service hotel near major government offices in Umuahia, with conference facilities and multiple on-site dining options.",
+						"Large full-service hotel near major government offices in Umuahia.",
 					location: "No 1A Rixos Avenue, by CBN Junction, off Bende Rd, Umuahia",
-					distance:
-						"Very close to International Conference Center (ICC) Umuahia",
+					distance: "~10–20 mins to wedding venue",
 					distanceKind: "venue",
 					website: "https://hotels.ng/hotel/1448253-rixos-continental-hotel",
 					mapUrl:
@@ -97,11 +91,6 @@ const data: TravelHotelsPageData = {
 			],
 		},
 	],
-	pageTip: {
-		eyebrow: "💡 Travel tip",
-		title: "If you're flying internationally, stay one night in Lagos first",
-		body: "It gives you breathing room for connections, luggage, and rest before the journey to Umuahia—especially after a long-haul flight.",
-	},
 };
 
 function assertRegionIds(regions: readonly HotelRegion[]) {

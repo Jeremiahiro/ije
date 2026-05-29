@@ -31,7 +31,7 @@ export const travelVisaPage: TravelVisaPageData = {
 		eyebrow: "For international guests",
 		title: "Visa Information",
 		ledes: [
-			"Most guests travelling from outside Nigeria will need a valid visa before departure. Start with the official application portal below.",
+			"Most guests traveling from outside Nigeria will need a valid visa before departure. Start with the official application portal below.",
 			"For wedding attendance, most guests should check the Short Visit category, especially the Visiting (Single Entry) Visa (F6A), on the Nigerian Immigration site.",
 			"Always confirm current requirements with the Nigerian embassy or consulate serving your country.",
 		],
@@ -40,6 +40,7 @@ export const travelVisaPage: TravelVisaPageData = {
 		title: "Basic Visa Checklist",
 		lede: "Apply early, select the correct visa type, and make sure your details match your passport exactly.",
 		points: [
+			"Please get in touch with us before submitting, as we will be organizing a group visa application.",
 			"Use the official portal and review Short Visit options, including Visiting (Single Entry) Visa (F6A), if your trip is for wedding attendance/visiting.",
 			"Visa fee: USD 160. Complete payment on the official portal and keep your payment receipt.",
 			"Passport checklist: valid for at least 6 months on the date you submit your application, with at least 2 blank visa pages for endorsement.",
@@ -47,7 +48,6 @@ export const travelVisaPage: TravelVisaPageData = {
 			"Prepare travel and stay proof: return ticket plus either hotel reservation or an invitation letter with your host address in Nigeria.",
 			"Prepare financial/supporting evidence: recent bank statement (often 180 days), visa application printout, payment receipt, and acknowledgment slip.",
 			"If applicable, include extra documents early, such as proof of legal residence in your country of application.",
-			"Please get in touch with us before submitting, as we will be organizing a group visa application.",
 			"Follow embassy instructions for your country and travel date.",
 		],
 	},
