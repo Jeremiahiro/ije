@@ -110,16 +110,6 @@ export const weddingFaq: FaqItem[] = [
     ],
   },
   {
-    question: "Will food be served?",
-    answer: [
-      {
-        type: "text",
-        value:
-          "Yes. Expect a delicious mix of Nigerian traditional dishes and continental cuisine, along with drinks, desserts, and more.",
-      },
-    ],
-  },
-  {
     question: "Do you have any hotel recommendations?",
     answer: [
       {

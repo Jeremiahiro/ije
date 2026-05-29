@@ -76,8 +76,10 @@ export const travelFlightsPage: TravelFlightsPageData = {
 		recommendedDates: {
 			eyebrowIcon: "📅",
 			eyebrow: "Recommended arrival dates",
-			title: "Plan to arrive in Lagos between December 29–31, 2026 or January 2, 2027",
-			copy: "These are the only days we coordinate airport assistance, ground transportation, and overall travel coordination for international guests.",
+			title: "Plan to arrive in Lagos between December 29–31, 2026",
+			copy: `These are the only days we coordinate airport assistance, ground transportation, and overall travel coordination for international guests.
+			
+			If you plan to only attend the Church Wedding, we are able to coordinate your transportation if you arrive on January 2, 2027.`,
 			note: `Guests arriving outside those dates will need to arrange their own local transport to${nbsp}Abia${nbsp}State.`,
 		},
 		steps: [

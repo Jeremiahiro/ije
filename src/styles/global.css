@@ -117,3 +117,7 @@ html.coming-soon-page .site-shell {
   outline: 2px solid var(--focus-ring);
   outline-offset: 2px;
 }
+
+.copy-preserve-breaks {
+  white-space: pre-line;
+}

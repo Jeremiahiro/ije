@@ -11,10 +11,12 @@ const externalRel = "noopener noreferrer";
 	<h2 id="travel-visa-section-title" class="travel-visa__page-title">
 		{hero.title}
 	</h2>
-	{hero.ledes.map((lede) => <p class="travel-visa__page-lede">{lede}</p>)}
+	{
+		hero.ledes.map((lede) => <p class="travel-visa__page-lede copy-preserve-breaks">{lede}</p>)
+	}
 
 	<p class="travel-visa__apply-title">{applyCard.title}</p>
-	<p class="travel-visa__apply-copy">{applyCard.copy}</p>
+	<p class="travel-visa__apply-copy copy-preserve-breaks">{applyCard.copy}</p>
 	<div class="travel-visa__actions">
 		{
 			applyCard.links.map((link) => (
@@ -37,11 +39,11 @@ const externalRel = "noopener noreferrer";
 
 	<ContentCard variant="secondary" class="travel-visa__main-shell">
 		<h2 class="travel-visa__section-title">{basics.title}</h2>
-		<p class="travel-visa__section-lede">{basics.lede}</p>
+		<p class="travel-visa__section-lede copy-preserve-breaks">{basics.lede}</p>
 		<ul class="travel-visa__checklist">
 			{
 				basics.points.map((point) => (
-					<li class="travel-visa__checklist-item">{point}</li>
+					<li class="travel-visa__checklist-item copy-preserve-breaks">{point}</li>
 				))
 			}
 		</ul>

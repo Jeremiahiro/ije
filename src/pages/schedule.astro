@@ -58,7 +58,9 @@ const canonicalHref = new URL("/schedule", Astro.url.origin).href;
                     </p>
                   ) : null}
                   {event.notes ? (
-                    <p class="schedule-event-card__notes">{event.notes}</p>
+                    <p class="schedule-event-card__notes copy-preserve-breaks">
+                      {event.notes}
+                    </p>
                   ) : null}
                   <div class="schedule-event-card__actions">
                     {event.mapHref ? (
