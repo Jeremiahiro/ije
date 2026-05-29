@@ -91,23 +91,6 @@ const internationalDateFields: SimpleField[] = [
 	},
 ];
 
-const internationalYesNo = [
-	{
-		legend: "Airport pickup",
-		name: RSVP_FIELD.airportPickup,
-		note: "You’ll need to arrive on our recommended days to qualify for organized pickup — we’ll confirm details closer to the date.",
-		yes: "Yes, I may need pickup help",
-		no: "No thanks",
-	},
-	{
-		legend: "Travel coordination",
-		name: RSVP_FIELD.travelGroupCoordination,
-		note: "Would you like to be grouped with other guests arriving around the same time?",
-		yes: "Yes, please",
-		no: "No thanks",
-	},
-] as const;
-
 const relationshipChoices = [
 	{ value: "family", label: "Family" },
 	{ value: "friend", label: "Friend" },
@@ -213,6 +196,7 @@ const thankYouWriteChars = ["T", "h", "a", "n", "k", "\u00A0", "y", "o", "u"];
 							variant="text"
 							autocomplete="name"
 							hint="We’ll use this for seating and travel notes."
+							required
 						/>
 					</div>
 				</RsvpSection>
@@ -265,22 +249,6 @@ const thankYouWriteChars = ["T", "h", "a", "n", "k", "\u00A0", "y", "o", "u"];
 									<RsvpFormField {...f} />
 								))}
 							</div>
-							{internationalYesNo.map((g) => (
-								<FormChoiceGroup
-									legend={g.legend}
-									errorId={`rsvp-error-${g.name}`}
-								>
-									<p class="rsvp__field-note">{g.note}</p>
-									<div class="rsvp__choice-row">
-										<FormChoice name={g.name} value="yes" required>
-											{g.yes}
-										</FormChoice>
-										<FormChoice name={g.name} value="no">
-											{g.no}
-										</FormChoice>
-									</div>
-								</FormChoiceGroup>
-							))}
 						</RsvpSection>
 					</div>
 				</div>
@@ -355,7 +323,7 @@ const thankYouWriteChars = ["T", "h", "a", "n", "k", "\u00A0", "y", "o", "u"];
 					</span>
 				</p>
 				<p class="rsvp__success-copy">
-					We’ve saved your details — our guest list will sync soon. Reach out if anything changes.
+					Your RSVP is in — thank you! We can’t wait to celebrate with you. If anything changes, just let us know.
 				</p>
 			</div>
 		</div>

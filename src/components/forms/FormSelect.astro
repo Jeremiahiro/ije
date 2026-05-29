@@ -103,12 +103,12 @@ const describedBy = [hintId, errorId].filter(Boolean).join(" ") || undefined;
 		font-family: inherit;
 		appearance: none;
 		cursor: pointer;
-		outline-offset: 3px;
 	}
 
-	.form-field__select:focus {
+	.form-field__select:focus,
+	.form-field__select:focus-visible {
+		outline: none;
 		border-color: #c9a87c;
-		box-shadow: 0 0 0 3px rgba(201, 168, 124, 0.22);
 	}
 
 	.form-field__error {

@@ -13,14 +13,12 @@ const fd = (extra: Record<string, string | Blob> = {}): FormData => {
 	const base: Record<string, string> = {
 		[RSVP_FIELD.fullName]: "Ada Okonkwo",
 		[RSVP_FIELD.email]: "ada@example.com",
-		[RSVP_FIELD.phone]: "+2348000000000",
+		[RSVP_FIELD.phone]: "+234 800 000 0000",
 		[RSVP_FIELD.plusOneName]: "",
 		[RSVP_FIELD.countryResidence]: "nigeria",
 		[RSVP_FIELD.otherCountry]: "",
 		[RSVP_FIELD.expectedArrival]: "",
 		[RSVP_FIELD.expectedDeparture]: "",
-		[RSVP_FIELD.airportPickup]: "",
-		[RSVP_FIELD.travelGroupCoordination]: "",
 		[RSVP_FIELD.guestNotes]: "",
 		[RSVP_FIELD.messageCouple]: "",
 		[RSVP_FIELD.relationship]: "",
@@ -44,7 +42,6 @@ describe("validateRsvpForm", () => {
 		expect(result.values.country_residence).toBe("nigeria");
 		expect(result.values.event_traditional).toBe(true);
 		expect(result.values.event_white).toBe(true);
-		expect(result.values.airport_pickup).toBeNull();
 	});
 
 	it("requires at least one event", () => {
@@ -75,8 +72,6 @@ describe("validateRsvpForm", () => {
 			[RSVP_FIELD.otherCountry]: "Canada",
 			[RSVP_FIELD.expectedArrival]: "2027-01-01",
 			[RSVP_FIELD.expectedDeparture]: "2027-01-10",
-			[RSVP_FIELD.airportPickup]: "yes",
-			[RSVP_FIELD.travelGroupCoordination]: "no",
 		});
 		const result = validateRsvpForm(parseRsvpFormData(form));
 		expect(result.ok).toBe(true);
@@ -96,13 +91,46 @@ describe("validateRsvpForm", () => {
 		expect(result.fieldErrors[RSVP_FIELD.plusOneName]).toBeDefined();
 	});
 
+	it("rejects invalid email", () => {
+		const form = fd({ [RSVP_FIELD.email]: "not-an-email" });
+		const result = validateRsvpForm(parseRsvpFormData(form));
+		expect(result.ok).toBe(false);
+		if (result.ok) return;
+		expect(result.fieldErrors[RSVP_FIELD.email]).toBeDefined();
+	});
+
+	it("rejects phone without country code prefix when provided", () => {
+		const form = fd({ [RSVP_FIELD.phone]: "2145771936" });
+		const result = validateRsvpForm(parseRsvpFormData(form));
+		expect(result.ok).toBe(false);
+		if (result.ok) return;
+		expect(result.fieldErrors[RSVP_FIELD.phone]).toBeDefined();
+	});
+
+	it("accepts phone with country code and formatting", () => {
+		const form = fd({ [RSVP_FIELD.phone]: "+1 214-577-1936" });
+		const result = validateRsvpForm(parseRsvpFormData(form));
+		expect(result.ok).toBe(true);
+	});
+
+	it("requires international travel fields for UK guests", () => {
+		const form = fd({
+			[RSVP_FIELD.countryResidence]: "uk",
+			[RSVP_FIELD.expectedArrival]: "",
+			[RSVP_FIELD.expectedDeparture]: "",
+		});
+		const result = validateRsvpForm(parseRsvpFormData(form));
+		expect(result.ok).toBe(false);
+		if (result.ok) return;
+		expect(result.fieldErrors[RSVP_FIELD.expectedArrival]).toBeDefined();
+		expect(result.fieldErrors[RSVP_FIELD.expectedDeparture]).toBeDefined();
+	});
+
 	it("rejects departure before arrival for international", () => {
 		const form = fd({
 			[RSVP_FIELD.countryResidence]: "uk",
 			[RSVP_FIELD.expectedArrival]: "2027-01-05",
 			[RSVP_FIELD.expectedDeparture]: "2027-01-01",
-			[RSVP_FIELD.airportPickup]: "no",
-			[RSVP_FIELD.travelGroupCoordination]: "yes",
 		});
 		const result = validateRsvpForm(parseRsvpFormData(form));
 		expect(result.ok).toBe(false);
@@ -125,11 +153,9 @@ describe("buildRsvpRecord", () => {
 			event_white: false,
 			expected_arrival: "",
 			expected_departure: "",
-			airport_pickup: null,
 			guest_notes: "",
 			relationship: null,
 			message_couple: "",
-			travel_group_coordination: null,
 		};
 		const row = buildRsvpRecord(values);
 		expect(row.phone).toBeNull();

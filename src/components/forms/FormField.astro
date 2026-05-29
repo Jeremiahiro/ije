@@ -133,7 +133,6 @@ const describedBy = [hintId, errorId].filter(Boolean).join(" ") || undefined;
 		color: var(--text-primary);
 		font-size: 1.05rem;
 		font-family: inherit;
-		outline-offset: 3px;
 	}
 
 	.form-field__control--narrow {
@@ -151,9 +150,10 @@ const describedBy = [hintId, errorId].filter(Boolean).join(" ") || undefined;
 		color: rgb(92 74 61 / 0.45);
 	}
 
-	.form-field__control:focus {
+	.form-field__control:focus,
+	.form-field__control:focus-visible {
+		outline: none;
 		border-color: #c9a87c;
-		box-shadow: 0 0 0 3px rgba(201, 168, 124, 0.22);
 	}
 
 	.form-field__error {
