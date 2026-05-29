@@ -1,16 +1,5 @@
 @import "tailwindcss";
 
-@font-face {
-  font-family: "Abigail";
-  src:
-    local("Abigail"),
-    url("/assets/abigail_3/Abigail.ttf") format("truetype"),
-    url("/assets/abigail_3/Abigail.otf") format("opentype");
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-}
-
 :root {
   --site-header-height: 3.5rem;
   --site-footer-reveal: 30dvh;
@@ -24,7 +13,6 @@
   --text-muted: #5c4a3d;
   --font-body: "Manrope", "Avenir Next", Avenir, "Segoe UI", sans-serif;
   --font-heading: "Caudex", Georgia, Cambria, "Times New Roman", serif;
-  --font-display: "Abigail", "Brush Script MT", cursive;
 
   --wrapper-padding-inline: clamp(1rem, 4vw, 2.25rem);
   --wrapper-max-width: min(80rem);
