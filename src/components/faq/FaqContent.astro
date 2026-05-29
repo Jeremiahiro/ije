@@ -1,51 +1,66 @@
 ---
 import ContentCard from "@/components/ContentCard.astro";
 import HeroPageSurface from "@/components/HeroPageSurface.astro";
-import { weddingNigeriaFaq } from "@/data/about-faq";
+import { weddingFaq } from "@/data/faq";
 ---
 
 <HeroPageSurface
 	bgSrc="/assets/faq.JPG"
-	surfaceClass="about-faq"
-	ariaLabelledBy="about-faq-heading"
+	surfaceClass="faq-page"
+	ariaLabelledBy="faq-heading"
 >
-	<ContentCard variant="secondary" class="about-faq__card">
-		<p class="about-faq__eyebrow">Quick Answers</p>
-		<h1 id="about-faq-heading" class="about-faq__title">Wedding FAQ</h1>
-		<p class="about-faq__lede">
+	<ContentCard variant="secondary" class="faq-page__card">
+		<p class="faq-page__eyebrow">Quick Answers</p>
+		<h1 id="faq-heading" class="faq-page__title">Wedding FAQ</h1>
+		<p class="faq-page__lede">
 			A short list of common questions for our wedding in Nigeria.
 		</p>
 
-		<div class="about-faq__accordion" data-faq-accordion>
+		<div class="faq-page__accordion" data-faq-accordion>
 			{
-				weddingNigeriaFaq.map((item, index) => {
-					const panelId = `about-faq-panel-${index}`;
+				weddingFaq.map((item, index) => {
+					const panelId = `faq-panel-${index}`;
 					return (
-						<section class="about-faq__item" data-faq-item>
-							<h2 class="about-faq__question-wrap">
+						<section class="faq-page__item" data-faq-item>
+							<h2 class="faq-page__question-wrap">
 								<button
 									type="button"
-									class="about-faq__question"
-									aria-expanded={index === 0 ? "true" : "false"}
+									class="faq-page__question"
 									aria-controls={panelId}
 									data-faq-trigger
 								>
 									{item.question}
-									<span aria-hidden="true" class="about-faq__icon">
+									<span aria-hidden="true" class="faq-page__icon">
 										+
 									</span>
 								</button>
 							</h2>
 							<div
 								id={panelId}
-								class="about-faq__answer-shell"
-								data-expanded={index === 0 ? "true" : "false"}
-								aria-hidden={index === 0 ? "false" : "true"}
+								class="faq-page__answer-shell"
 								data-faq-panel
 							>
-								<div class="about-faq__answer-shell-inner">
-									<div class="about-faq__answer">
-										<p>{item.answer}</p>
+								<div class="faq-page__answer-shell-inner">
+									<div class="faq-page__answer">
+										<p>
+											{item.answer.map((part) =>
+												part.type === "text" ? (
+													part.value
+												) : (
+													<a
+														href={part.href}
+														{...(part.external
+															? {
+																	target: "_blank",
+																	rel: "noopener noreferrer",
+																}
+															: {})}
+													>
+														{part.label}
+													</a>
+												),
+											)}
+										</p>
 									</div>
 								</div>
 							</div>
@@ -92,24 +107,24 @@ import { weddingNigeriaFaq } from "@/data/about-faq";
 </script>
 
 <style>
-	:global(.about-faq.hero-page) {
+	:global(.faq-page.hero-page) {
 		--travel-stack-gap: clamp(1rem, 2.5vw, 1.5rem);
 		min-height: 100vh;
 		min-height: 100dvh;
 	}
 
-	:global(.about-faq .hero-page__bg) {
+	:global(.faq-page .hero-page__bg) {
 		background-position: center top;
 		filter: saturate(0.8) contrast(1.04) brightness(0.8);
 	}
 
-	:global(.about-faq__card.content-card--secondary) {
+	:global(.faq-page__card.content-card--secondary) {
 		background: rgb(230 220 206 / 0.48);
 		border-color: rgb(96 72 53 / 0.28);
 		box-shadow: 0 16px 40px rgb(58 42 31 / 0.2);
 	}
 
-	:global(.about-faq .hero-page__scrim) {
+	:global(.faq-page .hero-page__scrim) {
 		background:
 			radial-gradient(
 				ellipse 92% 78% at 8% 6%,
@@ -129,12 +144,12 @@ import { weddingNigeriaFaq } from "@/data/about-faq";
 			);
 	}
 
-	:global(.about-faq__card) {
+	:global(.faq-page__card) {
 		width: min(100%, 52rem);
 		margin-inline: auto;
 	}
 
-	.about-faq__eyebrow {
+	.faq-page__eyebrow {
 		margin: 0;
 		font-size: 0.6875rem;
 		font-weight: 700;
@@ -143,33 +158,33 @@ import { weddingNigeriaFaq } from "@/data/about-faq";
 		color: rgb(92 74 61 / 0.78);
 	}
 
-	.about-faq__title {
+	.faq-page__title {
 		margin: 0.45rem 0 0;
 		font-size: clamp(1.5rem, 4vw, 2rem);
 	}
 
-	.about-faq__lede {
+	.faq-page__lede {
 		margin: 0.65rem 0 1rem;
 		color: var(--text-muted);
 	}
 
-	.about-faq__accordion {
+	.faq-page__accordion {
 		display: grid;
 		gap: 0.65rem;
 	}
 
-	.about-faq__item {
+	.faq-page__item {
 		border: 1px solid rgb(96 72 53 / 0.28);
 		border-radius: 0.85rem;
 		background: rgb(228 217 203 / 0.46);
 		overflow: clip;
 	}
 
-	.about-faq__question-wrap {
+	.faq-page__question-wrap {
 		margin: 0;
 	}
 
-	.about-faq__question {
+	.faq-page__question {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
@@ -185,13 +200,13 @@ import { weddingNigeriaFaq } from "@/data/about-faq";
 		cursor: pointer;
 	}
 
-	.about-faq__question:focus-visible {
+	.faq-page__question:focus-visible {
 		outline: 2px solid var(--focus-ring);
 		outline-offset: -2px;
 		border-radius: 0.85rem;
 	}
 
-	.about-faq__icon {
+	.faq-page__icon {
 		display: inline-grid;
 		place-items: center;
 		width: 1.25rem;
@@ -202,26 +217,26 @@ import { weddingNigeriaFaq } from "@/data/about-faq";
 		transition: transform 0.42s cubic-bezier(0.34, 1.56, 0.64, 1);
 	}
 
-	.about-faq__question[aria-expanded="true"] .about-faq__icon {
+	.faq-page__question[aria-expanded="true"] .faq-page__icon {
 		transform: rotate(45deg);
 	}
 
-	.about-faq__answer-shell {
+	.faq-page__answer-shell {
 		display: grid;
 		grid-template-rows: 0fr;
 		transition: grid-template-rows 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
 	}
 
-	.about-faq__answer-shell[data-expanded="true"] {
+	.faq-page__answer-shell[data-expanded="true"] {
 		grid-template-rows: 1fr;
 	}
 
-	.about-faq__answer-shell-inner {
+	.faq-page__answer-shell-inner {
 		min-height: 0;
 		overflow: hidden;
 	}
 
-	.about-faq__answer {
+	.faq-page__answer {
 		padding: 0 1rem 0.95rem;
 		opacity: 0;
 		transform: translateY(-0.25rem);
@@ -230,27 +245,39 @@ import { weddingNigeriaFaq } from "@/data/about-faq";
 			transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
 	}
 
-	.about-faq__answer-shell[data-expanded="true"] .about-faq__answer {
+	.faq-page__answer-shell[data-expanded="true"] .faq-page__answer {
 		opacity: 1;
 		transform: translateY(0);
 	}
 
-	.about-faq__answer p {
+	.faq-page__answer p {
 		margin: 0;
 		color: var(--text-muted);
 		line-height: 1.55;
 	}
 
+	.faq-page__answer a {
+		color: #6e523c;
+		font-weight: 600;
+		text-decoration: underline;
+		text-decoration-color: rgb(91 66 50 / 0.5);
+		text-underline-offset: 0.14em;
+	}
+
+	.faq-page__answer a:hover {
+		text-decoration-color: rgb(91 66 50 / 0.85);
+	}
+
 	@media (prefers-reduced-motion: reduce) {
-		.about-faq__answer-shell,
-		.about-faq__answer,
-		.about-faq__icon {
+		.faq-page__answer-shell,
+		.faq-page__answer,
+		.faq-page__icon {
 			transition: none;
 		}
 	}
 
 	@media (min-width: 1024px) {
-		:global(.about-faq .hero-page__bg) {
+		:global(.faq-page .hero-page__bg) {
 			background-position: center top;
 		}
 	}

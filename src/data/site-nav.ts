@@ -4,6 +4,9 @@ export const bride = "Jane Onuoha";
 export const groom = "Jeremiah Iromaka";
 export const defaultPageDescription = `${siteTitleSuffix} · Wedding details coming soon.`;
 
+export const registryHref =
+	"https://www.zola.com/wedding/jeremiahandjane2026/registry";
+
 export type HomeEventPreview = {
 	title: string;
 	dateLabel: string;
@@ -58,7 +61,7 @@ export const navItems: NavTopLink[] = [
 	{
 		kind: "link",
 		label: "Registry",
-		href: "https://www.zola.com/wedding/jeremiahandjane2026/registry",
+		href: registryHref,
 		target: "_blank",
 	},
 	{

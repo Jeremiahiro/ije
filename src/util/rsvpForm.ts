@@ -10,18 +10,14 @@ export const RSVP_FIELD = {
 	eventWhite: "event_white",
 	expectedArrival: "expected_arrival",
 	expectedDeparture: "expected_departure",
-	airportPickup: "airport_pickup",
 	guestNotes: "guest_notes",
 	relationship: "relationship",
 	messageCouple: "message_couple",
-	travelGroupCoordination: "travel_group_coordination",
 } as const;
 
 export const RSVP_EVENTS_ERROR_KEY = "events";
 
 export type CountryResidence = "nigeria" | "uk" | "usa" | "other";
-
-export type YesNo = "yes" | "no";
 
 export type Relationship = "family" | "friend" | "colleague" | "church" | "other";
 
@@ -37,11 +33,9 @@ export type RsvpFormValues = {
 	event_white: boolean;
 	expected_arrival: string;
 	expected_departure: string;
-	airport_pickup: YesNo | null;
 	guest_notes: string;
 	relationship: Relationship | null;
 	message_couple: string;
-	travel_group_coordination: YesNo | null;
 };
 
 export type RsvpRecord = {
@@ -56,15 +50,12 @@ export type RsvpRecord = {
 	event_white: boolean;
 	expected_arrival: string | null;
 	expected_departure: string | null;
-	airport_pickup: YesNo | null;
 	guest_notes: string | null;
 	relationship: Relationship | null;
 	message_couple: string | null;
-	travel_group_coordination: YesNo | null;
 };
 
 const COUNTRY: ReadonlySet<string> = new Set(["nigeria", "uk", "usa", "other"]);
-const YES_NO: ReadonlySet<string> = new Set(["yes", "no"]);
 const RELATIONSHIP: ReadonlySet<string> = new Set([
 	"family",
 	"friend",
@@ -75,6 +66,9 @@ const RELATIONSHIP: ReadonlySet<string> = new Set([
 
 const EMAIL_RE = /^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$/i;
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
+const PHONE_WITH_COUNTRY_RE = /^\+[\d\s().-]+$/;
+
+const phoneDigitCount = (raw: string): number => (raw.match(/\d/g) ?? []).length;
 
 const checkboxOn = (fd: FormData, name: string): boolean =>
 	String(fd.get(name) ?? "").toLowerCase() === "yes" || fd.get(name) === "on";
@@ -84,11 +78,6 @@ export const isInternationalResidence = (c: CountryResidence): boolean => c !== 
 export const parseCountryResidence = (raw: string | null | undefined): CountryResidence | null => {
 	if (raw == null || raw === "") return null;
 	return COUNTRY.has(raw) ? (raw as CountryResidence) : null;
-};
-
-export const parseYesNo = (raw: string | null | undefined): YesNo | null => {
-	if (raw == null || raw === "") return null;
-	return YES_NO.has(raw) ? (raw as YesNo) : null;
 };
 
 export type RsvpRawFormFields = {
@@ -103,11 +92,9 @@ export type RsvpRawFormFields = {
 	event_white: boolean;
 	expected_arrival: string;
 	expected_departure: string;
-	airport_pickup: string;
 	guest_notes: string;
 	relationship: string;
 	message_couple: string;
-	travel_group_coordination: string;
 };
 
 export const parseRsvpFormData = (fd: FormData): RsvpRawFormFields => ({
@@ -122,11 +109,9 @@ export const parseRsvpFormData = (fd: FormData): RsvpRawFormFields => ({
 	event_white: checkboxOn(fd, RSVP_FIELD.eventWhite),
 	expected_arrival: String(fd.get(RSVP_FIELD.expectedArrival) ?? "").trim(),
 	expected_departure: String(fd.get(RSVP_FIELD.expectedDeparture) ?? "").trim(),
-	airport_pickup: String(fd.get(RSVP_FIELD.airportPickup) ?? "").trim(),
 	guest_notes: String(fd.get(RSVP_FIELD.guestNotes) ?? "").trim(),
 	relationship: String(fd.get(RSVP_FIELD.relationship) ?? "").trim(),
 	message_couple: String(fd.get(RSVP_FIELD.messageCouple) ?? "").trim(),
-	travel_group_coordination: String(fd.get(RSVP_FIELD.travelGroupCoordination) ?? "").trim(),
 });
 
 export type RsvpValidationOk = { ok: true; values: RsvpFormValues };
@@ -166,8 +151,13 @@ export const validateRsvpForm = (raw: ReturnType<typeof parseRsvpFormData>): Rsv
 		fieldErrors[RSVP_FIELD.email] = "Enter a valid email address.";
 	}
 
-	if (raw.phone && raw.phone.length < 7) {
-		fieldErrors[RSVP_FIELD.phone] = "If you add a phone number, use at least 7 characters including country code.";
+	if (raw.phone) {
+		if (!PHONE_WITH_COUNTRY_RE.test(raw.phone)) {
+			fieldErrors[RSVP_FIELD.phone] =
+				"Include country code starting with + (e.g. +1 214-577-1936).";
+		} else if (phoneDigitCount(raw.phone) < 10) {
+			fieldErrors[RSVP_FIELD.phone] = "Enter a valid phone number with country code.";
+		}
 	}
 
 	const hasPlus = raw.has_plus_one;
@@ -187,8 +177,6 @@ export const validateRsvpForm = (raw: ReturnType<typeof parseRsvpFormData>): Rsv
 
 	let expected_arrival = raw.expected_arrival;
 	let expected_departure = raw.expected_departure;
-	let airport_pickup: YesNo | null = null;
-	let travel_group_coordination: YesNo | null = null;
 	let other_country = country === "other" ? raw.other_country.trim() : "";
 
 	if (country && isInternationalResidence(country)) {
@@ -207,26 +195,9 @@ export const validateRsvpForm = (raw: ReturnType<typeof parseRsvpFormData>): Rsv
 				fieldErrors[RSVP_FIELD.expectedDeparture] = "Departure should be on or after arrival.";
 			}
 		}
-
-		const ap = parseYesNo(raw.airport_pickup);
-		if (!ap) {
-			fieldErrors[RSVP_FIELD.airportPickup] = "Let us know if you need airport pickup assistance.";
-		} else {
-			airport_pickup = ap;
-		}
-
-		const tg = parseYesNo(raw.travel_group_coordination);
-		if (!tg) {
-			fieldErrors[RSVP_FIELD.travelGroupCoordination] =
-				"Let us know if you’d like to be grouped with other guests.";
-		} else {
-			travel_group_coordination = tg;
-		}
 	} else {
 		expected_arrival = "";
 		expected_departure = "";
-		airport_pickup = null;
-		travel_group_coordination = null;
 	}
 
 	if (Object.keys(fieldErrors).length) return err(fieldErrors);
@@ -249,11 +220,9 @@ export const validateRsvpForm = (raw: ReturnType<typeof parseRsvpFormData>): Rsv
 			event_white: raw.event_white,
 			expected_arrival,
 			expected_departure,
-			airport_pickup,
 			guest_notes: raw.guest_notes,
 			relationship,
 			message_couple: raw.message_couple,
-			travel_group_coordination,
 		},
 	};
 };
@@ -271,9 +240,7 @@ export const buildRsvpRecord = (values: RsvpFormValues): RsvpRecord => ({
 	event_white: values.event_white,
 	expected_arrival: values.expected_arrival.trim() ? values.expected_arrival.trim() : null,
 	expected_departure: values.expected_departure.trim() ? values.expected_departure.trim() : null,
-	airport_pickup: values.airport_pickup,
 	guest_notes: values.guest_notes.trim() ? values.guest_notes.trim() : null,
 	relationship: values.relationship,
 	message_couple: values.message_couple.trim() ? values.message_couple.trim() : null,
-	travel_group_coordination: values.travel_group_coordination,
 });

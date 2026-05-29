@@ -1,9 +1,12 @@
 import {
 	isInternationalResidence,
 	parseCountryResidence,
+	parseRsvpFormData,
 	RSVP_EVENTS_ERROR_KEY,
 	RSVP_FIELD,
+	validateRsvpForm,
 } from "@/util/rsvpForm";
+import { RSVP_SUBMIT_COPY, submitRsvp } from "@/util/rsvpSubmit";
 
 const ERROR_IDS = [
 	...Object.values(RSVP_FIELD).map((name) => `rsvp-error-${name}`),
@@ -37,8 +40,6 @@ const focusOrder = [
 	RSVP_EVENTS_ERROR_KEY,
 	RSVP_FIELD.expectedArrival,
 	RSVP_FIELD.expectedDeparture,
-	RSVP_FIELD.airportPickup,
-	RSVP_FIELD.travelGroupCoordination,
 	RSVP_FIELD.guestNotes,
 	RSVP_FIELD.relationship,
 	RSVP_FIELD.messageCouple,
@@ -53,11 +54,6 @@ const clearInternationalInputs = (root: HTMLElement): void => {
 	for (const name of [RSVP_FIELD.expectedArrival, RSVP_FIELD.expectedDeparture]) {
 		const el = root.querySelector<HTMLInputElement>(`[name="${name}"]`);
 		if (el) el.value = "";
-	}
-	for (const name of [RSVP_FIELD.airportPickup, RSVP_FIELD.travelGroupCoordination]) {
-		for (const r of root.querySelectorAll<HTMLInputElement>(`input[name="${name}"]`)) {
-			r.checked = false;
-		}
 	}
 };
 
@@ -120,6 +116,20 @@ const clearErrors = (form: HTMLFormElement): void => {
 	}
 };
 
+const RADIO_GROUP_FIELDS = new Set<string>([RSVP_FIELD.relationship]);
+
+const markRadioGroupInvalid = (form: HTMLFormElement, name: string): void => {
+	for (const r of form.querySelectorAll<HTMLInputElement>(`input[name="${name}"]`)) {
+		r.setAttribute("aria-invalid", "true");
+	}
+};
+
+const markEventsInvalid = (form: HTMLFormElement): void => {
+	for (const name of [RSVP_FIELD.eventTraditional, RSVP_FIELD.eventWhite]) {
+		form.querySelector<HTMLInputElement>(`input[name="${name}"]`)?.setAttribute("aria-invalid", "true");
+	}
+};
+
 const showErrors = (form: HTMLFormElement, fieldErrors: Record<string, string>): void => {
 	for (const [field, message] of Object.entries(fieldErrors)) {
 		const el = document.getElementById(`rsvp-error-${field}`);
@@ -127,6 +137,17 @@ const showErrors = (form: HTMLFormElement, fieldErrors: Record<string, string>):
 			el.textContent = message;
 			el.hidden = false;
 		}
+
+		if (field === RSVP_EVENTS_ERROR_KEY) {
+			markEventsInvalid(form);
+			continue;
+		}
+
+		if (RADIO_GROUP_FIELDS.has(field)) {
+			markRadioGroupInvalid(form, field);
+			continue;
+		}
+
 		const inputId = inputByField[field];
 		if (inputId) {
 			const input = document.getElementById(inputId);
@@ -142,39 +163,44 @@ const showErrors = (form: HTMLFormElement, fieldErrors: Record<string, string>):
 	}
 };
 
+const showSubmitError = (form: HTMLFormElement, message: string): void => {
+	const summary = form.querySelector("#rsvp-form-summary");
+	if (!(summary instanceof HTMLElement)) return;
+	summary.hidden = false;
+	summary.textContent = message;
+	scrollFieldIntoView(summary);
+};
+
+const scrollFieldIntoView = (el: HTMLElement | null | undefined): void => {
+	if (!el) return;
+	const behavior: ScrollBehavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+		? "auto"
+		: "smooth";
+	el.scrollIntoView({ behavior, block: "center" });
+};
+
 const focusFirstInvalid = (form: HTMLFormElement, fieldErrors: Record<string, string>): void => {
 	for (const field of focusOrder) {
 		if (!(field in fieldErrors)) continue;
 
-		if (
-			field === RSVP_FIELD.airportPickup ||
-			field === RSVP_FIELD.travelGroupCoordination ||
-			field === RSVP_FIELD.relationship
-		) {
-			form.querySelector<HTMLInputElement>(`input[name="${field}"]:not([disabled])`)?.focus();
-			return;
+		let target: HTMLElement | null | undefined;
+
+		if (RADIO_GROUP_FIELDS.has(field)) {
+			target = form.querySelector<HTMLInputElement>(`input[name="${field}"]:not([disabled])`);
+		} else if (field === RSVP_EVENTS_ERROR_KEY) {
+			target = form.querySelector<HTMLInputElement>(`input[name="${RSVP_FIELD.eventTraditional}"]`);
+		} else if (field === RSVP_FIELD.eventTraditional || field === RSVP_FIELD.eventWhite) {
+			target = form.querySelector<HTMLInputElement>(`input[name="${field}"]:not([disabled])`);
+		} else if (field === RSVP_FIELD.countryResidence) {
+			target = document.getElementById("rsvp-field-country");
+		} else {
+			const inputId = inputByField[field];
+			target = inputId ? document.getElementById(inputId) : null;
 		}
 
-		if (field === RSVP_EVENTS_ERROR_KEY) {
-			form.querySelector<HTMLInputElement>(`input[name="${RSVP_FIELD.eventTraditional}"]`)?.focus();
-			return;
-		}
-
-		if (field === RSVP_FIELD.eventTraditional || field === RSVP_FIELD.eventWhite) {
-			form.querySelector<HTMLInputElement>(`input[name="${field}"]:not([disabled])`)?.focus();
-			return;
-		}
-
-		if (field === RSVP_FIELD.countryResidence) {
-			document.getElementById("rsvp-field-country")?.focus();
-			return;
-		}
-
-		const inputId = inputByField[field];
-		if (inputId) {
-			document.getElementById(inputId)?.focus();
-			return;
-		}
+		target?.focus({ preventScroll: true });
+		scrollFieldIntoView(target);
+		return;
 	}
 };
 
@@ -204,6 +230,7 @@ const scrollRsvpSuccessBelowHeader = (el: HTMLElement): void => {
 export const mountRsvpForm = (): void => {
 	const form = document.getElementById("rsvp-form");
 	const success = document.getElementById("rsvp-success");
+	const submitBtn = document.getElementById("rsvp-submit");
 
 	if (!(form instanceof HTMLFormElement) || !success) {
 		throw new Error("RSVP form markup missing");
@@ -221,10 +248,44 @@ export const mountRsvpForm = (): void => {
 		}
 	});
 
-	form.addEventListener("submit", (e: SubmitEvent) => {
+	form.addEventListener("submit", async (e: SubmitEvent) => {
 		e.preventDefault();
 		clearErrors(form);
 		syncRsvpSections(form);
+
+		const result = validateRsvpForm(parseRsvpFormData(new FormData(form)));
+		if (!result.ok) {
+			showErrors(form, result.fieldErrors);
+			focusFirstInvalid(form, result.fieldErrors);
+
+			const summary = form.querySelector("#rsvp-form-summary");
+			if (summary instanceof HTMLElement && !summary.hidden) {
+				scrollFieldIntoView(summary);
+			}
+			return;
+		}
+
+		if (submitBtn instanceof HTMLButtonElement) {
+			submitBtn.disabled = true;
+			submitBtn.textContent = RSVP_SUBMIT_COPY.submitting;
+		}
+
+		const saved = await submitRsvp(form);
+
+		if (submitBtn instanceof HTMLButtonElement) {
+			submitBtn.disabled = false;
+			submitBtn.textContent = RSVP_SUBMIT_COPY.submitLabel;
+		}
+
+		if (!saved.ok) {
+			if (saved.kind === "validation") {
+				showErrors(form, saved.fieldErrors);
+				focusFirstInvalid(form, saved.fieldErrors);
+				return;
+			}
+			showSubmitError(form, saved.message);
+			return;
+		}
 
 		form.hidden = true;
 		success.hidden = false;

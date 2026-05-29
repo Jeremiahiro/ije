@@ -76,7 +76,7 @@ export const travelFlightsPage: TravelFlightsPageData = {
 		recommendedDates: {
 			eyebrowIcon: "📅",
 			eyebrow: "Recommended arrival dates",
-			title: "Plan to arrive in Lagos between the 29th and 31st of December, 2026 or the 2nd of January, 2027",
+			title: "Plan to arrive in Lagos between December 29–31, 2026 or January 2, 2027",
 			copy: "These are the only days we coordinate airport assistance, ground transportation, and overall travel coordination for international guests.",
 			note: `Guests arriving outside those dates will need to arrange their own local transport to${nbsp}Abia${nbsp}State.`,
 		},
@@ -92,7 +92,7 @@ export const travelFlightsPage: TravelFlightsPageData = {
 					],
 				},
 				footer: "Murtala Muhammed International Airport",
-				detailDescription: `Fly into Lagos on your international flight. Plan to arrive between the 29th and 31st of December 2026 for the Traditional Marriage or the 2nd of January 2027 for the Church Wedding — these are the only days we will coordinate airport assistance and ground transportation for guests travelling from outside${nbsp}Nigeria.`,
+				detailDescription: `Fly into Lagos on your international flight. Plan to arrive between December 29 and 31, 2026 for the Traditional Marriage or January 2, 2027 for the Church Wedding — these are the only days we will coordinate airport assistance and ground transportation for guests traveling from outside${nbsp}Nigeria.`,
 			},
 			{
 				tag: "Domestic",
@@ -106,7 +106,7 @@ export const travelFlightsPage: TravelFlightsPageData = {
 				title: "Ground to Abia State",
 				visual: "/assets/umuahia.png",
 				footer: "Onward to the venue",
-				detailDescription: `Transportation from Owerri to Abia State will be arranged for guests travelling from outside${nbsp}Nigeria.`,
+				detailDescription: `Transportation from Owerri to Abia State will be arranged for guests traveling from outside${nbsp}Nigeria.`,
 			},
 		],
 	},
@@ -116,7 +116,7 @@ export const travelFlightsPage: TravelFlightsPageData = {
 		stepsAriaLabel: "Domestic travel steps",
 		steps: [
 			{
-				tag: "2nd January, 2027",
+				tag: "January 2, 2027",
 				title: "Traditional Marriage",
 				visual: "/assets/item.png",
 				footer: "Onuoha's Country Home, Okai-Item, Bende LGA, Abia State",
@@ -126,7 +126,7 @@ export const travelFlightsPage: TravelFlightsPageData = {
 				actionHref: "https://maps.app.goo.gl/a5tYqVVXab4BL5tE9",
 			},
 			{
-				tag: "4th January, 2027",
+				tag: "January 4, 2027",
 				title: "Church Wedding",
 				visual: "/assets/mti.png",
 				footer: "Methodist Theological Institute Umuahia",

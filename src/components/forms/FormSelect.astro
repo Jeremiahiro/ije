@@ -67,7 +67,8 @@ const describedBy = [hintId, errorId].filter(Boolean).join(" ") || undefined;
 
 	.form-field__hint {
 		margin: 0;
-		font-size: 0.84rem;
+		font-size: 0.78rem;
+		font-style: italic;
 		line-height: 1.45;
 		color: var(--text-muted);
 	}
@@ -102,12 +103,12 @@ const describedBy = [hintId, errorId].filter(Boolean).join(" ") || undefined;
 		font-family: inherit;
 		appearance: none;
 		cursor: pointer;
-		outline-offset: 3px;
 	}
 
-	.form-field__select:focus {
+	.form-field__select:focus,
+	.form-field__select:focus-visible {
+		outline: none;
 		border-color: #c9a87c;
-		box-shadow: 0 0 0 3px rgba(201, 168, 124, 0.22);
 	}
 
 	.form-field__error {
