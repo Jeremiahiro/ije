@@ -1,360 +1,383 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { bride, groom, homePageContent, siteTitleSuffix } from "@/data/site-nav";
+import {
+  bride,
+  groom,
+  homePageContent,
+  siteTitleSuffix,
+} from "@/data/site-nav";
 
 const title = `${siteTitleSuffix}`;
 const description =
-	"Wedding details for Jeremiah Iromaka and Jane Onuoha, including celebration dates, venue highlights, and RSVP access.";
+  "Wedding details for Jeremiah Iromaka-Amajọ and Jane Onuoha, including celebration dates, venue highlights, and RSVP access.";
 const coupleMarqueeImages = [1, 2, 3, 4].map((photoNumber) => ({
-	src: `/assets/couple/${photoNumber}.jpeg`,
-	alt: `${bride} and ${groom} portrait ${photoNumber}`,
+  src: `/assets/couple/${photoNumber}.jpeg`,
+  alt: `${bride} and ${groom} portrait ${photoNumber}`,
 }));
 ---
 
 <BaseLayout title={title} description={description}>
-	<main class="home-page">
-		<div class="home-topfold">
-			<section class="home-marquee" aria-label="Couple portraits">
-				<div class="home-marquee__viewport">
-					<ul class="home-marquee__track">
-						{
-							[...coupleMarqueeImages, ...coupleMarqueeImages].map((image, index) => (
-								<li class="home-marquee__item" aria-hidden={index >= coupleMarqueeImages.length}>
-									<img
-										src={image.src}
-										alt={image.alt}
-										loading={index < 2 ? "eager" : "lazy"}
-										decoding="async"
-									/>
-								</li>
-							))
-						}
-					</ul>
-				</div>
-			</section>
+  <main class="home-page">
+    <div class="home-topfold">
+      <section class="home-marquee" aria-label="Couple portraits">
+        <div class="home-marquee__viewport">
+          <ul class="home-marquee__track">
+            {
+              [...coupleMarqueeImages, ...coupleMarqueeImages].map(
+                (image, index) => (
+                  <li
+                    class="home-marquee__item"
+                    aria-hidden={index >= coupleMarqueeImages.length}
+                  >
+                    <img
+                      src={image.src}
+                      alt={image.alt}
+                      loading={index < 2 ? "eager" : "lazy"}
+                      decoding="async"
+                    />
+                  </li>
+                ),
+              )
+            }
+          </ul>
+        </div>
+      </section>
 
-			<section class="home-hero wrapper" aria-labelledby="home-title">
-				<h1 id="home-title" class="home-hero__title">
-					<span>{bride}</span>
-					<span aria-hidden="true" class="home-hero__ampersand">and</span>
-					<span>{groom}</span>
-				</h1>
-				<p class="home-hero__summary">{homePageContent.subheading}</p>
-				<a class="home-hero__cta" href={homePageContent.primaryCta.href}>
-					{homePageContent.primaryCta.label}
-				</a>
-			</section>
-		</div>
-	
-		<section class="home-events wrapper" id="events" aria-labelledby="events-title">
-			<div class="home-events__heading">
-				<p class="home-events__eyebrow">Celebration Details</p>
-				<h2 id="events-title">Our Wedding Celebrations</h2>
-			</div>
-			<div class="home-events__grid">
-				{
-					homePageContent.events.map((event) => (
-						<article class="home-event-card">
-							<p class="home-event-card__date">{event.dateLabel}</p>
-							<h3>{event.title}</h3>
-							<p>{event.location}</p>
-							<a class="home-event-card__link" href={event.href}>View schedule</a>
-						</article>
-					))
-				}
-			</div>
-		</section>
+      <section class="home-hero wrapper" aria-labelledby="home-title">
+        <h1 id="home-title" class="home-hero__title">
+          <span>{bride}</span>
+          <span aria-hidden="true" class="home-hero__ampersand">and</span>
+          <span>{groom}</span>
+        </h1>
+        <p class="home-hero__summary">{homePageContent.subheading}</p>
+        <a class="home-hero__cta" href={homePageContent.primaryCta.href}>
+          {homePageContent.primaryCta.label}
+        </a>
+      </section>
+    </div>
 
-	</main>
+    <section
+      class="home-events wrapper"
+      id="events"
+      aria-labelledby="events-title"
+    >
+      <div class="home-events__heading">
+        <p class="home-events__eyebrow">Celebration Details</p>
+        <h2 id="events-title">Our Wedding Celebrations</h2>
+      </div>
+      <div class="home-events__grid">
+        {
+          homePageContent.events.map((event) => (
+            <article class="home-event-card">
+              <p class="home-event-card__date">{event.dateLabel}</p>
+              <h3>{event.title}</h3>
+              <p>{event.location}</p>
+              <a class="home-event-card__link" href={event.href}>
+                View schedule
+              </a>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+  </main>
 </BaseLayout>
 
 <style>
-	.home-page {
-		position: relative;
-		display: flex;
-		flex-direction: column;
-		gap: clamp(3.25rem, 8.5vw, 6.25rem);
-		padding-bottom: clamp(4.25rem, 8vw, 7rem);
-		overflow-x: clip;
-	}
+  .home-page {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(3.25rem, 8.5vw, 6.25rem);
+    padding-bottom: clamp(4.25rem, 8vw, 7rem);
+    overflow-x: clip;
+  }
 
-	.home-hero {
-		text-align: center;
-	}
+  .home-hero {
+    text-align: center;
+  }
 
-	.home-topfold {
-		display: flex;
-		flex-direction: column;
-		gap: 3rem;
-	}
+  .home-topfold {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
 
-	@media (min-width: 1024px) {
-		.home-topfold {
-			gap: 1rem;
-		}
-	}
+  @media (min-width: 1024px) {
+    .home-topfold {
+      gap: 1rem;
+    }
+  }
 
-	.home-hero__title {
-		display: flex;
-		flex-direction: column;
-		gap: 0.75rem;
-		font-size: clamp(2rem, 11vw, 7.35rem);
-		line-height: 0.94;
-		letter-spacing: 0.015em;
-		color: #3f2e22;
-		white-space: nowrap;
-	}
+  .home-hero__title {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    font-size: clamp(2rem, 11vw, 7.35rem);
+    line-height: 0.94;
+    letter-spacing: 0.015em;
+    color: #3f2e22;
+    white-space: normal;
+    text-wrap: balance;
+  }
 
-	@media (min-width: 1024px) {
-		.home-hero__title {
-			gap: 3rem;
-		}
-	}
+  @media (min-width: 1024px) {
+    .home-hero__title {
+      gap: 3rem;
+    }
+  }
 
-	.home-hero__ampersand {
-		font-size: clamp(2.2rem, 7vw, 3.8rem);
-		line-height: 1;
-		margin-block: 0.1em;
-		opacity: 0.75;
-	}
+  .home-hero__ampersand {
+    font-size: clamp(2.2rem, 7vw, 3.8rem);
+    line-height: 1;
+    margin-block: 0.1em;
+    opacity: 0.75;
+  }
 
-	.home-hero__summary {
-		margin: 2.35rem auto 0;
-		max-width: 60ch;
-		font-size: clamp(0.95rem, 2.1vw, 1.08rem);
-		line-height: 1.82;
-		color: rgb(58 46 38 / 0.85);
-	}
+  .home-hero__summary {
+    margin: 2.35rem auto 0;
+    max-width: 60ch;
+    font-size: clamp(0.95rem, 2.1vw, 1.08rem);
+    line-height: 1.82;
+    color: rgb(58 46 38 / 0.85);
+  }
 
-	.home-hero__cta {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		margin-top: 2.4rem;
-		padding: 0.98rem 1.95rem;
-		border: 1px solid transparent;
-		border-radius: 9999px;
-		background: #6e523c;
-		color: #fff;
-		font-size: 0.84rem;
-		font-weight: 700;
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
-		text-decoration: none;
-		transition: transform 220ms ease, box-shadow 220ms ease;
-	}
+  .home-hero__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2.4rem;
+    padding: 0.98rem 1.95rem;
+    border: 1px solid transparent;
+    border-radius: 9999px;
+    background: #6e523c;
+    color: #fff;
+    font-size: 0.84rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition:
+      transform 220ms ease,
+      box-shadow 220ms ease;
+  }
 
-	.home-hero__cta:hover {
-		transform: translateY(-1px);
-		box-shadow: 0 8px 20px rgb(110 82 60 / 0.2);
-	}
+  .home-hero__cta:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px rgb(110 82 60 / 0.2);
+  }
 
-	.home-events {
-		display: grid;
-		justify-items: center;
-		gap: 2.6rem;
-		text-align: center;
-		padding-top: clamp(1rem, 3vw, 2rem);
-	}
+  .home-events {
+    display: grid;
+    justify-items: center;
+    gap: 2.6rem;
+    text-align: center;
+    padding-top: clamp(1rem, 3vw, 2rem);
+  }
 
-	.home-events__heading {
-		text-align: center;
-		max-width: 54rem;
-	}
+  .home-events__heading {
+    text-align: center;
+    max-width: 54rem;
+  }
 
-	.home-marquee {
-		width: 100%;
-		padding-top: calc(var(--site-header-height) + env(safe-area-inset-top, 0px) + 1rem);
-	}
+  .home-marquee {
+    width: 100%;
+    padding-top: calc(
+      var(--site-header-height) + env(safe-area-inset-top, 0px) + 1rem
+    );
+  }
 
-	@media (min-width: 1024px) {
-		.home-marquee {
-			padding-top: calc(var(--site-header-height) + env(safe-area-inset-top, 0px) + 2rem);
-		}
-	}
+  @media (min-width: 1024px) {
+    .home-marquee {
+      padding-top: calc(
+        var(--site-header-height) + env(safe-area-inset-top, 0px) + 2rem
+      );
+    }
+  }
 
-	.home-marquee__viewport {
-		overflow: hidden;
-		padding: 0;
-	}
+  .home-marquee__viewport {
+    overflow: hidden;
+    padding: 0;
+  }
 
-	.home-marquee__track {
-		display: flex;
-		gap: 0;
-		width: max-content;
-		margin: 0;
-		padding: 0;
-		list-style: none;
-		animation: home-marquee-scroll 34s linear infinite;
-	}
+  .home-marquee__track {
+    display: flex;
+    gap: 0;
+    width: max-content;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    animation: home-marquee-scroll 34s linear infinite;
+  }
 
-	.home-marquee__item {
-		flex: 0 0 auto;
-		height: clamp(15rem, 54vw, 24rem);
-		aspect-ratio: 4 / 5;
-	}
+  .home-marquee__item {
+    flex: 0 0 auto;
+    height: clamp(15rem, 54vw, 24rem);
+    aspect-ratio: 4 / 5;
+  }
 
-	.home-marquee__item img {
-		display: block;
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-		object-position: center top;
-	}
+  .home-marquee__item img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+  }
 
-	.home-events__eyebrow {
-		font-size: 0.75rem;
-		font-weight: 700;
-		letter-spacing: 0.18em;
-		text-transform: uppercase;
-		color: rgb(92 74 61 / 0.75);
-	}
+  .home-events__eyebrow {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgb(92 74 61 / 0.75);
+  }
 
-	.home-events__heading h2 {
-		margin: 1.25rem 0 0;
-		font-family: var(--font-body);
-		font-size: clamp(1.55rem, 4.6vw, 2.1rem);
-		font-weight: 700;
-		letter-spacing: 0.01em;
-		color: #3a2e26;
-	}
+  .home-events__heading h2 {
+    margin: 1.25rem 0 0;
+    font-family: var(--font-body);
+    font-size: clamp(1.55rem, 4.6vw, 2.1rem);
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    color: #3a2e26;
+  }
 
-	.home-events__grid {
-		display: grid;
-		grid-template-columns: 1fr;
-		gap: 1.9rem;
-		width: 100%;
-		max-width: min(100%, 64rem);
-		margin-inline: auto;
-	}
+  .home-events__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.9rem;
+    width: 100%;
+    max-width: min(100%, 64rem);
+    margin-inline: auto;
+  }
 
-	.home-event-card {
-		padding: 1.8rem 1.6rem 1.55rem;
-		border: 1px solid rgb(110 82 60 / 0.16);
-		border-radius: 1rem;
-		background: rgb(255 252 247 / 0.55);
-		backdrop-filter: blur(4px);
-		-webkit-backdrop-filter: blur(4px);
-		text-align: center;
-	}
+  .home-event-card {
+    padding: 1.8rem 1.6rem 1.55rem;
+    border: 1px solid rgb(110 82 60 / 0.16);
+    border-radius: 1rem;
+    background: rgb(255 252 247 / 0.55);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    text-align: center;
+  }
 
-	.home-event-card__date {
-		margin: 0;
-		font-size: 0.8rem;
-		font-weight: 700;
-		letter-spacing: 0.06em;
-		text-transform: uppercase;
-		color: #6e523c;
-	}
+  .home-event-card__date {
+    margin: 0;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #6e523c;
+  }
 
-	.home-event-card h3 {
-		margin: 0.65rem 0 0;
-		font-family: var(--font-display);
-		font-size: clamp(2rem, 5vw, 2.6rem);
-		font-weight: 400;
-		line-height: 1.05;
-		letter-spacing: 0.01em;
-	}
+  .home-event-card h3 {
+    margin: 0.65rem 0 0;
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 2.6rem);
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: 0.01em;
+  }
 
-	.home-event-card p {
-		margin: 0.75rem 0 0;
-		font-size: 0.94rem;
-		line-height: 1.72;
-		color: rgb(58 46 38 / 0.88);
-	}
+  .home-event-card p {
+    margin: 0.75rem 0 0;
+    font-size: 0.94rem;
+    line-height: 1.72;
+    color: rgb(58 46 38 / 0.88);
+  }
 
-	.home-event-card__link {
-		display: inline-flex;
-		margin-top: 1.2rem;
-		font-size: 0.82rem;
-		font-weight: 700;
-		letter-spacing: 0.03em;
-		text-transform: none;
-		color: #6e523c;
-		text-decoration: underline;
-		text-decoration-thickness: 1.5px;
-		text-underline-offset: 0.18em;
-		text-decoration-color: rgb(110 82 60 / 0.5);
-		transition:
-			color 180ms ease,
-			text-decoration-color 180ms ease,
-			transform 180ms ease;
-	}
+  .home-event-card__link {
+    display: inline-flex;
+    margin-top: 1.2rem;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: none;
+    color: #6e523c;
+    text-decoration: underline;
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 0.18em;
+    text-decoration-color: rgb(110 82 60 / 0.5);
+    transition:
+      color 180ms ease,
+      text-decoration-color 180ms ease,
+      transform 180ms ease;
+  }
 
-	.home-event-card__link:focus-visible {
-		outline: none;
-		box-shadow: 0 0 0 2px rgb(110 82 60 / 0.28);
-		border-radius: 0.3rem;
-		padding-inline: 0.15rem;
-	}
+  .home-event-card__link:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px rgb(110 82 60 / 0.28);
+    border-radius: 0.3rem;
+    padding-inline: 0.15rem;
+  }
 
-	@media (min-width: 768px) {
-		.home-marquee__item {
-			height: clamp(22rem, 60vw, 30rem);
-		}
+  @media (min-width: 768px) {
+    .home-marquee__item {
+      height: clamp(22rem, 60vw, 30rem);
+    }
 
-		.home-events__grid {
-			grid-template-columns: repeat(2, minmax(0, 1fr));
-			gap: 2rem;
-		}
-	}
+    .home-events__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 2rem;
+    }
+  }
 
-	@media (max-width: 767px) {
-		.home-marquee__item {
-			flex: 0 0 100dvw;
-			width: 100dvw;
-			height: 68vh;
-			height: 68dvh;
-		}
+  @media (max-width: 767px) {
+    .home-marquee__item {
+      flex: 0 0 100dvw;
+      width: 100dvw;
+      height: 68vh;
+      height: 68dvh;
+    }
 
-		.home-hero {
-			margin-top: 0;
-		}
+    .home-hero {
+      margin-top: 0;
+    }
 
-		.home-hero__cta {
-			margin-top: 1.6rem;
-			padding: 0.74rem 1.3rem;
-			font-size: 0.72rem;
-			letter-spacing: 0.06em;
-		}
-	}
+    .home-hero__cta {
+      margin-top: 1.6rem;
+      padding: 0.74rem 1.3rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+    }
+  }
 
-	@media (min-width: 1024px) {
-		.home-marquee__item {
-			height: calc(
-				100dvh - var(--site-header-height) - env(safe-area-inset-top, 0px) - 2.75rem
-			);
-		}
+  @media (min-width: 1024px) {
+    .home-marquee__item {
+      height: calc(
+        100dvh - var(--site-header-height) - env(safe-area-inset-top, 0px) -
+          2.75rem
+      );
+    }
 
-		.home-hero {
-			margin-top: clamp(2rem, 4vw, 3.5rem);
-		}
-	}
+    .home-hero {
+      margin-top: clamp(2rem, 4vw, 3.5rem);
+    }
+  }
 
-	@media (hover: hover) and (pointer: fine) {
-		.home-event-card__link:hover {
-			color: #3f2e22;
-			text-decoration-color: rgb(63 46 34 / 0.9);
-			transform: translateX(1px);
-		}
-	}
+  @media (hover: hover) and (pointer: fine) {
+    .home-event-card__link:hover {
+      color: #3f2e22;
+      text-decoration-color: rgb(63 46 34 / 0.9);
+      transform: translateX(1px);
+    }
+  }
 
-	@media (prefers-reduced-motion: reduce) {
-		.home-marquee__viewport {
-			overflow-x: auto;
-		}
+  @media (prefers-reduced-motion: reduce) {
+    .home-marquee__viewport {
+      overflow-x: auto;
+    }
 
-		.home-marquee__track {
-			animation: none;
-		}
-	}
+    .home-marquee__track {
+      animation: none;
+    }
+  }
 
-	@keyframes home-marquee-scroll {
-		from {
-			transform: translateX(0);
-		}
-		to {
-			transform: translateX(-50%);
-		}
-	}
+  @keyframes home-marquee-scroll {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
 </style>
