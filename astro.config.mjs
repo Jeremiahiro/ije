@@ -10,9 +10,9 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // https://astro.build/config
 export default defineConfig({
-  server: {
-    allowedHosts: [".trycloudflare.com"],
-  },
+  site: "https://janeandjeremiah.com",
+
+  server: {},
 
   vite: {
     plugins: [tailwindcss()],

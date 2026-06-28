@@ -9,7 +9,11 @@ import type { FormSelectOption } from "@/components/forms/FormSelect.astro";
 import RsvpFormField from "@/components/rsvp/RsvpFormField.astro";
 import RsvpFormSelect from "@/components/rsvp/RsvpFormSelect.astro";
 import RsvpSection from "@/components/rsvp/RsvpSection.astro";
-import { RSVP_EVENTS_ERROR_KEY, RSVP_FIELD } from "@/util/rsvpForm";
+import {
+  RSVP_EVENTS_ERROR_KEY,
+  RSVP_FIELD,
+  RSVP_HONEYPOT_FIELD,
+} from "@/util/rsvpForm";
 
 const fieldIds = {
 	country: "rsvp-field-country",
@@ -80,14 +84,14 @@ const internationalDateFields: SimpleField[] = [
 		name: RSVP_FIELD.expectedArrival,
 		label: "Expected arrival in Nigeria",
 		variant: "date",
-		required: true,
+		required: false,
 	},
 	{
 		id: fieldIds.departure,
 		name: RSVP_FIELD.expectedDeparture,
 		label: "Expected departure",
 		variant: "date",
-		required: true,
+		required: false,
 	},
 ];
 
@@ -128,6 +132,17 @@ const thankYouWriteChars = ["T", "h", "a", "n", "k", "\u00A0", "y", "o", "u"];
 				method="post"
 				onsubmit="event.preventDefault()"
 			>
+				<div class="rsvp__hp" aria-hidden="true">
+					<label for="rsvp-company">Company (leave this field empty)</label>
+					<input
+						id="rsvp-company"
+						type="text"
+						name={RSVP_HONEYPOT_FIELD}
+						tabindex="-1"
+						autocomplete="off"
+					/>
+				</div>
+
 				<p class="rsvp__callout" role="note">
 					<strong>Please respond by</strong>
 					<time datetime="2026-10-01">October 1, 2026</time>
@@ -401,6 +416,15 @@ const thankYouWriteChars = ["T", "h", "a", "n", "k", "\u00A0", "y", "o", "u"];
 		flex-direction: column;
 		--rsvp-form-stack-gap: 2.35rem;
 		gap: var(--rsvp-form-stack-gap);
+	}
+
+	/* Honeypot: kept in the DOM and submitted, but hidden from real users */
+	.rsvp__hp {
+		position: absolute;
+		left: -9999px;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
 	}
 
 	.rsvp__callout {

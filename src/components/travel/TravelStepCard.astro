@@ -104,7 +104,19 @@ const isExternalActionHref = step.actionHref?.startsWith("http");
 					data-step-details-close
 					aria-label="Close details"
 				>
-					<span aria-hidden="true">×</span>
+					<svg
+						class="travel-step-card__detail-close-icon"
+						viewBox="0 0 24 24"
+						aria-hidden="true"
+					>
+						<path
+							d="M6 6l12 12M18 6L6 18"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+							stroke-linecap="round"
+						/>
+					</svg>
 				</button>
 				<p class="travel-step-card__detail-copy copy-preserve-breaks">
 					{step.detailDescription}
@@ -518,11 +530,10 @@ const isExternalActionHref = step.actionHref?.startsWith("http");
 			color 0.15s ease;
 	}
 
-	.travel-step-card__detail-close span {
+	.travel-step-card__detail-close-icon {
+		width: 0.85rem;
+		height: 0.85rem;
 		display: block;
-		font-size: 0.9375rem;
-		line-height: 1;
-		transform: translateY(-0.04em);
 	}
 
 	.travel-step-card__detail-close:hover {

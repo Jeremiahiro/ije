@@ -1,5 +1,10 @@
 import type { APIRoute } from "astro";
-import { buildRsvpRecord, parseRsvpFormData, validateRsvpForm } from "@/util/rsvpForm";
+import {
+	buildRsvpRecord,
+	parseRsvpFormData,
+	RSVP_HONEYPOT_FIELD,
+	validateRsvpForm,
+} from "@/util/rsvpForm";
 import { forwardRsvpToGoogleSheet } from "@/util/rsvpSheet";
 
 export const prerender = false;
@@ -23,6 +28,11 @@ export const POST: APIRoute = async ({ request }) => {
 		formData = await request.formData();
 	} catch {
 		return json({ ok: false, kind: "invalid_body", message: "Invalid form data." }, 400);
+	}
+
+	// Honeypot: bots fill the hidden field. Pretend success and drop the submission.
+	if (String(formData.get(RSVP_HONEYPOT_FIELD) ?? "").trim()) {
+		return json({ ok: true });
 	}
 
 	const validation = validateRsvpForm(parseRsvpFormData(formData));

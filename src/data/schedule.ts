@@ -1,5 +1,7 @@
+export type ScheduleEventIcon = "marriage" | "church" | "reception" | "party";
+
 export type ScheduleEvent = {
-  icon?: string;
+  icon?: ScheduleEventIcon;
   title: string;
   timeLabel?: string;
   venue: string;
@@ -90,7 +92,7 @@ export const schedulePageData: SchedulePageData = {
       dayLabel: "Saturday, January 2, 2027",
       events: [
         {
-          icon: "♥︎♥︎",
+          icon: "marriage",
           title: "Traditional Marriage (Ịgba Nkwụ)",
           timeLabel: "1:00 pm",
           venue: "Okai Item, Bende Local Government Area",
@@ -119,7 +121,7 @@ export const schedulePageData: SchedulePageData = {
       dayLabel: "Monday, January 4, 2027",
       events: [
         {
-          icon: "♥︎♥︎",
+          icon: "church",
           title: "Church Wedding",
           timeLabel: "11:00 am",
           venue: "Methodist Theological Institute (MTI)",
@@ -142,42 +144,44 @@ export const schedulePageData: SchedulePageData = {
           ),
         },
         {
-          icon: "❦",
+          icon: "reception",
           title: "Wedding Reception",
           timeLabel: "2:00 pm",
-          venue: "TBA",
-          location: "Umuahia, Abia State, Nigeria",
-          //   mapHref: "https://maps.app.goo.gl/xccY3nSsnxXVcPDH7",
+          venue: "International Conference Centre (ICC)",
+          location: "International Conference Centre (ICC), Umuahia, Abia State, Nigeria",
+          mapHref:
+            "https://www.google.com/maps/search/?api=1&query=International+Conference+Centre+Umuahia",
           googleCalendarHref: makeGoogleCalendarHref(
             "Jane & Jeremiah's Wedding Reception",
             "20270104T130000Z",
             "20270104T160000Z",
-            // "International Conference Centre, Umuahia, Abia State, Nigeria",
+            "International Conference Centre (ICC), Umuahia, Abia State, Nigeria",
           ),
           appleCalendarHref: makeAppleCalendarHref(
             "Jane & Jeremiah's Wedding Reception",
             "20270104T130000Z",
             "20270104T160000Z",
-            // "International Conference Centre, Umuahia, Abia State, Nigeria",
+            "International Conference Centre (ICC), Umuahia, Abia State, Nigeria",
           ),
         },
         {
-          icon: "✶",
+          icon: "party",
           title: "After Party",
-          venue: "TBA",
-          location: "Umuahia, Abia State, Nigeria",
-          // mapHref: "https://maps.app.goo.gl/xccY3nSsnxXVcPDH7",
+          venue: "International Conference Centre (ICC)",
+          location: "International Conference Centre (ICC), Umuahia, Abia State, Nigeria",
+          mapHref:
+            "https://www.google.com/maps/search/?api=1&query=International+Conference+Centre+Umuahia",
           googleCalendarHref: makeGoogleCalendarHref(
             "Jane & Jeremiah's After Party",
             "20270104T170000Z",
             "20270105T010000Z",
-            // "International Conference Centre, Umuahia, Abia State, Nigeria",
+            "International Conference Centre (ICC), Umuahia, Abia State, Nigeria",
           ),
           appleCalendarHref: makeAppleCalendarHref(
             "Jane & Jeremiah's After Party",
             "20270104T170000Z",
             "20270105T010000Z",
-            // "International Conference Centre, Umuahia, Abia State, Nigeria",
+            "International Conference Centre (ICC), Umuahia, Abia State, Nigeria",
           ),
         },
       ],

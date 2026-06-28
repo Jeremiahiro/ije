@@ -11,7 +11,7 @@ const title = `${siteTitleSuffix}`;
 const description =
   "Wedding details for Jeremiah Iromaka-Amajọ and Jane Onuoha, including celebration dates, venue highlights, and RSVP access.";
 const coupleMarqueeImages = [1, 2, 3, 4].map((photoNumber) => ({
-  src: `/assets/couple/${photoNumber}.jpeg`,
+  src: `/assets/couple/${photoNumber}.webp`,
   alt: `${bride} and ${groom} portrait ${photoNumber}`,
 }));
 ---
@@ -32,6 +32,8 @@ const coupleMarqueeImages = [1, 2, 3, 4].map((photoNumber) => ({
                     <img
                       src={image.src}
                       alt={image.alt}
+                      width="720"
+                      height="900"
                       loading={index < 2 ? "eager" : "lazy"}
                       decoding="async"
                     />

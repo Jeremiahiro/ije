@@ -17,6 +17,20 @@ export const RSVP_FIELD = {
 
 export const RSVP_EVENTS_ERROR_KEY = "events";
 
+/** Hidden anti-spam field — real users never see or fill it. */
+export const RSVP_HONEYPOT_FIELD = "company";
+
+/** Max character lengths for free-text fields (defense against oversized payloads). */
+export const RSVP_MAX_LEN = {
+	full_name: 100,
+	email: 254,
+	phone: 32,
+	other_country: 60,
+	plus_one_name: 100,
+	guest_notes: 1000,
+	message_couple: 1000,
+} as const;
+
 export type CountryResidence = "nigeria" | "uk" | "usa" | "other";
 
 export type Relationship = "family" | "friend" | "colleague" | "church" | "other";
@@ -136,6 +150,8 @@ export const validateRsvpForm = (raw: ReturnType<typeof parseRsvpFormData>): Rsv
 			fieldErrors[RSVP_FIELD.otherCountry] = "Enter your country.";
 		} else if (raw.other_country.length < 2) {
 			fieldErrors[RSVP_FIELD.otherCountry] = "Country name looks too short.";
+		} else if (raw.other_country.length > RSVP_MAX_LEN.other_country) {
+			fieldErrors[RSVP_FIELD.otherCountry] = "Country name is too long.";
 		}
 	}
 
@@ -143,16 +159,22 @@ export const validateRsvpForm = (raw: ReturnType<typeof parseRsvpFormData>): Rsv
 		fieldErrors[RSVP_FIELD.fullName] = "Enter your full name.";
 	} else if (raw.full_name.length < 2) {
 		fieldErrors[RSVP_FIELD.fullName] = "Name looks too short.";
+	} else if (raw.full_name.length > RSVP_MAX_LEN.full_name) {
+		fieldErrors[RSVP_FIELD.fullName] = "Name is too long.";
 	}
 
 	if (!raw.email) {
 		fieldErrors[RSVP_FIELD.email] = "Enter your email address.";
+	} else if (raw.email.length > RSVP_MAX_LEN.email) {
+		fieldErrors[RSVP_FIELD.email] = "Email is too long.";
 	} else if (!EMAIL_RE.test(raw.email)) {
 		fieldErrors[RSVP_FIELD.email] = "Enter a valid email address.";
 	}
 
 	if (raw.phone) {
-		if (!PHONE_WITH_COUNTRY_RE.test(raw.phone)) {
+		if (raw.phone.length > RSVP_MAX_LEN.phone) {
+			fieldErrors[RSVP_FIELD.phone] = "Phone number is too long.";
+		} else if (!PHONE_WITH_COUNTRY_RE.test(raw.phone)) {
 			fieldErrors[RSVP_FIELD.phone] =
 				"Include country code starting with + (e.g. +1 214-577-1936).";
 		} else if (phoneDigitCount(raw.phone) < 10) {
@@ -168,7 +190,17 @@ export const validateRsvpForm = (raw: ReturnType<typeof parseRsvpFormData>): Rsv
 			fieldErrors[RSVP_FIELD.plusOneName] = "Enter your guest’s name (plus one).";
 		} else if (raw.plus_one_name.trim().length < 2) {
 			fieldErrors[RSVP_FIELD.plusOneName] = "Name looks too short.";
+		} else if (raw.plus_one_name.trim().length > RSVP_MAX_LEN.plus_one_name) {
+			fieldErrors[RSVP_FIELD.plusOneName] = "Name is too long.";
 		}
+	}
+
+	if (raw.guest_notes.length > RSVP_MAX_LEN.guest_notes) {
+		fieldErrors[RSVP_FIELD.guestNotes] = "Please shorten your note a little.";
+	}
+
+	if (raw.message_couple.length > RSVP_MAX_LEN.message_couple) {
+		fieldErrors[RSVP_FIELD.messageCouple] = "Please shorten your message a little.";
 	}
 
 	if (!raw.event_traditional && !raw.event_white) {
@@ -180,14 +212,10 @@ export const validateRsvpForm = (raw: ReturnType<typeof parseRsvpFormData>): Rsv
 	let other_country = country === "other" ? raw.other_country.trim() : "";
 
 	if (country && isInternationalResidence(country)) {
-		if (!expected_arrival) {
-			fieldErrors[RSVP_FIELD.expectedArrival] = "Enter your expected arrival date in Nigeria.";
-		} else if (!ISO_DATE.test(expected_arrival)) {
+		if (expected_arrival && (!ISO_DATE.test(expected_arrival))) {
 			fieldErrors[RSVP_FIELD.expectedArrival] = "Use the date picker (YYYY-MM-DD).";
 		}
-		if (!expected_departure) {
-			fieldErrors[RSVP_FIELD.expectedDeparture] = "Enter your expected departure date.";
-		} else if (!ISO_DATE.test(expected_departure)) {
+		if (expected_departure && (!ISO_DATE.test(expected_departure))) {
 			fieldErrors[RSVP_FIELD.expectedDeparture] = "Use the date picker (YYYY-MM-DD).";
 		}
 		if (expected_arrival && expected_departure && ISO_DATE.test(expected_arrival) && ISO_DATE.test(expected_departure)) {

@@ -68,7 +68,7 @@ export const travelFlightsPage: TravelFlightsPageData = {
 			"Take special note of the days that we are able to assist with ground transport. Feel free to come in on any other day, but if you fly in outside of our recommended days then we will not be able to provide ground transport support.",
 		],
 	},
-	backgroundImage: "/assets/travel.jpg",
+	backgroundImage: "/assets/travel.webp",
 	international: {
 		title: "For Guests Arriving from Outside Nigeria",
 		lede: "Fly into Lagos, connect through Owerri, then travel onward to Abia State.",
@@ -86,21 +86,21 @@ export const travelFlightsPage: TravelFlightsPageData = {
 			{
 				tag: "International",
 				title: "Arrive in Lagos",
-				visual: "/assets/lagos.png",
+				visual: "/assets/lagos.webp",
 				footer: "Murtala Muhammed International Airport",
 				detailDescription: `Fly into Lagos on your international flight. Plan to arrive between December 29 and 31, 2026 for the Traditional Marriage or January 2, 2027 for the Church Wedding — these are the only days we will coordinate airport assistance and ground transportation for guests traveling from outside${nbsp}Nigeria.`,
 			},
 			{
 				tag: "Domestic",
 				title: "Connect to Owerri, Imo State",
-				visual: "/assets/owerri.png",
+				visual: "/assets/owerri.webp",
 				footer: "Sam Mbakwe International Cargo Airport",
 				detailDescription: `Take a local flight from Lagos to Owerri. This domestic connection brings you closer to Abia${nbsp}State and the celebration.`,
 			},
 			{
 				tag: "Domestic",
-				title: "Ground to Abia State",
-				visual: "/assets/umuahia.png",
+				title: "Connect to Abia State",
+				visual: "/assets/umuahia.webp",
 				footer: "Onward to the venue",
 				detailDescription: `Transportation from Owerri to Abia State will be arranged for guests traveling from outside${nbsp}Nigeria.`,
 			},
@@ -114,7 +114,7 @@ export const travelFlightsPage: TravelFlightsPageData = {
 			{
 				tag: "January 2, 2027",
 				title: "Traditional Marriage",
-				visual: "/assets/item.png",
+				visual: "/assets/item.webp",
 				footer: "Onuoha's Country Home, Okai-Item, Bende LGA, Abia State",
 				detailDescription:
 					"The traditional marriage ceremony takes place at Onuoha's Country Home in Okai Item, Bende LGA, Abia State.",
@@ -124,7 +124,7 @@ export const travelFlightsPage: TravelFlightsPageData = {
 			{
 				tag: "January 4, 2027",
 				title: "Church Wedding",
-				visual: "/assets/mti.png",
+				visual: "/assets/mti.webp",
 				footer: "Methodist Theological Institute Umuahia",
 				detailDescription:
 					"The church wedding takes place at Methodist Theological Institute in Umuahia while reception follows at the International Conference Centre Umuahia.",
