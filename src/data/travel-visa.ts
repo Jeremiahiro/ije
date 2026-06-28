@@ -26,7 +26,7 @@ export type TravelVisaPageData = {
 };
 
 export const travelVisaPage: TravelVisaPageData = {
-	backgroundImage: "/assets/visa.jpg",
+	backgroundImage: "/assets/visa.webp",
 	hero: {
 		eyebrow: "For international guests",
 		title: "Visa Information",
