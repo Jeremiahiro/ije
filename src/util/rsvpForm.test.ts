@@ -4,6 +4,7 @@ import {
 	parseRsvpFormData,
 	RSVP_EVENTS_ERROR_KEY,
 	RSVP_FIELD,
+	RSVP_MAX_LEN,
 	validateRsvpForm,
 	type RsvpFormValues,
 } from "./rsvpForm";
@@ -136,6 +137,41 @@ describe("validateRsvpForm", () => {
 		expect(result.ok).toBe(false);
 		if (result.ok) return;
 		expect(result.fieldErrors[RSVP_FIELD.expectedDeparture]).toBeDefined();
+	});
+
+	it("rejects an over-long name", () => {
+		const form = fd({ [RSVP_FIELD.fullName]: "a".repeat(RSVP_MAX_LEN.full_name + 1) });
+		const result = validateRsvpForm(parseRsvpFormData(form));
+		expect(result.ok).toBe(false);
+		if (result.ok) return;
+		expect(result.fieldErrors[RSVP_FIELD.fullName]).toBeDefined();
+	});
+
+	it("rejects an over-long guest note", () => {
+		const form = fd({ [RSVP_FIELD.guestNotes]: "x".repeat(RSVP_MAX_LEN.guest_notes + 1) });
+		const result = validateRsvpForm(parseRsvpFormData(form));
+		expect(result.ok).toBe(false);
+		if (result.ok) return;
+		expect(result.fieldErrors[RSVP_FIELD.guestNotes]).toBeDefined();
+	});
+
+	it("rejects an over-long message to the couple", () => {
+		const form = fd({
+			[RSVP_FIELD.messageCouple]: "x".repeat(RSVP_MAX_LEN.message_couple + 1),
+		});
+		const result = validateRsvpForm(parseRsvpFormData(form));
+		expect(result.ok).toBe(false);
+		if (result.ok) return;
+		expect(result.fieldErrors[RSVP_FIELD.messageCouple]).toBeDefined();
+	});
+
+	it("accepts free-text at the maximum length", () => {
+		const form = fd({
+			[RSVP_FIELD.guestNotes]: "x".repeat(RSVP_MAX_LEN.guest_notes),
+			[RSVP_FIELD.messageCouple]: "y".repeat(RSVP_MAX_LEN.message_couple),
+		});
+		const result = validateRsvpForm(parseRsvpFormData(form));
+		expect(result.ok).toBe(true);
 	});
 });
 

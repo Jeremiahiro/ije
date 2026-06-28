@@ -9,6 +9,24 @@ const COUNTRY_LABELS: Record<CountryResidence, string> = {
 
 const boolLabel = (value: boolean): string => (value ? "Yes" : "No");
 
+/**
+ * Neutralize spreadsheet formula injection: a cell whose first character is
+ * one of = + - @ (or a leading tab/CR) is treated as a formula by Google
+ * Sheets/Excel. Prefixing a single quote forces the value to be stored as text.
+ */
+const FORMULA_TRIGGER_RE = /^[=+\-@\t\r]/;
+
+export const sanitizeSheetCell = (value: string): string =>
+	FORMULA_TRIGGER_RE.test(value) ? `'${value}` : value;
+
+const sanitizeRow = (row: RsvpSheetGuestRow): RsvpSheetGuestRow => {
+	const out: Record<string, string> = {};
+	for (const [key, value] of Object.entries(row)) {
+		out[key] = sanitizeSheetCell(value);
+	}
+	return out as RsvpSheetGuestRow;
+};
+
 /** One spreadsheet row = one attending guest. */
 export type RsvpSheetGuestRow = {
 	submitted_at: string;
@@ -116,7 +134,7 @@ export const recordToSheetRows = (
 		});
 	}
 
-	return rows;
+	return rows.map(sanitizeRow);
 };
 
 export const recordToSheetPayload = (

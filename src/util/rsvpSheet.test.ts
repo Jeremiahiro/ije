@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { buildRsvpRecord, type RsvpFormValues } from "./rsvpForm";
-import { recordToSheetPayload, recordToSheetRows } from "./rsvpSheet";
+import { recordToSheetPayload, recordToSheetRows, sanitizeSheetCell } from "./rsvpSheet";
 
 const baseValues = (): RsvpFormValues => ({
 	country_residence: "nigeria",
@@ -72,5 +72,35 @@ describe("recordToSheetRows", () => {
 		values.other_country = "Canada";
 		const payload = recordToSheetPayload(buildRsvpRecord(values));
 		expect(payload.rows[0]?.country).toBe("Other (Canada)");
+	});
+
+	it("neutralizes spreadsheet formula injection in user text", () => {
+		const values = baseValues();
+		values.full_name = "=HYPERLINK(\"http://evil\",\"x\")";
+		values.message_couple = "@SUM(A1:A2)";
+		const rows = recordToSheetRows(buildRsvpRecord(values));
+		expect(rows[0]?.full_name.startsWith("'=")).toBe(true);
+		expect(rows[0]?.message_couple.startsWith("'@")).toBe(true);
+	});
+
+	it("leaves ordinary text untouched", () => {
+		const values = baseValues();
+		const rows = recordToSheetRows(buildRsvpRecord(values));
+		expect(rows[0]?.full_name).toBe("Ada Okonkwo");
+		expect(rows[0]?.email).toBe("ada@example.com");
+	});
+});
+
+describe("sanitizeSheetCell", () => {
+	it("prefixes values that start with a formula trigger", () => {
+		for (const c of ["=", "+", "-", "@"]) {
+			expect(sanitizeSheetCell(`${c}danger`)).toBe(`'${c}danger`);
+		}
+	});
+
+	it("does not touch safe values", () => {
+		expect(sanitizeSheetCell("Ada")).toBe("Ada");
+		expect(sanitizeSheetCell("a+b")).toBe("a+b");
+		expect(sanitizeSheetCell("")).toBe("");
 	});
 });
