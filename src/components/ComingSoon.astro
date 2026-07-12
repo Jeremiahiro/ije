@@ -11,7 +11,7 @@ const { heading, subheading } = Astro.props;
 	<div class="coming-soon__bg" aria-hidden="true"></div>
 	<main class="coming-soon__main">
 		<h1>{heading}</h1>
-		{subheading ? <p class="coming-soon__sub">{subheading}</p> : null}
+		{subheading ? <p class="coming-soon__sub" set:html={subheading}></p> : null}
 	</main>
 </div>
 
