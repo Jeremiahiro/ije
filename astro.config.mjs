@@ -12,9 +12,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export default defineConfig({
   site: "https://janeandjeremiah.com",
 
-  server: {
-    allowedHosts: [".trycloudflare.com"]
-  },
+  server: {},
 
   vite: {
     plugins: [tailwindcss()],
