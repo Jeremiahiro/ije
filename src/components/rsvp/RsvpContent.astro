@@ -115,6 +115,7 @@ const thankYouWriteChars = ["T", "h", "a", "n", "k", "\u00A0", "y", "o", "u"];
 	ariaLabelledBy="rsvp-heading"
 >
 	<header class="rsvp__intro">
+		<p class="rsvp__eyebrow">Confirm your attendance</p>
 		<h1 id="rsvp-heading" class="rsvp__title">RSVP</h1>
 		<p class="rsvp__lede">
 			We’d love to know how we can make your time with us smooth — events
@@ -143,12 +144,14 @@ const thankYouWriteChars = ["T", "h", "a", "n", "k", "\u00A0", "y", "o", "u"];
 					/>
 				</div>
 
-				<p class="rsvp__callout" role="note">
-					<strong>Please respond by</strong>
-					<time datetime="2026-10-01">October 1, 2026</time>
-					<br /> It helps us finalize numbers and plan for guests
-					traveling from abroad.
-				</p>
+				<ContentCard variant="primary" class="rsvp__callout" role="note">
+					<p class="rsvp__callout-text">
+						<strong>Please respond by</strong>
+						<time datetime="2026-10-01">October 1, 2026</time>
+						<br /> It helps us finalize numbers and plan for guests
+						traveling from abroad.
+					</p>
+				</ContentCard>
 
 				<p
 					id="rsvp-form-summary"
@@ -352,13 +355,22 @@ const thankYouWriteChars = ["T", "h", "a", "n", "k", "\u00A0", "y", "o", "u"];
 		text-align: center;
 	}
 
+	.rsvp__eyebrow {
+		margin: 0 0 0.65rem;
+		font-size: 0.72rem;
+		font-weight: 700;
+		letter-spacing: 0.2em;
+		text-transform: uppercase;
+		color: rgb(92 74 61 / 0.75);
+	}
+
 	.rsvp__title {
 		margin: 0 0 0.5rem;
-		font-size: clamp(2rem, 4.5vw, 2.75rem);
-		font-weight: 800;
+		font-size: clamp(2.5rem, 6vw, 3.75rem);
+		font-weight: 400;
 		line-height: 1.1;
-		letter-spacing: 0.02em;
-		color: #4a3d32;
+		letter-spacing: 0.01em;
+		color: var(--text-primary);
 	}
 
 	.rsvp__lede {
@@ -428,27 +440,23 @@ const thankYouWriteChars = ["T", "h", "a", "n", "k", "\u00A0", "y", "o", "u"];
 	}
 
 	.rsvp__callout {
-		margin: 0;
-		padding: 1rem 1.15rem;
-		border-radius: 0.75rem;
-		border: 1px solid rgb(201 168 124 / 0.45);
-		background: linear-gradient(
-			135deg,
-			rgb(255 251 243 / 0.95) 0%,
-			rgb(245 232 214 / 0.45) 100%
-		);
-		font-size: 0.95rem;
-		line-height: 1.5;
-		color: #4a3d32;
+		margin-block: 0 !important;
 		text-align: center;
 	}
 
-	.rsvp__callout strong {
+	.rsvp__callout-text {
+		margin: 0;
+		font-size: 0.95rem;
+		line-height: 1.5;
+		color: #4a3d32;
+	}
+
+	.rsvp__callout-text strong {
 		font-weight: 700;
 		color: #6e523c;
 	}
 
-	.rsvp__callout time {
+	.rsvp__callout-text time {
 		font-weight: 600;
 		white-space: nowrap;
 	}
@@ -574,7 +582,7 @@ const thankYouWriteChars = ["T", "h", "a", "n", "k", "\u00A0", "y", "o", "u"];
 	.rsvp__submit {
 		padding: 0.72rem 1.5rem;
 		min-height: 3.1rem;
-		border-radius: 0.55rem;
+		border-radius: 9999px;
 		border: 1px solid rgb(110 82 60 / 0.35);
 		background: linear-gradient(180deg, #6e523c 0%, #5a4434 100%);
 		color: #fffcf7;
@@ -582,10 +590,12 @@ const thankYouWriteChars = ["T", "h", "a", "n", "k", "\u00A0", "y", "o", "u"];
 		font-size: 1.02rem;
 		cursor: pointer;
 		font-family: inherit;
+		transition: background 200ms ease, transform 200ms ease;
 	}
 
 	.rsvp__submit:hover:not(:disabled) {
-		filter: brightness(1.06);
+		background: #5b4232;
+		transform: translateY(-1px);
 	}
 
 	.rsvp__submit:disabled {
@@ -720,3 +730,22 @@ const thankYouWriteChars = ["T", "h", "a", "n", "k", "\u00A0", "y", "o", "u"];
 		}
 	}
 </style>
+
+<script>
+	const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+	let detected: string | null = null;
+	if (tz === "Africa/Lagos") detected = "nigeria";
+	else if (tz === "Europe/London") detected = "uk";
+	else if (tz.startsWith("America/")) detected = "usa";
+
+	if (detected) {
+		const select = document.getElementById("rsvp-field-country");
+		if (select instanceof HTMLSelectElement) {
+			select.value = detected;
+			if (detected === "nigeria") {
+				const wrapper = select.closest<HTMLElement>(".form-field");
+				if (wrapper) wrapper.hidden = true;
+			}
+		}
+	}
+</script>
