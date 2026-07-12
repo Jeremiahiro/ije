@@ -65,7 +65,6 @@ const sectionNav = [
 		<TravelVisaContent />
 	</section>
 
-	<div data-pill-nav-end aria-hidden="true" style="height:0;overflow:hidden"></div>
 </HeroPageSurface>
 
 <style>
@@ -107,11 +106,11 @@ const sectionNav = [
 </style>
 
 <script>
-	// Pin PillNav to bottom when wrapper scrolls off top; hide when past all content
+	// Pin PillNav to bottom when wrapper scrolls off top; hide when footer starts revealing
 	function initTravelNav() {
 		const wrapper = document.querySelector<HTMLElement>("[data-pill-nav-wrapper]");
 		const nav = wrapper?.querySelector<HTMLElement>("[data-pill-nav]");
-		const endSentinel = document.querySelector<HTMLElement>("[data-pill-nav-end]");
+		const shell = document.querySelector<HTMLElement>(".site-shell");
 		if (!wrapper || !nav) return;
 
 		// Lock wrapper height so layout never shifts when nav goes fixed
@@ -138,22 +137,19 @@ const sectionNav = [
 		);
 		pinObserver.observe(wrapper);
 
-		// Hide / show when past the end of travel content
-		if (endSentinel) {
-			const endObserver = new IntersectionObserver(
-				(entries) => {
-					for (const entry of entries) {
-						if (entry.isIntersecting || entry.boundingClientRect.top < 0) {
-							nav.dataset.navHidden = "";
-						} else {
-							delete nav.dataset.navHidden;
-						}
-					}
-				},
-				{ threshold: 0 },
-			);
-			endObserver.observe(endSentinel);
-		}
+		// Hide when the shell bottom is within the viewport (footer starting to reveal)
+		const updateHidden = () => {
+			if (!shell) return;
+			const shellBottom = shell.getBoundingClientRect().bottom;
+			if (shellBottom < window.innerHeight + 80) {
+				nav.dataset.navHidden = "";
+			} else {
+				delete nav.dataset.navHidden;
+			}
+		};
+		window.addEventListener("scroll", updateHidden, { passive: true });
+		window.addEventListener("resize", updateHidden, { passive: true });
+		updateHidden();
 	}
 
 	if (document.readyState === "loading") {

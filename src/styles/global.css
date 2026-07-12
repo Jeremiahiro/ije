@@ -26,7 +26,7 @@
 }
 
 html {
-  background-color: var(--page-bg);
+  background-color: #1c120a;
   scroll-behavior: smooth;
 }
 
@@ -41,19 +41,6 @@ body {
   min-height: 100%;
   font-family: var(--font-body);
   color: var(--text-primary);
-  background-color: var(--page-bg);
-  background-image:
-    radial-gradient(
-      ellipse 92% 78% at 8% 6%,
-      var(--page-tan-glow),
-      transparent 54%
-    ),
-    radial-gradient(
-      ellipse 88% 72% at 96% 94%,
-      var(--page-tan-deep),
-      transparent 58%
-    ),
-    linear-gradient(168deg, #eceae6 0%, var(--page-bg-mid) 42%, #ebe7e1 100%);
 }
 
 h1,

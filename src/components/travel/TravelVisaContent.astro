@@ -8,12 +8,14 @@ const externalRel = "noopener noreferrer";
 ---
 
 <ContentCard variant="primary" class="travel-visa__apply-card">
-	<h2 id="travel-visa-section-title" class="travel-visa__page-title">
-		{hero.title}
-	</h2>
-	{
-		hero.ledes.map((lede) => <p class="travel-visa__page-lede copy-preserve-breaks">{lede}</p>)
-	}
+	<div data-reveal>
+		<h2 id="travel-visa-section-title" class="travel-visa__page-title">
+			{hero.title}
+		</h2>
+		{
+			hero.ledes.map((lede) => <p class="travel-visa__page-lede copy-preserve-breaks">{lede}</p>)
+		}
+	</div>
 
 	<p class="travel-visa__apply-title">{applyCard.title}</p>
 	<p class="travel-visa__apply-copy copy-preserve-breaks">{applyCard.copy}</p>
