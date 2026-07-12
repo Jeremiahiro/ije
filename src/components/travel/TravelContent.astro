@@ -28,11 +28,14 @@ const sectionNav = [
 		accentEyebrow
 	/>
 
-	<PillNav
-		links={sectionNav}
-		aria-label="Travel sections"
-		class="travel-page__section-nav"
-	/>
+	<div class="travel-page__nav-wrap" data-pill-nav-wrapper>
+		<PillNav
+			links={sectionNav}
+			aria-label="Travel sections"
+			class="travel-page__section-nav"
+			dockBottom={true}
+		/>
+	</div>
 
 	<section
 		id="flights"
@@ -42,7 +45,7 @@ const sectionNav = [
 		<h2 id="travel-flights-section-title" class="travel-page__visually-hidden">
 			Flights
 		</h2>
-		
+
 		<TravelFlightsContent />
 	</section>
 
@@ -61,6 +64,8 @@ const sectionNav = [
 	>
 		<TravelVisaContent />
 	</section>
+
+	<div data-pill-nav-end aria-hidden="true" style="height:0;overflow:hidden"></div>
 </HeroPageSurface>
 
 <style>
@@ -68,24 +73,15 @@ const sectionNav = [
 		overflow-x: visible;
 		--travel-stack-gap: clamp(1rem, 2.5vw, 1.75rem);
 		--travel-block-gap: clamp(1rem, 3vw, 1.5rem);
-		--pill-nav-sticky-top: calc(
-			var(--site-header-height) + env(safe-area-inset-top, 0px) + 1.5rem
-		);
-		--travel-section-scroll-margin: calc(
-			var(--pill-nav-sticky-top) + 3.25rem
-		);
-		--travel-hotels-section-scroll-margin: calc(
-			var(--pill-nav-sticky-top) + 3.25rem
-		);
+		padding-bottom: clamp(5rem, 10vw, 7rem);
 	}
 
 	:global(.travel-page.hero-page .travel-page-intro) {
 		margin: 0 auto clamp(2rem, 5vw, 3rem);
 	}
 
-
 	.travel-page__section {
-		scroll-margin-top: var(--travel-section-scroll-margin);
+		scroll-margin-bottom: calc(4rem + env(safe-area-inset-bottom, 0px));
 	}
 
 	.travel-page__section + .travel-page__section {
@@ -104,4 +100,65 @@ const sectionNav = [
 		border: 0;
 	}
 
+	/* Wrapper holds the PillNav's space in the layout at all times */
+	.travel-page__nav-wrap {
+		padding-bottom: clamp(1.1rem, 2.8vw, 1.5rem);
+	}
 </style>
+
+<script>
+	// Pin PillNav to bottom when wrapper scrolls off top; hide when past all content
+	function initTravelNav() {
+		const wrapper = document.querySelector<HTMLElement>("[data-pill-nav-wrapper]");
+		const nav = wrapper?.querySelector<HTMLElement>("[data-pill-nav]");
+		const endSentinel = document.querySelector<HTMLElement>("[data-pill-nav-end]");
+		if (!wrapper || !nav) return;
+
+		// Lock wrapper height so layout never shifts when nav goes fixed
+		const lockHeight = () => {
+			if (!nav.dataset.pinnedBottom) {
+				wrapper.style.height = wrapper.offsetHeight + "px";
+			}
+		};
+		lockHeight();
+		window.addEventListener("resize", () => requestAnimationFrame(lockHeight), { passive: true });
+
+		// Pin / unpin based on wrapper position
+		const pinObserver = new IntersectionObserver(
+			(entries) => {
+				for (const entry of entries) {
+					if (!entry.isIntersecting && entry.boundingClientRect.top < 0) {
+						nav.dataset.pinnedBottom = "";
+					} else if (entry.isIntersecting) {
+						delete nav.dataset.pinnedBottom;
+					}
+				}
+			},
+			{ threshold: 0 },
+		);
+		pinObserver.observe(wrapper);
+
+		// Hide / show when past the end of travel content
+		if (endSentinel) {
+			const endObserver = new IntersectionObserver(
+				(entries) => {
+					for (const entry of entries) {
+						if (entry.isIntersecting || entry.boundingClientRect.top < 0) {
+							nav.dataset.navHidden = "";
+						} else {
+							delete nav.dataset.navHidden;
+						}
+					}
+				},
+				{ threshold: 0 },
+			);
+			endObserver.observe(endSentinel);
+		}
+	}
+
+	if (document.readyState === "loading") {
+		document.addEventListener("DOMContentLoaded", initTravelNav, { once: true });
+	} else {
+		initTravelNav();
+	}
+</script>

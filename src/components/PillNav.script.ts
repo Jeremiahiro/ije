@@ -34,15 +34,18 @@ const initRoot = (root: HTMLElement): void => {
 
 	let hoverIndex: number | null = null;
 	let focusIndex: number | null = null;
+	let activeIndex: number = readIndexFromHash(links);
+	// Suppress IntersectionObserver updates briefly after a hash-driven scroll
+	let suppressObserver = false;
+	let suppressTimer = 0;
 
 	const apply = (): void => {
-		const pinned = readIndexFromHash(links);
-		const visual = hoverIndex ?? focusIndex ?? pinned;
+		const visual = hoverIndex ?? focusIndex ?? activeIndex;
 		const link = links[visual];
 		if (link) {
 			setSegmentedHighlightGeometry(track, highlight, link);
 		}
-		setActiveNavState(links, pinned);
+		setActiveNavState(links, activeIndex);
 	};
 
 	apply();
@@ -80,10 +83,16 @@ const initRoot = (root: HTMLElement): void => {
 		apply();
 	});
 
-	const syncFromHash = (): void => {
+	window.addEventListener("hashchange", () => {
+		activeIndex = readIndexFromHash(links);
+		// Briefly lock out observer so smooth-scroll intermediate frames don't flicker
+		suppressObserver = true;
+		clearTimeout(suppressTimer);
+		suppressTimer = window.setTimeout(() => {
+			suppressObserver = false;
+		}, 800);
 		apply();
-	};
-	window.addEventListener("hashchange", syncFromHash);
+	});
 
 	let raf = 0;
 	const onResize = (): void => {
@@ -95,6 +104,43 @@ const initRoot = (root: HTMLElement): void => {
 	if (window.ResizeObserver) {
 		const ro = new ResizeObserver(onResize);
 		ro.observe(track);
+	}
+
+	// IntersectionObserver: update active pill as user scrolls through sections
+	const sectionIds = links
+		.map((a) => a.hash.replace(/^#/, ""))
+		.filter(Boolean);
+	const sections = sectionIds
+		.map((id) => document.getElementById(id))
+		.filter((el): el is HTMLElement => el !== null);
+
+	if (sections.length > 0 && sections.length === sectionIds.length) {
+		const intersecting = new Map<string, boolean>(
+			sectionIds.map((id) => [id, false]),
+		);
+
+		const observer = new IntersectionObserver(
+			(entries) => {
+				if (suppressObserver) return;
+				for (const entry of entries) {
+					intersecting.set(entry.target.id, entry.isIntersecting);
+				}
+				// Activate the topmost intersecting section
+				for (const [i, id] of sectionIds.entries()) {
+					if (intersecting.get(id)) {
+						if (i !== activeIndex) {
+							activeIndex = i;
+							apply();
+						}
+						break;
+					}
+				}
+			},
+			// Top 45% of viewport is the "active zone" — works well with bottom-docked nav
+			{ rootMargin: "0px 0px -55% 0px" },
+		);
+
+		sections.forEach((section) => observer.observe(section));
 	}
 };
 
