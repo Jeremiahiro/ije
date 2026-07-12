@@ -242,7 +242,7 @@ const isCurrent = (href: string): boolean => {
 		--header-idle-split-duration: var(--header-menu-stack-duration);
 		--header-idle-split-ease: var(--header-menu-stack-ease);
 
-		@apply absolute inset-x-0 top-0 z-50 w-full bg-transparent;
+		@apply fixed inset-x-0 top-0 z-50 w-full bg-transparent;
 		padding-top: max(1rem, env(safe-area-inset-top, 0px));
 		font-family: var(--font-body);
 		-webkit-text-size-adjust: 100%;

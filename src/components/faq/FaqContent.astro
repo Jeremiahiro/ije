@@ -9,12 +9,18 @@ import { weddingFaq } from "@/data/faq";
 	surfaceClass="faq-page"
 	ariaLabelledBy="faq-heading"
 >
-	<ContentCard variant="secondary" class="faq-page__card">
+	<ContentCard variant="secondary" class="faq-page__card" data-reveal>
 		<p class="faq-page__eyebrow">Quick Answers</p>
 		<h1 id="faq-heading" class="faq-page__title">Wedding FAQ</h1>
 		<p class="faq-page__lede">
 			A short list of common questions for our wedding in Nigeria.
 		</p>
+
+		<div class="faq-page__accordion-bar">
+			<button type="button" class="faq-page__toggle-all" data-faq-toggle-all>
+				Expand all
+			</button>
+		</div>
 
 		<div class="faq-page__accordion" data-faq-accordion>
 			{
@@ -69,6 +75,11 @@ import { weddingFaq } from "@/data/faq";
 				})
 			}
 		</div>
+
+		<div class="faq-page__cta">
+			<p class="faq-page__cta-text">Still have a question?</p>
+			<a href="/rsvp" class="faq-page__cta-link">Leave us a note →</a>
+		</div>
 	</ContentCard>
 </HeroPageSurface>
 
@@ -77,28 +88,68 @@ import { weddingFaq } from "@/data/faq";
 		const items = [...root.querySelectorAll<HTMLElement>("[data-faq-item]")];
 		if (!items.length) return;
 
-		function setOpen(nextItem?: HTMLElement) {
-			for (const item of items) {
-				const trigger = item.querySelector<HTMLButtonElement>("[data-faq-trigger]");
-				const panel = item.querySelector<HTMLElement>("[data-faq-panel]");
-				if (!trigger || !panel) continue;
+		const triggers = items
+			.map((item) => item.querySelector<HTMLButtonElement>("[data-faq-trigger]"))
+			.filter((t): t is HTMLButtonElement => t !== null);
 
-				const isOpen = item === nextItem;
-				trigger.setAttribute("aria-expanded", isOpen ? "true" : "false");
-				panel.setAttribute("data-expanded", isOpen ? "true" : "false");
-				panel.setAttribute("aria-hidden", isOpen ? "false" : "true");
-			}
+		const toggleAllBtn =
+			root.parentElement?.querySelector<HTMLButtonElement>("[data-faq-toggle-all]") ?? null;
+
+		function applyItemState(item: HTMLElement, open: boolean) {
+			const trigger = item.querySelector<HTMLButtonElement>("[data-faq-trigger]");
+			const panel = item.querySelector<HTMLElement>("[data-faq-panel]");
+			if (!trigger || !panel) return;
+			trigger.setAttribute("aria-expanded", open ? "true" : "false");
+			panel.setAttribute("data-expanded", open ? "true" : "false");
+			panel.setAttribute("aria-hidden", open ? "false" : "true");
 		}
 
-		for (const item of items) {
-			const trigger = item.querySelector<HTMLButtonElement>("[data-faq-trigger]");
-			if (!trigger) continue;
+		function syncToggleLabel() {
+			if (!toggleAllBtn) return;
+			const allOpen = triggers.every((t) => t.getAttribute("aria-expanded") === "true");
+			toggleAllBtn.textContent = allOpen ? "Collapse all" : "Expand all";
+		}
+
+		function setOpen(nextItem?: HTMLElement) {
+			for (const item of items) {
+				applyItemState(item, item === nextItem);
+			}
+			syncToggleLabel();
+		}
+
+		for (const trigger of triggers) {
+			const item = trigger.closest<HTMLElement>("[data-faq-item]")!;
 
 			trigger.addEventListener("click", () => {
 				const isOpen = trigger.getAttribute("aria-expanded") === "true";
 				setOpen(isOpen ? undefined : item);
 			});
+
+			trigger.addEventListener("keydown", (e: KeyboardEvent) => {
+				const idx = triggers.indexOf(trigger);
+				if (e.key === "ArrowDown") {
+					e.preventDefault();
+					triggers[(idx + 1) % triggers.length]?.focus();
+				} else if (e.key === "ArrowUp") {
+					e.preventDefault();
+					triggers[(idx - 1 + triggers.length) % triggers.length]?.focus();
+				} else if (e.key === "Home") {
+					e.preventDefault();
+					triggers[0]?.focus();
+				} else if (e.key === "End") {
+					e.preventDefault();
+					triggers[triggers.length - 1]?.focus();
+				}
+			});
 		}
+
+		toggleAllBtn?.addEventListener("click", () => {
+			const allOpen = triggers.every((t) => t.getAttribute("aria-expanded") === "true");
+			for (const item of items) {
+				applyItemState(item, !allOpen);
+			}
+			syncToggleLabel();
+		});
 	}
 
 	document
@@ -168,6 +219,40 @@ import { weddingFaq } from "@/data/faq";
 		color: var(--text-muted);
 	}
 
+	.faq-page__accordion-bar {
+		display: flex;
+		justify-content: flex-end;
+		margin-bottom: 0.25rem;
+	}
+
+	.faq-page__toggle-all {
+		border: 0;
+		padding: 0.25rem 0;
+		background: transparent;
+		color: rgb(92 74 61 / 0.72);
+		font: inherit;
+		font-size: 0.8125rem;
+		font-weight: 600;
+		cursor: pointer;
+		text-decoration: underline;
+		text-decoration-color: transparent;
+		text-underline-offset: 0.14em;
+		transition:
+			color 0.2s,
+			text-decoration-color 0.2s;
+	}
+
+	.faq-page__toggle-all:hover {
+		color: #6e523c;
+		text-decoration-color: rgb(91 66 50 / 0.5);
+	}
+
+	.faq-page__toggle-all:focus-visible {
+		outline: 2px solid var(--focus-ring);
+		outline-offset: 2px;
+		border-radius: 0.25rem;
+	}
+
 	.faq-page__accordion {
 		display: grid;
 		gap: 0.65rem;
@@ -217,8 +302,18 @@ import { weddingFaq } from "@/data/faq";
 		transition: transform 0.42s cubic-bezier(0.34, 1.56, 0.64, 1);
 	}
 
+	@keyframes faq-icon-spin {
+		from { transform: rotate(45deg); }
+		to { transform: rotate(405deg); }
+	}
+
 	.faq-page__question[aria-expanded="true"] .faq-page__icon {
 		transform: rotate(45deg);
+		animation: faq-icon-spin 3s linear 0.42s infinite;
+	}
+
+	.faq-page__question[aria-expanded="true"]:hover .faq-page__icon {
+		animation-play-state: paused;
 	}
 
 	.faq-page__answer-shell {
@@ -268,11 +363,43 @@ import { weddingFaq } from "@/data/faq";
 		text-decoration-color: rgb(91 66 50 / 0.85);
 	}
 
+	.faq-page__cta {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.5rem;
+		margin-top: 1.75rem;
+		padding-top: 1.5rem;
+		border-top: 1px solid rgb(96 72 53 / 0.18);
+		text-align: center;
+	}
+
+	.faq-page__cta-text {
+		margin: 0;
+		font-size: 0.875rem;
+		color: var(--text-muted);
+	}
+
+	.faq-page__cta-link {
+		font-size: 0.875rem;
+		font-weight: 600;
+		color: #6e523c;
+		text-decoration: underline;
+		text-decoration-color: rgb(91 66 50 / 0.4);
+		text-underline-offset: 0.14em;
+		transition: text-decoration-color 0.2s;
+	}
+
+	.faq-page__cta-link:hover {
+		text-decoration-color: rgb(91 66 50 / 0.85);
+	}
+
 	@media (prefers-reduced-motion: reduce) {
 		.faq-page__answer-shell,
 		.faq-page__answer,
 		.faq-page__icon {
 			transition: none;
+			animation: none;
 		}
 	}
 

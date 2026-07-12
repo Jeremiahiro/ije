@@ -65,6 +65,10 @@ const resolvedOgDescription = ogDescription ?? description;
     <slot name="head" />
     <Analytics />
   </head>
+  <script>
+    import { initScrollReveal } from "@/lib/scrollReveal";
+    initScrollReveal();
+  </script>
   <body class:list={[bodyClass]}>
     <SiteGate />
     <Header />

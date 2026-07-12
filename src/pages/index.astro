@@ -4,6 +4,7 @@ import {
   bride,
   groom,
   homePageContent,
+  navItems,
   siteTitleSuffix,
 } from "@/data/site-nav";
 
@@ -14,192 +15,270 @@ const coupleMarqueeImages = [1, 2, 3, 4].map((photoNumber) => ({
   src: `/assets/couple/${photoNumber}.webp`,
   alt: `${bride} and ${groom} portrait ${photoNumber}`,
 }));
+
+const quickLinks = navItems
+  .filter((n) => n.target === "_self")
+  .slice(0, 4);
 ---
 
 <BaseLayout title={title} description={description}>
   <main class="home-page">
-    <div class="home-topfold">
-      <section class="home-marquee" aria-label="Couple portraits">
-        <div class="home-marquee__viewport">
-          <ul class="home-marquee__track">
-            {
-              [...coupleMarqueeImages, ...coupleMarqueeImages].map(
-                (image, index) => (
-                  <li
-                    class="home-marquee__item"
-                    aria-hidden={index >= coupleMarqueeImages.length}
-                  >
-                    <img
-                      src={image.src}
-                      alt={image.alt}
-                      width="720"
-                      height="900"
-                      loading={index < 2 ? "eager" : "lazy"}
-                      decoding="async"
-                    />
-                  </li>
-                ),
-              )
-            }
-          </ul>
-        </div>
-      </section>
 
-      <section class="home-hero wrapper" aria-labelledby="home-title">
+    <!-- 1. Full-viewport hero -->
+    <section class="home-hero" aria-labelledby="home-title">
+      <div class="home-hero__bg" aria-hidden="true"></div>
+      <div class="home-hero__scrim" aria-hidden="true"></div>
+      <div class="home-hero__content">
+        <p class="home-hero__eyebrow">January 2 &amp; 4, 2027 · Abia State, Nigeria</p>
         <h1 id="home-title" class="home-hero__title">
-          <span>{bride}</span>
-          <span aria-hidden="true" class="home-hero__ampersand">and</span>
-          <span>{groom}</span>
+          <span>{bride.split(" ")[0]}</span>
+          <span aria-hidden="true" class="home-hero__amp">&amp;</span>
+          <span>{groom.split(" ")[0]}</span>
         </h1>
-        <p class="home-hero__summary">{homePageContent.subheading}</p>
         <a class="home-hero__cta" href={homePageContent.primaryCta.href}>
           {homePageContent.primaryCta.label}
         </a>
-      </section>
-    </div>
+      </div>
+      <a class="home-hero__scroll-hint" href="#events" aria-label="Scroll to celebrations">
+        <span aria-hidden="true">Scroll</span>
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+          <path d="M7 2v10M2 7l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </section>
 
+    <!-- 2. Editorial photo marquee -->
+    <section class="home-marquee" aria-label="Couple portraits">
+      <div class="home-marquee__viewport">
+        <ul class="home-marquee__track">
+          {
+            [...coupleMarqueeImages, ...coupleMarqueeImages].map(
+              (image, index) => (
+                <li
+                  class="home-marquee__item"
+                  aria-hidden={index >= coupleMarqueeImages.length}
+                >
+                  <img
+                    src={image.src}
+                    alt={image.alt}
+                    width="720"
+                    height="900"
+                    loading={index < 2 ? "eager" : "lazy"}
+                    decoding="async"
+                  />
+                </li>
+              ),
+            )
+          }
+        </ul>
+      </div>
+    </section>
+
+    <!-- 3. Celebration events -->
     <section
       class="home-events wrapper"
       id="events"
       aria-labelledby="events-title"
     >
-      <div class="home-events__heading">
+      <div class="home-events__heading" data-reveal>
         <p class="home-events__eyebrow">Celebration Details</p>
         <h2 id="events-title">Our Wedding Celebrations</h2>
       </div>
       <div class="home-events__grid">
         {
-          homePageContent.events.map((event) => (
-            <article class="home-event-card">
+          homePageContent.events.map((event, i) => (
+            <article class="home-event-card" data-reveal data-delay={String(i + 1)}>
               <p class="home-event-card__date">{event.dateLabel}</p>
               <h3>{event.title}</h3>
-              <p>{event.location}</p>
+              <p class="home-event-card__location">{event.location}</p>
               <a class="home-event-card__link" href={event.href}>
                 View schedule
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                  <path d="M2 6h8M6 2l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
               </a>
             </article>
           ))
         }
       </div>
     </section>
+
+    <!-- 4. Explore quick-links -->
+    <section class="home-explore wrapper" aria-labelledby="explore-title">
+      <p class="home-explore__eyebrow" data-reveal id="explore-title">Explore the Details</p>
+      <div class="home-explore__grid">
+        {
+          quickLinks.map((link, i) => (
+            <a
+              class="home-explore__card"
+              href={link.href}
+              data-reveal
+              data-delay={String(i + 1)}
+            >
+              <span class="home-explore__card-label">{link.label}</span>
+              <svg class="home-explore__card-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+          ))
+        }
+      </div>
+    </section>
+
   </main>
 </BaseLayout>
 
 <style>
   .home-page {
-    position: relative;
     display: flex;
     flex-direction: column;
-    gap: clamp(3.25rem, 8.5vw, 6.25rem);
-    padding-bottom: clamp(4.25rem, 8vw, 7rem);
     overflow-x: clip;
   }
 
-  .home-hero {
-    text-align: center;
-  }
+  /* ─── Hero ─── */
 
-  .home-topfold {
+  .home-hero {
+    position: relative;
+    height: 100svh;
     display: flex;
     flex-direction: column;
-    gap: 3rem;
+    align-items: center;
+    justify-content: flex-end;
+    padding-bottom: clamp(5rem, 10vh, 8rem);
+    isolation: isolate;
+    overflow: hidden;
   }
 
-  @media (min-width: 1024px) {
-    .home-topfold {
-      gap: 1rem;
-    }
+  .home-hero__bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: url("/assets/couple/1.jpeg") center top / cover no-repeat;
+    animation: home-hero-kenburns 24s ease-in-out forwards;
+    will-change: transform;
+  }
+
+  .home-hero__scrim {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: linear-gradient(
+      to bottom,
+      rgb(30 18 8 / 0.08) 0%,
+      rgb(30 18 8 / 0.04) 30%,
+      rgb(30 18 8 / 0.38) 62%,
+      rgb(30 18 8 / 0.72) 100%
+    );
+  }
+
+  .home-hero__content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding-inline: clamp(1rem, 4vw, 2.25rem);
+    width: 100%;
+  }
+
+  .home-hero__eyebrow {
+    margin: 0 0 1.5rem;
+    font-size: clamp(0.62rem, 1.8vw, 0.78rem);
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgb(255 255 255 / 0.78);
   }
 
   .home-hero__title {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
-    font-size: clamp(2rem, 11vw, 7.35rem);
-    line-height: 0.94;
-    letter-spacing: 0.015em;
-    color: #3f2e22;
-    white-space: normal;
-    text-wrap: balance;
+    gap: 0.2em;
+    margin: 0;
+    font-family: var(--font-heading);
+    font-size: clamp(4rem, 12vw, 8.5rem);
+    font-weight: 400;
+    line-height: 0.92;
+    letter-spacing: 0.01em;
+    color: #fff;
   }
 
-  @media (min-width: 1024px) {
-    .home-hero__title {
-      gap: 3rem;
-    }
-  }
-
-  .home-hero__ampersand {
-    font-size: clamp(2.2rem, 7vw, 3.8rem);
-    line-height: 1;
-    margin-block: 0.1em;
-    opacity: 0.75;
-  }
-
-  .home-hero__summary {
-    margin: 2.35rem auto 0;
-    max-width: 60ch;
-    font-size: clamp(0.95rem, 2.1vw, 1.08rem);
-    line-height: 1.82;
-    color: rgb(58 46 38 / 0.85);
+  .home-hero__amp {
+    font-size: 0.5em;
+    opacity: 0.6;
+    margin-block: 0.15em;
   }
 
   .home-hero__cta {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    margin-top: 2.4rem;
-    padding: 0.98rem 1.95rem;
-    border: 1px solid transparent;
+    gap: 0.4em;
+    margin-top: clamp(2rem, 4vh, 3rem);
+    padding: 0.9rem 2.4rem;
+    border: 1.5px solid rgb(255 255 255 / 0.65);
     border-radius: 9999px;
-    background: #6e523c;
+    background: transparent;
     color: #fff;
-    font-size: 0.84rem;
+    font-size: 0.75rem;
     font-weight: 700;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     text-decoration: none;
     transition:
-      transform 220ms ease,
-      box-shadow 220ms ease;
+      background 220ms ease,
+      border-color 220ms ease;
   }
 
-  .home-hero__cta:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 8px 20px rgb(110 82 60 / 0.2);
+  .home-hero__scroll-hint {
+    position: absolute;
+    bottom: clamp(1.5rem, 4vh, 2.25rem);
+    left: 50%;
+    translate: -50% 0;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    color: rgb(255 255 255 / 0.5);
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    text-decoration: none;
+    animation: home-scroll-bob 2.4s ease-in-out infinite;
+    transition: color 200ms ease;
   }
 
-  .home-events {
-    display: grid;
-    justify-items: center;
-    gap: 2.6rem;
-    text-align: center;
-    padding-top: clamp(1rem, 3vw, 2rem);
+  @media (hover: hover) and (pointer: fine) {
+    .home-hero__scroll-hint:hover {
+      color: rgb(255 255 255 / 0.85);
+    }
   }
 
-  .home-events__heading {
-    text-align: center;
-    max-width: 54rem;
+  @keyframes home-hero-kenburns {
+    from { transform: scale(1); }
+    to   { transform: scale(1.05); }
   }
+
+  @keyframes home-scroll-bob {
+    0%, 100% { translate: -50% 0; }
+    50%       { translate: -50% 6px; }
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .home-hero__cta:hover {
+      background: rgb(255 255 255 / 0.14);
+      border-color: #fff;
+    }
+  }
+
+  /* ─── Marquee ─── */
 
   .home-marquee {
     width: 100%;
-    padding-top: calc(
-      var(--site-header-height) + env(safe-area-inset-top, 0px) + 1rem
-    );
-  }
-
-  @media (min-width: 1024px) {
-    .home-marquee {
-      padding-top: calc(
-        var(--site-header-height) + env(safe-area-inset-top, 0px) + 2rem
-      );
-    }
+    overflow: hidden;
   }
 
   .home-marquee__viewport {
     overflow: hidden;
-    padding: 0;
   }
 
   .home-marquee__track {
@@ -209,12 +288,12 @@ const coupleMarqueeImages = [1, 2, 3, 4].map((photoNumber) => ({
     margin: 0;
     padding: 0;
     list-style: none;
-    animation: home-marquee-scroll 34s linear infinite;
+    animation: home-marquee-scroll 38s linear infinite;
   }
 
   .home-marquee__item {
     flex: 0 0 auto;
-    height: clamp(15rem, 54vw, 24rem);
+    height: clamp(18rem, 38vw, 28rem);
     aspect-ratio: 4 / 5;
   }
 
@@ -226,19 +305,42 @@ const coupleMarqueeImages = [1, 2, 3, 4].map((photoNumber) => ({
     object-position: center top;
   }
 
+  @keyframes home-marquee-scroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  /* ─── Events ─── */
+
+  .home-events {
+    display: grid;
+    justify-items: center;
+    gap: clamp(2rem, 4vw, 3rem);
+    text-align: center;
+    padding-top: clamp(4rem, 8vw, 7rem);
+    padding-bottom: clamp(2rem, 4vw, 4rem);
+  }
+
+  .home-events__heading {
+    text-align: center;
+    max-width: 54rem;
+  }
+
   .home-events__eyebrow {
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     font-weight: 700;
-    letter-spacing: 0.18em;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
     color: rgb(92 74 61 / 0.75);
+    margin: 0 0 1.1rem;
   }
 
   .home-events__heading h2 {
-    margin: 1.25rem 0 0;
-    font-family: var(--font-body);
-    font-size: clamp(1.55rem, 4.6vw, 2.1rem);
-    font-weight: 700;
+    margin: 0;
+    font-family: var(--font-heading);
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 400;
+    line-height: 1.05;
     letter-spacing: 0.01em;
     color: #3a2e26;
   }
@@ -246,140 +348,187 @@ const coupleMarqueeImages = [1, 2, 3, 4].map((photoNumber) => ({
   .home-events__grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 1.9rem;
+    gap: 1.5rem;
     width: 100%;
-    max-width: min(100%, 64rem);
+    max-width: min(100%, 68rem);
     margin-inline: auto;
   }
 
+  @media (min-width: 640px) {
+    .home-events__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.75rem;
+    }
+  }
+
   .home-event-card {
-    padding: 1.8rem 1.6rem 1.55rem;
-    border: 1px solid rgb(110 82 60 / 0.16);
-    border-radius: 1rem;
-    background: rgb(255 252 247 / 0.55);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    text-align: center;
+    padding: clamp(1.8rem, 4vw, 2.75rem) clamp(1.5rem, 3.5vw, 2.25rem);
+    border: 1px solid rgb(255 255 255 / 0.58);
+    border-radius: 1.5rem;
+    background: rgb(255 255 255 / 0.38);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 16px 48px rgb(110 82 60 / 0.09);
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
   }
 
   .home-event-card__date {
     margin: 0;
-    font-size: 0.8rem;
+    font-size: 0.72rem;
     font-weight: 700;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     color: #6e523c;
   }
 
   .home-event-card h3 {
-    margin: 0.65rem 0 0;
+    margin: 0;
     font-family: var(--font-heading);
-    font-size: clamp(2rem, 5vw, 2.6rem);
+    font-size: clamp(1.8rem, 4vw, 2.4rem);
     font-weight: 400;
     line-height: 1.05;
     letter-spacing: 0.01em;
+    color: #3a2e26;
   }
 
-  .home-event-card p {
-    margin: 0.75rem 0 0;
-    font-size: 0.94rem;
-    line-height: 1.72;
-    color: rgb(58 46 38 / 0.88);
+  .home-event-card__location {
+    margin: 0.15rem 0 0;
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: rgb(58 46 38 / 0.82);
+    flex: 1;
   }
 
   .home-event-card__link {
     display: inline-flex;
-    margin-top: 1.2rem;
-    font-size: 0.82rem;
+    align-items: center;
+    gap: 0.35rem;
+    margin-top: 0.75rem;
+    font-size: 0.8rem;
     font-weight: 700;
-    letter-spacing: 0.03em;
-    text-transform: none;
+    letter-spacing: 0.04em;
     color: #6e523c;
-    text-decoration: underline;
-    text-decoration-thickness: 1.5px;
-    text-underline-offset: 0.18em;
-    text-decoration-color: rgb(110 82 60 / 0.5);
+    text-decoration: none;
     transition:
-      color 180ms ease,
-      text-decoration-color 180ms ease,
-      transform 180ms ease;
+      gap 200ms ease,
+      color 180ms ease;
   }
 
   .home-event-card__link:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 2px rgb(110 82 60 / 0.28);
+    box-shadow: 0 0 0 2px rgb(110 82 60 / 0.3);
     border-radius: 0.3rem;
     padding-inline: 0.15rem;
-  }
-
-  @media (min-width: 768px) {
-    .home-marquee__item {
-      height: clamp(22rem, 60vw, 30rem);
-    }
-
-    .home-events__grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 2rem;
-    }
-  }
-
-  @media (max-width: 767px) {
-    .home-marquee__item {
-      flex: 0 0 100dvw;
-      width: 100dvw;
-      height: 68vh;
-      height: 68dvh;
-    }
-
-    .home-hero {
-      margin-top: 0;
-    }
-
-    .home-hero__cta {
-      margin-top: 1.6rem;
-      padding: 0.74rem 1.3rem;
-      font-size: 0.72rem;
-      letter-spacing: 0.06em;
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .home-marquee__item {
-      height: calc(
-        100dvh - var(--site-header-height) - env(safe-area-inset-top, 0px) -
-          2.75rem
-      );
-    }
-
-    .home-hero {
-      margin-top: clamp(2rem, 4vw, 3.5rem);
-    }
   }
 
   @media (hover: hover) and (pointer: fine) {
     .home-event-card__link:hover {
       color: #3f2e22;
-      text-decoration-color: rgb(63 46 34 / 0.9);
-      transform: translateX(1px);
+      gap: 0.55rem;
     }
   }
 
+  /* ─── Explore quick-links ─── */
+
+  .home-explore {
+    padding-top: clamp(2rem, 5vw, 4rem);
+    padding-bottom: clamp(5rem, 10vw, 8rem);
+    display: grid;
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+  }
+
+  .home-explore__eyebrow {
+    margin: 0;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgb(92 74 61 / 0.75);
+    text-align: center;
+  }
+
+  .home-explore__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    max-width: min(100%, 68rem);
+    margin-inline: auto;
+    width: 100%;
+  }
+
+  @media (min-width: 640px) {
+    .home-explore__grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1.25rem;
+    }
+  }
+
+  .home-explore__card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: clamp(1rem, 3vw, 1.5rem) clamp(1rem, 2.5vw, 1.35rem);
+    border: 1px solid rgb(255 255 255 / 0.55);
+    border-radius: 1.25rem;
+    background: rgb(255 255 255 / 0.35);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 10px 32px rgb(110 82 60 / 0.07);
+    text-decoration: none;
+    color: #3a2e26;
+    transition:
+      background 220ms ease,
+      box-shadow 220ms ease,
+      translate 220ms ease;
+  }
+
+  .home-explore__card-label {
+    font-size: clamp(0.82rem, 2vw, 0.92rem);
+    font-weight: 700;
+    letter-spacing: 0.01em;
+  }
+
+  .home-explore__card-arrow {
+    flex-shrink: 0;
+    color: #6e523c;
+    opacity: 0.7;
+    transition: translate 220ms ease;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .home-explore__card:hover {
+      background: rgb(255 255 255 / 0.55);
+      box-shadow: 0 16px 48px rgb(110 82 60 / 0.12);
+      translate: 0 -2px;
+    }
+
+    .home-explore__card:hover .home-explore__card-arrow {
+      translate: 3px 0;
+      opacity: 1;
+    }
+  }
+
+  /* ─── Reduced motion ─── */
+
   @media (prefers-reduced-motion: reduce) {
-    .home-marquee__viewport {
-      overflow-x: auto;
+    .home-hero__bg {
+      animation: none;
+    }
+
+    .home-hero__scroll-hint {
+      animation: none;
     }
 
     .home-marquee__track {
       animation: none;
     }
-  }
 
-  @keyframes home-marquee-scroll {
-    from {
-      transform: translateX(0);
-    }
-    to {
-      transform: translateX(-50%);
+    .home-marquee__viewport {
+      overflow-x: auto;
     }
   }
 </style>

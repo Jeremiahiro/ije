@@ -16,7 +16,7 @@ const canonicalHref = new URL("/schedule", Astro.url.origin).href;
   canonicalHref={canonicalHref}
 >
   <main class="schedule-page wrapper" aria-labelledby="schedule-title">
-    <header class="schedule-page__header">
+    <header class="schedule-page__header" data-reveal>
       <p class="schedule-page__eyebrow">{schedulePageData.eyebrow}</p>
       <h1 id="schedule-title">{schedulePageData.title}</h1>
     </header>
@@ -25,10 +25,10 @@ const canonicalHref = new URL("/schedule", Astro.url.origin).href;
       {
         schedulePageData.days.map((day) => (
           <section class="schedule-day" id={day.id}>
-            <h2 class="schedule-day__title">{day.dayLabel}</h2>
+            <h2 class="schedule-day__title" data-reveal>{day.dayLabel}</h2>
             <div class="schedule-day__events">
-              {day.events.map((event) => (
-                <article class="schedule-event-card">
+              {day.events.map((event, eventIndex) => (
+                <article class="schedule-event-card" data-reveal data-delay={String(Math.min(eventIndex + 1, 4))}>
                   {event.icon ? (
                     <span class="schedule-event-card__icon" aria-hidden="true">
                       <EventIcon type={event.icon} />

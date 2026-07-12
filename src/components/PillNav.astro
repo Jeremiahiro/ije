@@ -8,12 +8,13 @@ interface Props {
 	links: readonly PillNavLink[];
 	ariaLabel?: string;
 	class?: string;
+	dockBottom?: boolean;
 }
 
-const { links, ariaLabel = "Section navigation", class: className } = Astro.props;
+const { links, ariaLabel = "Section navigation", class: className, dockBottom } = Astro.props;
 ---
 
-<div class:list={["pill-nav", className]} data-pill-nav>
+<div class:list={["pill-nav", className]} data-pill-nav data-dock-bottom={dockBottom || undefined}>
 	<nav class="pill-nav__track" aria-label={ariaLabel}>
 		<span class="pill-nav__highlight" aria-hidden="true"></span>
 		{
@@ -55,6 +56,51 @@ const { links, ariaLabel = "Section navigation", class: className } = Astro.prop
 		max-width: 100%;
 		margin: 0 auto clamp(1.1rem, 2.8vw, 1.5rem);
 		box-sizing: border-box;
+	}
+
+	/* dock-bottom: natural position, wrapper carries the bottom spacing */
+	.pill-nav[data-dock-bottom] {
+		position: relative;
+		top: auto;
+		margin-bottom: 0;
+	}
+
+	/* pinned: fixed at the bottom, slides in */
+	.pill-nav[data-dock-bottom][data-pinned-bottom] {
+		position: fixed;
+		top: auto;
+		bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
+		left: 50%;
+		transform: translateX(-50%);
+		z-index: 10;
+		align-self: unset;
+		margin: 0;
+		animation: pill-nav-enter 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+	}
+
+	/* hidden: past travel content or before pinned */
+	.pill-nav[data-dock-bottom][data-nav-hidden] {
+		opacity: 0;
+		pointer-events: none;
+		transform: translateX(-50%) translateY(0.75rem);
+	}
+
+	/* smooth hide transition when fixed */
+	.pill-nav[data-dock-bottom][data-pinned-bottom][data-nav-hidden] {
+		transition:
+			opacity 0.25s ease,
+			transform 0.25s ease;
+	}
+
+	@keyframes pill-nav-enter {
+		from {
+			opacity: 0;
+			transform: translateX(-50%) translateY(0.75rem);
+		}
+		to {
+			opacity: 1;
+			transform: translateX(-50%) translateY(0);
+		}
 	}
 
 	.pill-nav__track {

@@ -1,12 +1,13 @@
 ---
 import ContentCard from "@/components/ContentCard.astro";
+import TravelFlightRoute from "@/components/travel/TravelFlightRoute.astro";
 import TravelStepCard from "@/components/travel/TravelStepCard.astro";
 import { travelFlightsPage } from "@/data/travel-flights";
 
 const { international, domestic } = travelFlightsPage;
 ---
 
-<ContentCard variant="secondary" class="travel-flights__intl-shell">
+<ContentCard variant="secondary" class="travel-flights__intl-shell" data-reveal>
 
 	<div class="travel-page__outside-nigeria">
 		<h2 class="travel-page__section-title">{international.title}</h2>
@@ -42,6 +43,8 @@ const { international, domestic } = travelFlightsPage;
 				</ContentCard>
 			) : null
 		}
+
+		<TravelFlightRoute />
 
 		<div class="travel-flights__steps" data-step-cards-section>
 			<ol
