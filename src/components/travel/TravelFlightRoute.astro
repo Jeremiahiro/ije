@@ -1,0 +1,545 @@
+---
+// Self-contained animated flight route diagram for international guests.
+---
+
+<div
+	class="travel-flight-route"
+	role="img"
+	aria-label="International guest flight route: from your home airport to Lagos, then Owerri, then Umuahia, Abia State"
+>
+	<div class="travel-route__header">
+		<span class="travel-route__eyebrow">International guest route</span>
+		<span class="travel-route__caption">Your journey to Abia State</span>
+	</div>
+
+	<div class="travel-route__diagram">
+
+		<div class="travel-route__stop travel-route__stop--origin">
+			<div class="travel-route__badge travel-route__badge--origin" aria-hidden="true">
+				<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" focusable="false">
+					<circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.25"/>
+					<ellipse cx="8" cy="8" rx="3" ry="7" stroke="currentColor" stroke-width="1.25"/>
+					<line x1="1" y1="8" x2="15" y2="8" stroke="currentColor" stroke-width="1.25"/>
+					<line x1="2.5" y1="5" x2="13.5" y2="5" stroke="currentColor" stroke-width="0.9"/>
+					<line x1="2.5" y1="11" x2="13.5" y2="11" stroke="currentColor" stroke-width="0.9"/>
+				</svg>
+			</div>
+			<p class="travel-route__city">International</p>
+			<p class="travel-route__airport">Your home airport</p>
+		</div>
+
+		<div class="travel-route__leg travel-route__leg--intl" aria-hidden="true">
+			<span class="travel-route__leg-label">International flight</span>
+			<span class="travel-route__leg-track">
+				<span class="travel-route__leg-arrow"></span>
+			</span>
+		</div>
+
+		<div class="travel-route__stop travel-route__stop--lagos">
+			<div class="travel-route__badge" aria-hidden="true">LOS</div>
+			<p class="travel-route__city">Lagos</p>
+			<p class="travel-route__airport">Murtala Muhammed Int'l</p>
+		</div>
+
+		<div class="travel-route__leg travel-route__leg--flight" aria-hidden="true">
+			<span class="travel-route__leg-label">Domestic flight</span>
+			<span class="travel-route__leg-track">
+				<span class="travel-route__leg-arrow"></span>
+			</span>
+		</div>
+
+		<div class="travel-route__stop travel-route__stop--owerri">
+			<div class="travel-route__badge" aria-hidden="true">QOW</div>
+			<p class="travel-route__city">Owerri</p>
+			<p class="travel-route__airport">Sam Mbakwe Int'l</p>
+		</div>
+
+		<div class="travel-route__leg travel-route__leg--ground" aria-hidden="true">
+			<span class="travel-route__leg-label">Ground transport</span>
+			<span class="travel-route__leg-track">
+				<span class="travel-route__leg-arrow"></span>
+			</span>
+		</div>
+
+		<div class="travel-route__stop travel-route__stop--dest">
+			<div class="travel-route__badge travel-route__badge--dest" aria-hidden="true">
+				<svg width="14" height="18" viewBox="0 0 14 18" fill="none" aria-hidden="true" focusable="false">
+					<path d="M7 0C3.13 0 0 3.13 0 7c0 5.25 7 11 7 11s7-5.75 7-11c0-3.87-3.13-7-7-7z" fill="rgba(110,82,60,0.18)" stroke="#6e523c" stroke-width="1.5"/>
+					<circle cx="7" cy="7" r="2.5" fill="#6e523c"/>
+				</svg>
+			</div>
+			<p class="travel-route__city">Umuahia</p>
+			<p class="travel-route__airport">Abia State</p>
+		</div>
+
+	</div>
+</div>
+
+<style>
+	/* ── Variables & card shell ── */
+
+	.travel-flight-route {
+		--route-brown: #6e523c;
+		--route-brown-mid: rgba(110, 82, 60, 0.5);
+		--route-brown-faint: rgba(110, 82, 60, 0.3);
+		--route-brown-bg: rgba(110, 82, 60, 0.08);
+
+		display: flex;
+		flex-direction: column;
+		margin: var(--travel-block-gap, 1.25rem) 0;
+		padding: 1rem clamp(0.85rem, 3vw, 1.5rem) 1.25rem;
+		background: rgba(255, 255, 255, 0.32);
+		border-radius: 1.25rem;
+		border: 1px solid rgba(110, 82, 60, 0.14);
+		box-shadow: 0 6px 24px rgba(110, 82, 60, 0.07);
+	}
+
+	/* ── Header ── */
+
+	.travel-route__header {
+		display: flex;
+		flex-direction: row;
+		align-items: baseline;
+		flex-wrap: wrap;
+		gap: 0.4rem 0.6rem;
+		margin-bottom: 1rem;
+		padding-bottom: 0.75rem;
+		border-bottom: 1px solid rgba(110, 82, 60, 0.1);
+	}
+
+	.travel-route__eyebrow {
+		font-size: 0.625rem;
+		font-weight: 700;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		color: var(--route-brown);
+	}
+
+	.travel-route__caption {
+		font-size: 0.75rem;
+		color: rgba(92, 74, 61, 0.5);
+	}
+
+	/* ── Diagram row ── */
+
+	.travel-route__diagram {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: nowrap;
+		align-items: center;
+		gap: 0;
+	}
+
+	/* ── Stop nodes ── */
+
+	.travel-route__stop {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+		flex-shrink: 0;
+		min-width: 0;
+		/* Animation initial state */
+		opacity: 0;
+		transform: scale(0.65);
+	}
+
+	.travel-route__badge {
+		width: 2.75rem;
+		height: 2.75rem;
+		border-radius: 50%;
+		border: 1.5px solid var(--route-brown);
+		background: var(--route-brown-bg);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 0.5625rem;
+		font-weight: 700;
+		letter-spacing: 0.1em;
+		color: var(--route-brown);
+		text-transform: uppercase;
+		flex-shrink: 0;
+	}
+
+	.travel-route__badge--origin {
+		border-style: dashed;
+		border-color: var(--route-brown-mid);
+		background: transparent;
+		color: var(--route-brown-mid);
+	}
+
+	.travel-route__badge--dest {
+		position: relative;
+		overflow: visible;
+		border-style: dashed;
+		background: rgba(110, 82, 60, 0.05);
+	}
+
+	/* Pulse ring on destination badge */
+	.travel-route__badge--dest::after {
+		content: "";
+		position: absolute;
+		inset: -3px;
+		border-radius: 50%;
+		border: 1.5px solid rgba(110, 82, 60, 0.45);
+		opacity: 0;
+		pointer-events: none;
+	}
+
+	.travel-route__city {
+		margin: 0.4rem 0 0;
+		font-size: 0.75rem;
+		font-weight: 600;
+		color: #3d2e22;
+		letter-spacing: -0.01em;
+		font-family: var(--font-heading, serif);
+	}
+
+	.travel-route__stop--origin .travel-route__city {
+		color: rgba(61, 46, 34, 0.55);
+	}
+
+	.travel-route__airport {
+		margin: 0.1rem 0 0;
+		font-size: 0.5625rem;
+		font-weight: 500;
+		color: rgba(92, 74, 61, 0.5);
+		max-width: 4.75rem;
+		line-height: 1.35;
+	}
+
+	/* ── Leg connectors ── */
+
+	.travel-route__leg {
+		flex: 1 1 0;
+		min-width: 2rem;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.25rem;
+		padding: 0 0.25rem;
+		/* Animation initial state */
+		opacity: 0;
+	}
+
+	.travel-route__leg-label {
+		font-size: 0.5rem;
+		font-weight: 700;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: rgba(92, 74, 61, 0.5);
+		white-space: nowrap;
+	}
+
+	.travel-route__leg--intl .travel-route__leg-label {
+		color: rgba(92, 74, 61, 0.35);
+	}
+
+	.travel-route__leg-track {
+		display: block;
+		position: relative;
+		width: 100%;
+		height: 1.5px;
+		transform: scaleX(0);
+		transform-origin: left center;
+	}
+
+	.travel-route__leg--intl .travel-route__leg-track {
+		background: repeating-linear-gradient(
+			to right,
+			var(--route-brown-faint) 0,
+			var(--route-brown-faint) 4px,
+			transparent 4px,
+			transparent 8px
+		);
+	}
+
+	.travel-route__leg--flight .travel-route__leg-track {
+		background: repeating-linear-gradient(
+			to right,
+			var(--route-brown) 0,
+			var(--route-brown) 5px,
+			transparent 5px,
+			transparent 9px
+		);
+	}
+
+	.travel-route__leg--ground .travel-route__leg-track {
+		background: repeating-linear-gradient(
+			to right,
+			var(--route-brown-mid) 0,
+			var(--route-brown-mid) 3px,
+			transparent 3px,
+			transparent 7px
+		);
+	}
+
+	/* Arrow tip */
+	.travel-route__leg-arrow {
+		position: absolute;
+		right: -4px;
+		top: 50%;
+		transform: translateY(-50%);
+		width: 0;
+		height: 0;
+		border-top: 3.5px solid transparent;
+		border-bottom: 3.5px solid transparent;
+		border-left: 6px solid var(--route-brown);
+	}
+
+	.travel-route__leg--intl .travel-route__leg-arrow {
+		border-left-color: var(--route-brown-faint);
+	}
+
+	.travel-route__leg--ground .travel-route__leg-arrow {
+		border-left-color: var(--route-brown-mid);
+	}
+
+	/* ── Keyframes ── */
+
+	@keyframes stop-in {
+		from {
+			opacity: 0;
+			transform: scale(0.65);
+		}
+		to {
+			opacity: 1;
+			transform: scale(1);
+		}
+	}
+
+	@keyframes track-draw {
+		from { transform: scaleX(0); }
+		to   { transform: scaleX(1); }
+	}
+
+	@keyframes leg-in {
+		from { opacity: 0; }
+		to   { opacity: 1; }
+	}
+
+	@keyframes dashes-flow {
+		from { background-position-x: 0px; }
+		to   { background-position-x: 9px; }
+	}
+
+	@keyframes dest-pulse {
+		0%   { opacity: 0.7; transform: scale(1); }
+		100% { opacity: 0;   transform: scale(2.1); }
+	}
+
+	/* ── Animation triggers (set by JS observer) ── */
+
+	/* Stops — staggered spring entrance */
+	.travel-flight-route[data-route-visible] .travel-route__stop--origin {
+		animation: stop-in 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) 0ms both;
+	}
+	.travel-flight-route[data-route-visible] .travel-route__diagram > .travel-route__stop:nth-child(3) {
+		animation: stop-in 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) 1050ms both;
+	}
+	.travel-flight-route[data-route-visible] .travel-route__diagram > .travel-route__stop:nth-child(5) {
+		animation: stop-in 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) 2100ms both;
+	}
+	.travel-flight-route[data-route-visible] .travel-route__stop--dest {
+		animation: stop-in 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) 3150ms both;
+	}
+
+	/* Legs (label + track) fade in, tracks then draw and flow */
+	.travel-flight-route[data-route-visible] .travel-route__leg--intl {
+		animation: leg-in 0.3s ease 400ms both;
+	}
+	.travel-flight-route[data-route-visible] .travel-route__leg--intl .travel-route__leg-track {
+		animation:
+			track-draw 0.65s ease-out 400ms both,
+			dashes-flow 1.6s linear 1065ms infinite;
+	}
+
+	.travel-flight-route[data-route-visible] .travel-route__leg--flight {
+		animation: leg-in 0.3s ease 1450ms both;
+	}
+	.travel-flight-route[data-route-visible] .travel-route__leg--flight .travel-route__leg-track {
+		animation:
+			track-draw 0.65s ease-out 1450ms both,
+			dashes-flow 1.6s linear 2115ms infinite;
+	}
+
+	.travel-flight-route[data-route-visible] .travel-route__leg--ground {
+		animation: leg-in 0.3s ease 2500ms both;
+	}
+	.travel-flight-route[data-route-visible] .travel-route__leg--ground .travel-route__leg-track {
+		animation:
+			track-draw 0.65s ease-out 2500ms both,
+			dashes-flow 1.6s linear 3165ms infinite;
+	}
+
+	/* Destination pulse ring */
+	.travel-flight-route[data-route-visible] .travel-route__badge--dest::after {
+		animation: dest-pulse 2.2s ease-out 3750ms infinite;
+	}
+
+	/* ── Mobile: 2×2 grid (≤540px) ── */
+
+	@media (max-width: 540px) {
+		.travel-route__header {
+			flex-direction: column;
+			gap: 0.15rem;
+		}
+
+		/* 2×2 grid: row 1 = Intl→Lagos, row 2 = domestic divider, row 3 = Owerri→Umuahia */
+		.travel-route__diagram {
+			display: grid;
+			grid-template-columns: minmax(0, 1fr) 2.25rem minmax(0, 1fr);
+			grid-template-rows: auto auto auto;
+			align-items: center;
+			row-gap: 0.85rem;
+			width: 100%;
+		}
+
+		.travel-route__stop--origin { grid-column: 1; grid-row: 1; }
+		.travel-route__leg--intl    { grid-column: 2; grid-row: 1; }
+		.travel-route__stop--lagos  { grid-column: 3; grid-row: 1; }
+		.travel-route__leg--flight  { grid-column: 1 / -1; grid-row: 2; }
+		.travel-route__stop--owerri { grid-column: 1; grid-row: 3; }
+		.travel-route__leg--ground  { grid-column: 2; grid-row: 3; }
+		.travel-route__stop--dest   { grid-column: 3; grid-row: 3; }
+
+		/* Stops: keep desktop column+centered style; just clear shrink issues in grid */
+		.travel-route__stop { flex-shrink: unset; min-width: 0; }
+		.travel-route__airport { max-width: none; }
+
+		/* Intl + ground legs: compact horizontal connector in centre column */
+		.travel-route__leg--intl,
+		.travel-route__leg--ground {
+			flex: none;
+			flex-direction: column;
+			align-items: center;
+			padding: 0;
+			gap: 0;
+			min-height: 0;
+			width: 100%;
+		}
+
+		.travel-route__leg--intl .travel-route__leg-label,
+		.travel-route__leg--ground .travel-route__leg-label {
+			display: none;
+		}
+
+		.travel-route__leg--intl .travel-route__leg-track,
+		.travel-route__leg--ground .travel-route__leg-track {
+			width: 100%;
+			height: 1.5px;
+			transform: scaleX(0);
+			transform-origin: left center;
+		}
+
+		/* Domestic flight leg: full-width centered divider */
+		.travel-route__leg--flight {
+			flex: none;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			padding: 0.1rem 0;
+			gap: 0.15rem;
+			min-height: 0;
+		}
+
+		.travel-route__leg--flight .travel-route__leg-track {
+			width: 1.5px;
+			height: 1.5rem;
+			background: none !important; /* stylelint-disable-line */
+			border-left: 1.5px dashed var(--route-brown);
+			transform: scaleY(0);
+			transform-origin: top center;
+		}
+
+		.travel-route__leg--flight .travel-route__leg-arrow {
+			right: auto;
+			top: auto;
+			left: 50%;
+			bottom: -5px;
+			transform: translateX(-50%);
+			border-left: 3px solid transparent;
+			border-right: 3px solid transparent;
+			border-top: 5px solid var(--route-brown);
+			border-bottom: none;
+		}
+
+		/* Mobile animation overrides */
+		@keyframes track-draw-v {
+			from { transform: scaleY(0); }
+			to   { transform: scaleY(1); }
+		}
+
+		/* Horizontal draw + flowing dashes for intl and ground legs */
+		.travel-flight-route[data-route-visible] .travel-route__leg--intl .travel-route__leg-track {
+			animation:
+				track-draw 0.65s ease-out 400ms both,
+				dashes-flow 1.6s linear 1065ms infinite;
+		}
+		/* Vertical draw for domestic divider */
+		.travel-flight-route[data-route-visible] .travel-route__leg--flight .travel-route__leg-track {
+			animation: track-draw-v 0.65s ease-out 1450ms both;
+		}
+		.travel-flight-route[data-route-visible] .travel-route__leg--ground .travel-route__leg-track {
+			animation:
+				track-draw 0.65s ease-out 2500ms both,
+				dashes-flow 1.6s linear 3165ms infinite;
+		}
+	}
+
+	/* ── Reduced motion: show immediately, no animation ── */
+
+	@media (prefers-reduced-motion: reduce) {
+		.travel-route__stop,
+		.travel-route__leg {
+			opacity: 1;
+			transform: none;
+		}
+		.travel-route__leg-track {
+			transform: none;
+		}
+		.travel-flight-route[data-route-visible] .travel-route__stop--origin,
+		.travel-flight-route[data-route-visible] .travel-route__diagram > .travel-route__stop:nth-child(3),
+		.travel-flight-route[data-route-visible] .travel-route__diagram > .travel-route__stop:nth-child(5),
+		.travel-flight-route[data-route-visible] .travel-route__stop--dest,
+		.travel-flight-route[data-route-visible] .travel-route__leg--intl .travel-route__leg-track,
+		.travel-flight-route[data-route-visible] .travel-route__leg--flight .travel-route__leg-track,
+		.travel-flight-route[data-route-visible] .travel-route__leg--ground .travel-route__leg-track,
+		.travel-flight-route[data-route-visible] .travel-route__badge--dest::after {
+			animation: none;
+		}
+	}
+</style>
+
+<script>
+	function initRouteAnimation() {
+		const route = document.querySelector<HTMLElement>(".travel-flight-route");
+		if (!route) return;
+
+		// Reduced motion: skip observer entirely, just reveal immediately
+		if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+			route.dataset.routeVisible = "";
+			return;
+		}
+
+		const observer = new IntersectionObserver(
+			(entries) => {
+				for (const entry of entries) {
+					if (entry.isIntersecting) {
+						(entry.target as HTMLElement).dataset.routeVisible = "";
+						observer.unobserve(entry.target);
+					}
+				}
+			},
+			{ threshold: 0.15 },
+		);
+
+		observer.observe(route);
+	}
+
+	if (document.readyState === "loading") {
+		document.addEventListener("DOMContentLoaded", initRouteAnimation, { once: true });
+	} else {
+		initRouteAnimation();
+	}
+</script>

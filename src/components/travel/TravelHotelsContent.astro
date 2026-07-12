@@ -23,14 +23,18 @@ const { introLede, regions } = travelHotelsPage;
 						class="travel-hotels__region"
 						aria-labelledby={headingId}
 					>
-						<p class="travel-hotels__region-eyebrow">{region.eyebrow}</p>
-						<h3 id={headingId} class="travel-hotels__region-title">
-							{region.title}
-						</h3>
-						<p class="travel-hotels__region-lede copy-preserve-breaks">{region.lede}</p>
+						<div data-reveal>
+							<p class="travel-hotels__region-eyebrow">{region.eyebrow}</p>
+							<h3 id={headingId} class="travel-hotels__region-title">
+								{region.title}
+							</h3>
+							<p class="travel-hotels__region-lede copy-preserve-breaks">{region.lede}</p>
+						</div>
 						<div class="travel-hotels__grid">
-							{region.hotels.map((hotel) => (
-								<TravelHotelCard hotel={hotel} />
+							{region.hotels.map((hotel, i) => (
+								<div data-reveal data-delay={String((i % 4) + 1)}>
+									<TravelHotelCard hotel={hotel} />
+								</div>
 							))}
 						</div>
 					</section>
