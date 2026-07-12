@@ -157,7 +157,7 @@ const canonicalHref = new URL("/things-to-do", Astro.url.origin).href;
     font-size: 0.9rem;
     line-height: 1.72;
     color: rgb(58 46 38 / 0.75);
-    max-width: 44ch;
+    max-width: 60ch;
     margin-inline: auto;
   }
 
@@ -188,6 +188,16 @@ const canonicalHref = new URL("/things-to-do", Astro.url.origin).href;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     box-shadow: 0 14px 40px rgb(110 82 60 / 0.09);
+    transition:
+      transform 220ms ease,
+      box-shadow 220ms ease;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .things-item:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 52px rgb(110 82 60 / 0.16);
+    }
   }
 
   .things-item__top {
@@ -198,7 +208,7 @@ const canonicalHref = new URL("/things-to-do", Astro.url.origin).href;
 
   .things-item__tag {
     display: inline-block;
-    align-self: start;
+    justify-self: start;
     padding: 0.22rem 0.7rem;
     border-radius: 9999px;
     border: 1px solid rgb(110 82 60 / 0.2);
@@ -230,7 +240,7 @@ const canonicalHref = new URL("/things-to-do", Astro.url.origin).href;
 
   .things-item__bottom {
     display: flex;
-    align-items: flex-end;
+    align-items: center;
     justify-content: space-between;
     gap: 0.75rem;
     flex-wrap: wrap;
@@ -272,6 +282,7 @@ const canonicalHref = new URL("/things-to-do", Astro.url.origin).href;
     transition:
       background 200ms ease,
       border-color 200ms ease,
+      color 200ms ease,
       transform 200ms ease;
   }
 
