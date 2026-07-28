@@ -1,21 +1,23 @@
 /**
- * Google Apps Script — append RSVP rows to a Google Sheet.
+ * Google Apps Script — append rows to a Google Sheet.
  *
- * One sheet row per guest (plus ones get their own row so you can count rows = headcount).
+ * Supports multiple tabs in the same spreadsheet via `payload.sheet`.
+ * Defaults to "RSVPs" if not specified (backward compatible).
  *
  * Setup:
  * 1. Create a Google Sheet (e.g. "Wedding RSVPs").
  * 2. Extensions → Apps Script → paste this file → Save.
- * 3. (Optional) Project settings → Script properties → add RSVP_SECRET (match RSVP_SCRIPT_SECRET in .env).
+ * 3. (Optional) Project settings → Script properties → add RSVP_SECRET.
  * 4. Deploy → New deployment → Web app:
  *    - Execute as: Me
  *    - Who has access: Anyone
- * 5. Copy the Web app URL (ends in /exec) into RSVP_GOOGLE_SCRIPT_URL.
+ * 5. Copy the Web app URL (ends in /exec) into RSVP_GOOGLE_SCRIPT_URL and
+ *    WEDDING_TRAIN_GOOGLE_SCRIPT_URL (they are the same URL).
  */
 
-var SHEET_NAME = "RSVPs";
+var DEFAULT_SHEET_NAME = "RSVPs";
 
-var HEADERS = [
+var RSVP_HEADERS = [
   "Submitted At",
   "Full Name",
   "Guest",
@@ -33,19 +35,34 @@ var HEADERS = [
   "Message to Couple",
 ];
 
-function getSheet_() {
+var WEDDING_TRAIN_HEADERS = [
+  "Submitted At",
+  "Full Name",
+  "Role",
+  "Accommodation",
+  "Outfit",
+  "Commit: Attend",
+  "Commit: Outfit",
+  "Commit: Travel",
+  "Commit: Contact",
+  "Commit: Church",
+  "Final Decision",
+];
+
+function getSheet_(name) {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var sheet = ss.getSheetByName(SHEET_NAME);
+  var sheet = ss.getSheetByName(name);
   if (!sheet) {
-    sheet = ss.insertSheet(SHEET_NAME);
+    sheet = ss.insertSheet(name);
   }
   return sheet;
 }
 
-function ensureHeaders_(sheet) {
+function ensureHeaders_(sheet, sheetName) {
   if (sheet.getLastRow() > 0) return;
-  sheet.appendRow(HEADERS);
-  sheet.getRange(1, 1, 1, HEADERS.length).setFontWeight("bold");
+  var headers = sheetName === "Wedding Train" ? WEDDING_TRAIN_HEADERS : RSVP_HEADERS;
+  sheet.appendRow(headers);
+  sheet.getRange(1, 1, 1, headers.length).setFontWeight("bold");
   sheet.setFrozenRows(1);
 }
 
@@ -63,7 +80,7 @@ function sheetText_(value) {
   return "'" + s;
 }
 
-function rowFromGuest_(r) {
+function rowFromRsvpGuest_(r) {
   return [
     r.submitted_at || "",
     r.full_name || "",
@@ -83,6 +100,29 @@ function rowFromGuest_(r) {
   ];
 }
 
+function rowFromWeddingTrainGuest_(r) {
+  return [
+    r.submitted_at || "",
+    r.full_name || "",
+    r.role || "",
+    r.accommodation || "",
+    r.outfit || "",
+    r.commit_attend || "",
+    r.commit_outfit || "",
+    r.commit_travel || "",
+    r.commit_contact || "",
+    r.commit_church || "",
+    r.final_decision || "",
+  ];
+}
+
+function buildRow_(sheetName, record) {
+  if (sheetName === "Wedding Train") {
+    return rowFromWeddingTrainGuest_(record);
+  }
+  return rowFromRsvpGuest_(record);
+}
+
 function doPost(e) {
   try {
     var expectedSecret = PropertiesService.getScriptProperties().getProperty("RSVP_SECRET");
@@ -92,8 +132,9 @@ function doPost(e) {
       return jsonResponse_({ ok: false, error: "unauthorized" });
     }
 
-    var sheet = getSheet_();
-    ensureHeaders_(sheet);
+    var sheetName = payload.sheet || DEFAULT_SHEET_NAME;
+    var sheet = getSheet_(sheetName);
+    ensureHeaders_(sheet, sheetName);
 
     var rows = payload.rows;
     if (!rows || !rows.length) {
@@ -101,7 +142,7 @@ function doPost(e) {
     }
 
     for (var i = 0; i < rows.length; i++) {
-      sheet.appendRow(rowFromGuest_(rows[i]));
+      sheet.appendRow(buildRow_(sheetName, rows[i]));
     }
 
     return jsonResponse_({ ok: true });

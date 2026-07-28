@@ -26,6 +26,7 @@ const { name, value, required = false } = Astro.props;
 <style>
 	.form-choice {
 		position: relative;
+		display: flex;
 		cursor: pointer;
 		min-width: 0;
 	}
@@ -46,8 +47,9 @@ const { name, value, required = false } = Astro.props;
 	}
 
 	.form-choice__face {
+		flex: 1;
 		display: flex;
-		align-items: center;
+		align-items: flex-start;
 		gap: 0.55rem;
 		min-height: 3rem;
 		padding: 0.55rem 1rem 0.55rem 0.75rem;
@@ -79,6 +81,7 @@ const { name, value, required = false } = Astro.props;
 
 	.form-choice__dot {
 		flex: 0 0 auto;
+		margin-top: 0.2rem;
 		width: 1.1rem;
 		height: 1.1rem;
 		border-radius: 50%;
