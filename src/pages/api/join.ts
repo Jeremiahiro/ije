@@ -1,11 +1,10 @@
 import type { APIRoute } from "astro";
 import {
-	buildRsvpRecord,
-	parseRsvpFormData,
-	RSVP_HONEYPOT_FIELD,
-	validateRsvpForm,
-} from "@/util/rsvpForm";
-import { forwardRsvpToGoogleSheet } from "@/util/rsvpSheet";
+	buildWeddingTrainRecord,
+	parseWeddingTrainFormData,
+	validateWeddingTrainForm,
+} from "@/util/weddingTrainForm";
+import { forwardWeddingTrainToGoogleSheet } from "@/util/weddingTrainSheet";
 
 export const prerender = false;
 
@@ -27,12 +26,7 @@ export const POST: APIRoute = async ({ request }) => {
 		return json({ ok: false, kind: "invalid_body", message: "Invalid form data." }, 400);
 	}
 
-	// Honeypot: bots fill the hidden field. Pretend success and drop the submission.
-	if (String(formData.get(RSVP_HONEYPOT_FIELD) ?? "").trim()) {
-		return json({ ok: true });
-	}
-
-	const validation = validateRsvpForm(parseRsvpFormData(formData));
+	const validation = validateWeddingTrainForm(parseWeddingTrainFormData(formData));
 	if (!validation.ok) {
 		return json(
 			{ ok: false, kind: "validation", fieldErrors: validation.fieldErrors },
@@ -40,15 +34,15 @@ export const POST: APIRoute = async ({ request }) => {
 		);
 	}
 
-	const record = buildRsvpRecord(validation.values);
-	const forwarded = await forwardRsvpToGoogleSheet(record);
+	const record = buildWeddingTrainRecord(validation.values);
+	const forwarded = await forwardWeddingTrainToGoogleSheet(record);
 
 	if (!forwarded.ok) {
 		return json(
 			{
 				ok: false,
 				kind: "upstream",
-				message: "Could not save your RSVP. Please try again in a moment.",
+				message: "Could not save your response. Please try again in a moment.",
 			},
 			502,
 		);
@@ -57,5 +51,4 @@ export const POST: APIRoute = async ({ request }) => {
 	return json({ ok: true });
 };
 
-export const ALL: APIRoute = () =>
-	json({ ok: false, message: "Method not allowed." }, 405);
+export const ALL: APIRoute = () => json({ ok: false, message: "Method not allowed." }, 405);

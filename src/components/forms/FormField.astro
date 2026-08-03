@@ -19,6 +19,7 @@ interface Props {
 	inputmode?: "email" | "tel" | "text" | "numeric" | "decimal" | "url" | "search" | "none";
 	required?: boolean;
 	placeholder?: string;
+	readonly?: boolean;
 }
 
 const {
@@ -39,6 +40,7 @@ const {
 	inputmode,
 	required = false,
 	placeholder,
+	readonly = false,
 } = Astro.props;
 
 const hintId = hint ? `${id}__hint` : undefined;
@@ -80,6 +82,7 @@ const describedBy = [hintId, errorId].filter(Boolean).join(" ") || undefined;
 				autocomplete={autocomplete}
 				inputmode={inputmode}
 				required={required}
+				readonly={readonly || undefined}
 				aria-required={required ? "true" : undefined}
 				aria-invalid="false"
 				aria-describedby={describedBy}
@@ -144,6 +147,12 @@ const describedBy = [hintId, errorId].filter(Boolean).join(" ") || undefined;
 		padding-block: 0.65rem;
 		resize: vertical;
 		line-height: 1.45;
+	}
+
+	.form-field__control[readonly] {
+		background: rgb(245 238 228 / 0.7);
+		color: var(--text-muted);
+		cursor: default;
 	}
 
 	.form-field__control::placeholder {

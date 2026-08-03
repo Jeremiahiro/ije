@@ -18,6 +18,7 @@
     "@tailwindcss/vite": "^4.2.4",
     "@vercel/analytics": "^2.0.1",
     "astro": "^6.2.2",
+    "googleapis": "^173.0.0",
     "sass": "^1.99.0",
     "tailwindcss": "^4.2.4"
   },

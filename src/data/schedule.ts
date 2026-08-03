@@ -147,10 +147,10 @@ export const schedulePageData: SchedulePageData = {
           icon: "reception",
           title: "Wedding Reception",
           timeLabel: "2:00 pm",
-          venue: "International Conference Centre (ICC)",
-          location: "International Conference Centre (ICC), Umuahia, Abia State, Nigeria",
-          mapHref:
-            "https://www.google.com/maps/search/?api=1&query=International+Conference+Centre+Umuahia",
+          venue: "International Conference Centre (ICC) Umuahia",
+          location:
+            "International Conference Centre (ICC), Umuahia, Abia State, Nigeria",
+          mapHref: "https://maps.app.goo.gl/xccY3nSsnxXVcPDH7",
           googleCalendarHref: makeGoogleCalendarHref(
             "Jane & Jeremiah's Wedding Reception",
             "20270104T130000Z",
@@ -167,10 +167,10 @@ export const schedulePageData: SchedulePageData = {
         {
           icon: "party",
           title: "After Party",
-          venue: "International Conference Centre (ICC)",
-          location: "International Conference Centre (ICC), Umuahia, Abia State, Nigeria",
-          mapHref:
-            "https://www.google.com/maps/search/?api=1&query=International+Conference+Centre+Umuahia",
+          venue: "International Conference Centre (ICC) Umuahia",
+          location:
+            "International Conference Centre (ICC), Umuahia, Abia State, Nigeria",
+          mapHref: "https://maps.app.goo.gl/xccY3nSsnxXVcPDH7",
           googleCalendarHref: makeGoogleCalendarHref(
             "Jane & Jeremiah's After Party",
             "20270104T170000Z",

@@ -7,32 +7,12 @@ export const RSVP_SUBMIT_COPY = {
 		"We couldn’t save your RSVP right now. Please try again in a little while, or contact us if it keeps happening.",
 } as const;
 
+import { parseApiBody } from "@/util/apiResponse";
+
 export type RsvpClientSubmitResult =
 	| { ok: true }
 	| { ok: false; kind: "validation"; fieldErrors: Record<string, string> }
 	| { ok: false; kind: "network" | "server" | "not_configured"; message: string };
-
-type ApiBody = {
-	ok?: boolean;
-	kind?: string;
-	fieldErrors?: Record<string, string>;
-	message?: string;
-};
-
-const isRecord = (value: unknown): value is Record<string, unknown> =>
-	typeof value === "object" && value !== null;
-
-const parseApiBody = (value: unknown): ApiBody | null => {
-	if (!isRecord(value)) return null;
-	return {
-		ok: typeof value.ok === "boolean" ? value.ok : undefined,
-		kind: typeof value.kind === "string" ? value.kind : undefined,
-		fieldErrors: isRecord(value.fieldErrors)
-			? (value.fieldErrors as Record<string, string>)
-			: undefined,
-		message: typeof value.message === "string" ? value.message : undefined,
-	};
-};
 
 /** POST form data to the site API (validates again server-side, then appends to Google Sheets). */
 export const submitRsvpFormData = async (
@@ -60,7 +40,7 @@ export const submitRsvpFormData = async (
 	if (response.status === 503 && data?.kind === "not_configured") {
 		if (import.meta.env.DEV) {
 			console.warn(
-				"[RSVP] RSVP_GOOGLE_SCRIPT_URL is not set — submissions will fail until it is configured (see .env.example).",
+				"[RSVP] GOOGLE_SPREADSHEET_ID is not set — submissions will fail until it is configured (see .env.example).",
 			);
 		}
 		return { ok: false, kind: "not_configured", message: RSVP_SUBMIT_COPY.notConfigured };
