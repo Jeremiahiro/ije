@@ -337,12 +337,23 @@ export const mountWeddingTrainPage = (): void => {
 			fd.set(WEDDING_TRAIN_FIELD.role, form.dataset.role ?? "");
 			fd.set(WEDDING_TRAIN_FIELD.finalDecision, "unable");
 
-			await submitWeddingTrainFormData(fd);
+			const result = await submitWeddingTrainFormData(fd);
+
+			if (!result.ok) {
+				if (triggerUnable instanceof HTMLButtonElement) {
+					triggerUnable.disabled = false;
+					triggerUnable.textContent = "I'm unable to commit at this time";
+				}
+				showSubmitError(form, result.kind !== "validation" ? result.message : WEDDING_TRAIN_SUBMIT_COPY.serverError);
+				return;
+			}
 
 			const copyHonour = document.getElementById("wt-success-copy-honour");
 			const copyUnable = document.getElementById("wt-success-copy-unable");
+			const honourDetails = document.getElementById("wt-success-honour-details");
 			if (copyHonour) copyHonour.hidden = true;
 			if (copyUnable) copyUnable.hidden = false;
+			if (honourDetails) honourDetails.hidden = true;
 
 			decisionPrompt.hidden = true;
 			success.hidden = false;

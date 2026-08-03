@@ -454,6 +454,79 @@ const churchTierPrice = (v: string) => {
 						I completely understand. Thank you for taking the time to let
 						me know — I hope to see you very soon.
 					</p>
+					<div id="wt-success-honour-details" class="wt__success-honour-details">
+						{isGroomsman && (
+							<div class="wt__itinerary">
+								<p class="wt__account-heading">Itinerary</p>
+								<div class="wt__itinerary-day">
+									<p class="wt__itinerary-date">Sunday, 2nd</p>
+									<ol class="wt__itinerary-list">
+										<li>
+											<span class="wt__itinerary-time">10:00 AM</span>
+											Arrive at meeting point <span class="wt__itinerary-note">(TBC)</span>
+										</li>
+										<li>
+											<span class="wt__itinerary-time">11:00 AM</span>
+											Depart for traditional marriage venue
+										</li>
+										<li>
+											<span class="wt__itinerary-time">1:00 PM</span>
+											Occasion starts
+										</li>
+									</ol>
+								</div>
+								<div class="wt__itinerary-day">
+									<p class="wt__itinerary-date">Monday, 3rd</p>
+									<ol class="wt__itinerary-list">
+										<li>
+											<span class="wt__itinerary-time">6:00 AM</span>
+											5k morning run
+										</li>
+										<li>
+											<span class="wt__itinerary-time">7:00 AM</span>
+											Briefing at the reception venue
+										</li>
+										<li>
+											<span class="wt__itinerary-time">8:00 AM</span>
+											Breakfast &amp; getting ready
+										</li>
+										<li>
+											<span class="wt__itinerary-time">9:30 AM</span>
+											Visit the bride &amp; her girls
+										</li>
+										<li>
+											<span class="wt__itinerary-time">10:00 AM</span>
+											Ready for pictures
+										</li>
+										<li>
+											<span class="wt__itinerary-time">10:30 AM</span>
+											Head to church
+										</li>
+									</ol>
+								</div>
+							</div>
+						)}
+						<div class="wt__account wt__success-payment">
+							<p class="wt__account-heading">Payment details</p>
+							<dl class="wt__account-dl">
+								<div class="wt__account-row">
+									<dt>Bank</dt>
+									<dd>{ACCOUNT.bank}</dd>
+								</div>
+								<div class="wt__account-row">
+									<dt>Account name</dt>
+									<dd>{ACCOUNT.name}</dd>
+								</div>
+								<div class="wt__account-row">
+									<dt>Account number</dt>
+									<dd class="wt__account-number">{ACCOUNT.number}</dd>
+								</div>
+							</dl>
+							<p class="wt__payment-deadline">
+								Payment due on or before {PAYMENT_DEADLINE}
+							</p>
+						</div>
+					</div>
 				</div>
 			</ContentCard>
 		</HeroPageSurface>
@@ -1240,6 +1313,67 @@ const churchTierPrice = (v: string) => {
 		font-size: 0.95rem;
 		line-height: 1.5;
 		color: var(--text-muted);
+	}
+
+	.wt__success-honour-details {
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+		margin-top: 1.5rem;
+	}
+
+	.wt__success-payment {
+		margin-top: 0;
+	}
+
+	.wt__itinerary {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
+
+	.wt__itinerary-day {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+
+	.wt__itinerary-date {
+		margin: 0;
+		font-size: 0.8rem;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.06em;
+		color: var(--text-muted);
+	}
+
+	.wt__itinerary-list {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		display: flex;
+		flex-direction: column;
+		gap: 0.35rem;
+	}
+
+	.wt__itinerary-list li {
+		display: flex;
+		gap: 0.75rem;
+		font-size: 0.9rem;
+		line-height: 1.4;
+	}
+
+	.wt__itinerary-time {
+		flex-shrink: 0;
+		width: 5rem;
+		font-variant-numeric: tabular-nums;
+		color: var(--text-muted);
+		font-size: 0.85rem;
+	}
+
+	.wt__itinerary-note {
+		color: var(--text-muted);
+		font-size: 0.85em;
 	}
 
 	:global(.wt-page.hero-page) {
