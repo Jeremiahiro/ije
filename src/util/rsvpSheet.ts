@@ -1,4 +1,7 @@
 import type { CountryResidence, RsvpRecord } from "@/util/rsvpForm";
+import { appendRowsToSheet } from "@/util/googleSheetsApi";
+
+const SHEET_NAME = "RSVPs";
 
 const COUNTRY_LABELS: Record<CountryResidence, string> = {
 	nigeria: "Nigeria",
@@ -44,12 +47,6 @@ export type RsvpSheetGuestRow = {
 	guest_notes: string;
 	relationship: string;
 	message_couple: string;
-};
-
-/** Flat JSON body sent to the Google Apps Script web app. */
-export type RsvpSheetPayload = {
-	secret?: string;
-	rows: RsvpSheetGuestRow[];
 };
 
 const countryLabelForRecord = (record: RsvpRecord): { country: string; other_country: string } => {
@@ -137,58 +134,39 @@ export const recordToSheetRows = (
 	return rows.map(sanitizeRow);
 };
 
-export const recordToSheetPayload = (
-	record: RsvpRecord,
-	opts?: { submittedAt?: string; secret?: string },
-): RsvpSheetPayload => ({
-	...(opts?.secret ? { secret: opts.secret } : {}),
-	rows: recordToSheetRows(record, { submittedAt: opts?.submittedAt }),
-});
+const rowToValues = (row: RsvpSheetGuestRow): string[] => [
+	row.submitted_at,
+	row.full_name,
+	row.guest_role,
+	row.primary_guest,
+	row.email,
+	row.phone,
+	row.country,
+	row.other_country,
+	row.event_traditional,
+	row.event_white,
+	row.expected_arrival,
+	row.expected_departure,
+	row.guest_notes,
+	row.relationship,
+	row.message_couple,
+];
 
-export type ForwardRsvpResult = { ok: true } | { ok: false; reason: "upstream" | "invalid_response" };
+export type ForwardRsvpResult = { ok: true } | { ok: false; reason: "upstream" };
 
-const parseAppsScriptJson = (text: string): { ok?: boolean } | null => {
-	try {
-		return JSON.parse(text) as { ok?: boolean };
-	} catch {
-		return null;
-	}
-};
-
-/** POST validated RSVP row to a deployed Google Apps Script web app URL. */
 export const forwardRsvpToGoogleSheet = async (
-	webhookUrl: string,
 	record: RsvpRecord,
-	secret?: string,
+	opts?: { submittedAt?: string },
 ): Promise<ForwardRsvpResult> => {
-	const payload = recordToSheetPayload(record, { secret });
-
-	let response: Response;
-	try {
-		response = await fetch(webhookUrl, {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify(payload),
-			redirect: "follow",
-		});
-	} catch {
-		return { ok: false, reason: "upstream" };
-	}
-
-	const text = await response.text();
-	const parsed = parseAppsScriptJson(text);
-
-	if (!response.ok || parsed?.ok === false) {
-		return { ok: false, reason: "upstream" };
-	}
-
-	if (parsed?.ok === true) {
-		return { ok: true };
-	}
-
-	if (response.ok && text.trim().length === 0) {
-		return { ok: true };
-	}
-
-	return parsed == null && response.ok ? { ok: true } : { ok: false, reason: "invalid_response" };
+	const rows = recordToSheetRows(record, opts).map(rowToValues);
+	const result = await appendRowsToSheet(SHEET_NAME, rows, {
+		headers: [
+			"Submitted At", "Full Name", "Guest Role", "Primary Guest",
+			"Email", "Phone", "Country", "Other Country",
+			"Traditional Event", "White Wedding", "Expected Arrival", "Expected Departure",
+			"Guest Notes", "Relationship", "Message for Couple",
+		],
+	});
+	if (!result.ok) return { ok: false, reason: "upstream" };
+	return { ok: true };
 };

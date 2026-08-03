@@ -1,4 +1,7 @@
 import type { WeddingTrainRecord } from "@/util/weddingTrainForm";
+import { appendRowsToSheet } from "@/util/googleSheetsApi";
+
+const SHEET_NAME = "Groom's Train";
 
 const boolLabel = (value: boolean): string => (value ? "Yes" : "No");
 
@@ -36,13 +39,7 @@ export type WeddingTrainSheetRow = {
 	final_decision: string;
 };
 
-export type WeddingTrainSheetPayload = {
-	sheet: "Groom's Train";
-	secret?: string;
-	rows: [WeddingTrainSheetRow];
-};
-
-export const recordToWeddingTrainSheetRow = (
+const recordToWeddingTrainSheetRow = (
 	record: WeddingTrainRecord,
 	opts?: { submittedAt?: string },
 ): WeddingTrainSheetRow => ({
@@ -59,60 +56,34 @@ export const recordToWeddingTrainSheetRow = (
 	final_decision: FINAL_DECISION_LABELS[record.final_decision] ?? record.final_decision,
 });
 
-export const recordToWeddingTrainSheetPayload = (
-	record: WeddingTrainRecord,
-	opts?: { submittedAt?: string; secret?: string },
-): WeddingTrainSheetPayload => ({
-	sheet: "Groom's Train",
-	...(opts?.secret ? { secret: opts.secret } : {}),
-	rows: [recordToWeddingTrainSheetRow(record, { submittedAt: opts?.submittedAt })],
-});
+const rowToValues = (row: WeddingTrainSheetRow): string[] => [
+	row.submitted_at,
+	row.full_name,
+	row.role,
+	row.accommodation,
+	row.outfit,
+	row.commit_attend,
+	row.commit_outfit,
+	row.commit_travel,
+	row.commit_contact,
+	row.commit_church,
+	row.final_decision,
+];
 
-export type ForwardWeddingTrainResult =
-	| { ok: true }
-	| { ok: false; reason: "upstream" | "invalid_response" };
-
-const parseAppsScriptJson = (text: string): { ok?: boolean } | null => {
-	try {
-		return JSON.parse(text) as { ok?: boolean };
-	} catch {
-		return null;
-	}
-};
+export type ForwardWeddingTrainResult = { ok: true } | { ok: false; reason: "upstream" };
 
 export const forwardWeddingTrainToGoogleSheet = async (
-	webhookUrl: string,
 	record: WeddingTrainRecord,
-	secret?: string,
+	opts?: { submittedAt?: string },
 ): Promise<ForwardWeddingTrainResult> => {
-	const payload = recordToWeddingTrainSheetPayload(record, { secret });
-
-	let response: Response;
-	try {
-		response = await fetch(webhookUrl, {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify(payload),
-			redirect: "follow",
-		});
-	} catch {
-		return { ok: false, reason: "upstream" };
-	}
-
-	const text = await response.text();
-	const parsed = parseAppsScriptJson(text);
-
-	if (!response.ok || parsed?.ok === false) {
-		return { ok: false, reason: "upstream" };
-	}
-
-	if (parsed?.ok === true) {
-		return { ok: true };
-	}
-
-	if (response.ok && text.trim().length === 0) {
-		return { ok: true };
-	}
-
-	return parsed == null && response.ok ? { ok: true } : { ok: false, reason: "invalid_response" };
+	const row = recordToWeddingTrainSheetRow(record, opts);
+	const result = await appendRowsToSheet(SHEET_NAME, [rowToValues(row)], {
+		headers: [
+			"Submitted At", "Full Name", "Role", "Accommodation", "Outfit",
+			"Commit (Attend)", "Commit (Outfit)", "Commit (Travel)",
+			"Commit (Contact)", "Commit (Church)", "Final Decision",
+		],
+	});
+	if (!result.ok) return { ok: false, reason: "upstream" };
+	return { ok: true };
 };

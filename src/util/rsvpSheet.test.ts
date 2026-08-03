@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { buildRsvpRecord, type RsvpFormValues } from "./rsvpForm";
-import { recordToSheetPayload, recordToSheetRows, sanitizeSheetCell } from "./rsvpSheet";
+import { recordToSheetRows, sanitizeSheetCell } from "./rsvpSheet";
 
 const baseValues = (): RsvpFormValues => ({
 	country_residence: "nigeria",
@@ -70,8 +70,8 @@ describe("recordToSheetRows", () => {
 		const values = baseValues();
 		values.country_residence = "other";
 		values.other_country = "Canada";
-		const payload = recordToSheetPayload(buildRsvpRecord(values));
-		expect(payload.rows[0]?.country).toBe("Other (Canada)");
+		const rows = recordToSheetRows(buildRsvpRecord(values));
+		expect(rows[0]?.country).toBe("Other (Canada)");
 	});
 
 	it("neutralizes spreadsheet formula injection in user text", () => {

@@ -16,10 +16,7 @@ const json = (body: unknown, status = 200): Response =>
 	});
 
 export const POST: APIRoute = async ({ request }) => {
-	const webhookUrl = import.meta.env.RSVP_GOOGLE_SCRIPT_URL;
-	const secret = import.meta.env.RSVP_SCRIPT_SECRET;
-
-	if (!webhookUrl?.trim()) {
+	if (!import.meta.env.GOOGLE_SPREADSHEET_ID?.trim()) {
 		return json({ ok: false, kind: "not_configured" }, 503);
 	}
 
@@ -44,7 +41,7 @@ export const POST: APIRoute = async ({ request }) => {
 	}
 
 	const record = buildRsvpRecord(validation.values);
-	const forwarded = await forwardRsvpToGoogleSheet(webhookUrl.trim(), record, secret?.trim());
+	const forwarded = await forwardRsvpToGoogleSheet(record);
 
 	if (!forwarded.ok) {
 		return json(
