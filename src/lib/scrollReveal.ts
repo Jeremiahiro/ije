@@ -16,8 +16,9 @@ export function initScrollReveal(): void {
 		(entries) => {
 			entries.forEach((entry) => {
 				if (entry.isIntersecting) {
-					(entry.target as HTMLElement).dataset.visible = "";
-					observer.unobserve(entry.target);
+					const el = entry.target as HTMLElement;
+					el.dataset.visible = "";
+					observer.unobserve(el);
 				}
 			});
 		},

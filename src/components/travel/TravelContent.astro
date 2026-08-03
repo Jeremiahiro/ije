@@ -113,13 +113,16 @@ const sectionNav = [
 		const shell = document.querySelector<HTMLElement>(".site-shell");
 		if (!wrapper || !nav) return;
 
-		// Lock wrapper height so layout never shifts when nav goes fixed
+		// Lock wrapper min-height so layout never shifts when nav goes fixed.
+		// Measure nav directly (not wrapper) so resize re-reads the true rendered height.
+		// Wait for fonts.ready so FOUT doesn't produce a wrong initial measurement.
 		const lockHeight = () => {
 			if (!nav.dataset.pinnedBottom) {
-				wrapper.style.height = wrapper.offsetHeight + "px";
+				wrapper.style.minHeight = nav.offsetHeight + "px";
 			}
 		};
-		lockHeight();
+		requestAnimationFrame(lockHeight);
+		document.fonts.ready.then(() => requestAnimationFrame(lockHeight));
 		window.addEventListener("resize", () => requestAnimationFrame(lockHeight), { passive: true });
 
 		// Pin / unpin based on wrapper position
