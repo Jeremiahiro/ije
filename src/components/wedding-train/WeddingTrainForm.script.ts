@@ -14,6 +14,7 @@ const ERROR_IDS = Object.values(WEDDING_TRAIN_FIELD).map((name) => `wt-error-${n
 
 const inputByField: Partial<Record<string, string>> = {
 	[WEDDING_TRAIN_FIELD.fullName]: "wt-field-full-name",
+	[WEDDING_TRAIN_FIELD.outfitSelfConfirm]: "wt-check-outfit-self-confirm",
 };
 
 const focusOrder = [
@@ -141,9 +142,8 @@ const scrollSuccessBelowHeader = (el: HTMLElement): void => {
 };
 
 const tierIncludes = (tier: string) => ({
-	material: ["material_only", "material_tailoring", "material_tailoring_accessories"].includes(tier),
-	tailoring: ["material_tailoring", "material_tailoring_accessories"].includes(tier),
-	accessories: ["accessories_only", "material_tailoring_accessories"].includes(tier),
+	material: ["material_only", "material_tailoring"].includes(tier),
+	tailoring: tier === "material_tailoring",
 });
 
 const makeOutfitRows = (
@@ -151,13 +151,9 @@ const makeOutfitRows = (
 	tier: string,
 	matCost: number,
 	tailCost: number,
-	accCost: number,
 ): { html: string; total: number } => {
 	const inc = tierIncludes(tier);
-	const total =
-		(inc.material ? matCost : 0) +
-		(inc.tailoring ? tailCost : 0) +
-		(inc.accessories ? accCost : 0);
+	const total = (inc.material ? matCost : 0) + (inc.tailoring ? tailCost : 0);
 	let html =
 		`<tr class="wt__cost-row">` +
 		`<td class="wt__cost-row-label">${label}</td>` +
@@ -172,20 +168,15 @@ const makeOutfitRows = (
 	if (inc.tailoring)
 		html +=
 			`<tr class="wt__cost-sub-row">` +
-			`<td class="wt__cost-sub-label">Tailoring</td>` +
+			`<td class="wt__cost-sub-label">Sewing & monogram</td>` +
 			`<td class="wt__cost-sub-amount">${fmtNaira(tailCost)}</td>` +
-			`</tr>`;
-	if (inc.accessories)
-		html +=
-			`<tr class="wt__cost-sub-row">` +
-			`<td class="wt__cost-sub-label">Accessories</td>` +
-			`<td class="wt__cost-sub-amount">${fmtNaira(accCost)}</td>` +
 			`</tr>`;
 	return { html, total };
 };
 
 const mountCostSummary = (form: HTMLFormElement): void => {
 	const tierGroup = document.getElementById("wt-outfit-tier");
+	const selfSourceGroup = document.getElementById("wt-outfit-self-source");
 	const nightsGroup = document.getElementById("wt-accommodation-nights");
 	const costSummary = document.getElementById("wt-cost-summary");
 	const costRowsEl = document.getElementById("wt-cost-rows");
@@ -213,6 +204,18 @@ const mountCostSummary = (form: HTMLFormElement): void => {
 			}
 		}
 
+		// Show / hide self-source confirmation
+		if (selfSourceGroup) {
+			const showSelfSource = outfit === "self_source";
+			selfSourceGroup.hidden = !showSelfSource;
+			if (!showSelfSource) {
+				const cb = form.querySelector<HTMLInputElement>(
+					`input[name="${WEDDING_TRAIN_FIELD.outfitSelfConfirm}"]`,
+				);
+				if (cb) cb.checked = false;
+			}
+		}
+
 		// Show / hide accommodation nights sub-group
 		if (nightsGroup) {
 			const showNights = accommodation === "team_arrange";
@@ -231,12 +234,11 @@ const mountCostSummary = (form: HTMLFormElement): void => {
 		const role = form.dataset.role ?? "";
 		const costs = {
 			logistics: Number(form.dataset.costLogistics ?? 0),
-			accommodationPerNight: Number(form.dataset.costAccommodationPerNight ?? 0),
+			accommodationMin: Number(form.dataset.costAccommodationPerNightMin ?? 0),
+			accommodationMax: Number(form.dataset.costAccommodationPerNightMax ?? 0),
 			tradMaterial: Number(form.dataset.costTradOutfitMaterial ?? 0),
 			tradTailoring: Number(form.dataset.costTradOutfitTailoring ?? 0),
-			tradAccessories: Number(form.dataset.costTradOutfitAccessories ?? 0),
-			churchMaterial: Number(form.dataset.costChurchOutfitMaterial ?? 0),
-			churchTailoring: Number(form.dataset.costChurchOutfitTailoring ?? 0),
+			churchFull: Number(form.dataset.costChurchOutfitFull ?? 0),
 		};
 
 		let html =
@@ -252,40 +254,48 @@ const mountCostSummary = (form: HTMLFormElement): void => {
 				tier,
 				costs.tradMaterial,
 				costs.tradTailoring,
-				costs.tradAccessories,
 			);
 			html += trad.html;
 			total += trad.total;
 
 			if (role === "groomsman") {
-				const church = makeOutfitRows(
-					"Church outfit",
-					tier,
-					costs.churchMaterial,
-					costs.churchTailoring,
-					0,
-				);
-				html += church.html;
-				total += church.total;
+				html +=
+					`<tr class="wt__cost-row">` +
+					`<td class="wt__cost-row-label">Church outfit (Tux)</td>` +
+					`<td class="wt__cost-row-amount">${fmtNaira(costs.churchFull)}</td>` +
+					`</tr>` +
+					`<tr class="wt__cost-sub-row">` +
+					`<td class="wt__cost-sub-label">Made with vendor</td>` +
+					`<td class="wt__cost-sub-amount"></td>` +
+					`</tr>`;
+				total += costs.churchFull;
 			}
+
+			html +=
+				`<tr class="wt__cost-row">` +
+				`<td class="wt__cost-row-label">Accessories</td>` +
+				`<td class="wt__cost-row-amount">${fmtNaira(0)}</td>` +
+				`</tr>` +
+				`<tr class="wt__cost-sub-row">` +
+				`<td class="wt__cost-sub-label">Provided</td>` +
+				`<td class="wt__cost-sub-amount"></td>` +
+				`</tr>`;
 		}
 
 		if (accommodation === "team_arrange") {
 			const nightsCount = Number(nights || 0);
-			const accTotal = costs.accommodationPerNight * nightsCount;
+			const rangeLabel = nightsCount > 0
+				? `${fmtNaira(costs.accommodationMin * nightsCount)} – ${fmtNaira(costs.accommodationMax * nightsCount)}`
+				: `${fmtNaira(costs.accommodationMin)} – ${fmtNaira(costs.accommodationMax)} / night`;
 			html +=
 				`<tr class="wt__cost-row">` +
 				`<td class="wt__cost-row-label">Accommodation</td>` +
-				`<td class="wt__cost-row-amount">${fmtNaira(accTotal)}</td>` +
+				`<td class="wt__cost-row-amount wt__cost-tbc">${rangeLabel}</td>` +
+				`</tr>` +
+				`<tr class="wt__cost-sub-row">` +
+				`<td class="wt__cost-sub-label">${nightsCount > 0 ? `${nightsCount} nights · ` : ""}not required now — paid separately</td>` +
+				`<td class="wt__cost-sub-amount"></td>` +
 				`</tr>`;
-			if (nightsCount > 0) {
-				html +=
-					`<tr class="wt__cost-sub-row">` +
-					`<td class="wt__cost-sub-label">${nightsCount} nights × ${fmtNaira(costs.accommodationPerNight)}</td>` +
-					`<td class="wt__cost-sub-amount"></td>` +
-					`</tr>`;
-			}
-			total += accTotal;
 		}
 
 		costSummary.hidden = false;
@@ -296,6 +306,7 @@ const mountCostSummary = (form: HTMLFormElement): void => {
 	for (const name of [
 		WEDDING_TRAIN_FIELD.outfit,
 		WEDDING_TRAIN_FIELD.outfitTier,
+		WEDDING_TRAIN_FIELD.outfitSelfConfirm,
 		WEDDING_TRAIN_FIELD.accommodation,
 		WEDDING_TRAIN_FIELD.accommodationNights,
 	]) {
@@ -410,5 +421,13 @@ export const mountWeddingTrainPage = (): void => {
 		success.hidden = false;
 		scrollSuccessBelowHeader(success);
 		success.focus({ preventScroll: true });
+
+		const measurementNote = document.getElementById("wt-success-measurement");
+		if (measurementNote) {
+			const outfitVal = form.querySelector<HTMLInputElement>(
+				`input[name="${WEDDING_TRAIN_FIELD.outfit}"]:checked`,
+			)?.value;
+			measurementNote.hidden = outfitVal !== "team_organises";
+		}
 	});
 };

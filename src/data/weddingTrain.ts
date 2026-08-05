@@ -5,30 +5,49 @@ export interface ScheduleItem {
 }
 
 export const TRAD_SCHEDULE: ScheduleItem[] = [
-	{ time: "10:00am", label: "Meet up in Umuahia", desc: "Meeting point to be communicated" },
-	{
-		time: "11:00am",
-		label: "Commute to Bende LGA",
-		desc: "Ensure you're at the meeting point on time to avoid missing out",
-	},
-	{
-		time: "1:00pm",
-		label: "Traditional Marriage",
-		desc: "Onuoha's Country Home, Okai-Item, Bende LGA, Abia State",
-	},
+  {
+    time: "9:00am",
+    label: "General Pictures with Bridal / Groom Train",
+    desc: "Location TBC",
+  },
+  {
+    time: "11:00am",
+    label: "Depart for Okai Item",
+    desc: "Okai Item, Abia State",
+  },
+  {
+    time: "12:00pm",
+    label: "Arrive Onuoha's Compound"
+  },
+  { time: "1:00pm", label: "Traditional Ceremony Begins", desc: "Onuoha's Compound, Okai Item" },
+  {
+    time: "5:00pm",
+    label: "Party Continues till late",
+    desc: "Head back to Umuahia",
+  },
 ];
 
 export const CHURCH_SCHEDULE: ScheduleItem[] = [
-	{ time: "11:00am", label: "Church Ceremony", desc: "Methodist Theological Institute (MTI), Umuahia" },
-	{ time: "2:00pm", label: "Wedding Reception", desc: "International Conference Centre (ICC), Umuahia" },
-	{ time: "5:00pm", label: "After Party", desc: "International Conference Centre (ICC), Umuahia" },
+  {
+    time: "9:00am",
+    label: "General Pictures with Bridal / Groom Train",
+    desc: "Location TBC",
+  },
+  {
+    time: "11:00am",
+    label: "Arrive Church",
+    desc: "Rhema Chapel (MTI), Umuahia",
+  },
+  { time: "12:00pm", label: "Bridal Procession" },
+  {
+    time: "2:00pm",
+    label: "Wedding Reception",
+    desc: "International Conference Centre (ICC), Umuahia",
+  },
+  { time: "5:00pm", label: "After Party", desc: "Till late" },
 ];
 
-export type OutfitTierValue =
-	| "material_only"
-	| "accessories_only"
-	| "material_tailoring"
-	| "material_tailoring_accessories";
+export type OutfitTierValue = "material_only" | "material_tailoring";
 
 export interface OutfitTier {
 	label: string;
@@ -36,13 +55,8 @@ export interface OutfitTier {
 }
 
 export const OUTFIT_TIERS: OutfitTier[] = [
-  {
-    label: "All Inclusive",
-    value: "material_tailoring_accessories",
-  },
-  { label: "Materials + Tailoring", value: "material_tailoring" },
-  { label: "Materials only", value: "material_only" },
-  { label: "Accessories only", value: "accessories_only" },
+	{ label: "Full service", value: "material_tailoring" },
+	{ label: "Material only", value: "material_only" },
 ];
 
 export interface AccommodationNightOption {
@@ -53,28 +67,28 @@ export interface AccommodationNightOption {
 }
 
 export const ACCOMMODATION_NIGHTS: AccommodationNightOption[] = [
-	{
-		label: "3 nights",
-		value: "3",
-		desc: "Arrive Sat 2 Jan, rest Sun 3 Jan, attend wedding Mon 4 Jan — checkout in the morning before the ceremony",
-		note: "Provision will be made for bag storage so you can enjoy the wedding without your luggage.",
-	},
-	{
-		label: "4 nights",
-		value: "4",
-		desc: "As above, with one extra night after the wedding before heading home",
-	},
+  {
+    label: "3 Nights",
+    value: "3",
+    desc: "Arrive on Saturday, 2 January, attend the Traditional Marriage (ideal for those travelling from nearby or arriving early), stay through the Church Wedding on Monday, 4 January, and depart on Tuesday, 5 January.",
+    note: "This option allows you to spend New Year's Day with your family before travelling. Secure luggage storage will be available if you check out before the Church Wedding.",
+  },
+  {
+    label: "4 Nights (Recommended)",
+    value: "4",
+    desc: "Arrive on Friday, 1 January, settle in ahead of the celebrations, attend both the Traditional Marriage and Church Wedding, and depart on Tuesday, 5 January.",
+    note: "Recommended for guests travelling from farther away or anyone who prefers a more relaxed schedule before the wedding celebrations.",
+  }
 ];
 
-// All values in Naira. 0 = TBC — renders as ₦— in the UI.
 export const COSTS = {
 	logistics: 5000,
-	tradOutfitMaterial: 1000,
-	tradOutfitTailoring: 1500,
-	tradOutfitAccessories: 500,
-	churchOutfitMaterial: 1000,
-	churchOutfitTailoring: 1500,
-	accommodationPerNight: 1000,
+	tradOutfitMaterial: 30000,
+	tradOutfitTailoring: 20000,
+	tradOutfitAccessories: 0,
+	churchOutfitFull: 200000,
+	accommodationPerNightMin: 20000,
+	accommodationPerNightMax: 35000,
 };
 
 export const ACCOUNT = {

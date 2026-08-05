@@ -5,6 +5,7 @@ export const WEDDING_TRAIN_FIELD = {
 	accommodationNights: "accommodation_nights",
 	outfit: "outfit",
 	outfitTier: "outfit_tier",
+	outfitSelfConfirm: "outfit_self_confirm",
 	commitAttend: "commit_attend",
 	commitOutfit: "commit_outfit",
 	commitTravel: "commit_travel",
@@ -17,11 +18,7 @@ export type WeddingTrainRole = "train" | "groomsman" | "unknown";
 export type AccommodationChoice = "team_arrange" | "self_arrange";
 export type AccommodationNightsChoice = "3" | "4";
 export type OutfitChoice = "team_organises" | "self_source";
-export type OutfitTierChoice =
-	| "material_only"
-	| "accessories_only"
-	| "material_tailoring"
-	| "material_tailoring_accessories";
+export type OutfitTierChoice = "material_only" | "material_tailoring";
 export type FinalDecision = "honoured" | "unable";
 
 export type WeddingTrainFormValues = {
@@ -31,6 +28,7 @@ export type WeddingTrainFormValues = {
 	accommodation_nights: AccommodationNightsChoice | "";
 	outfit: OutfitChoice;
 	outfit_tier: OutfitTierChoice | "";
+	outfit_self_confirm: boolean;
 	commit_attend: boolean;
 	commit_outfit: boolean;
 	commit_travel: boolean;
@@ -44,12 +42,7 @@ export type WeddingTrainRecord = WeddingTrainFormValues;
 const ACCOMMODATION_VALUES: ReadonlySet<string> = new Set(["team_arrange", "self_arrange"]);
 const ACCOMMODATION_NIGHTS_VALUES: ReadonlySet<string> = new Set(["3", "4"]);
 const OUTFIT_VALUES: ReadonlySet<string> = new Set(["team_organises", "self_source"]);
-const OUTFIT_TIER_VALUES: ReadonlySet<string> = new Set([
-	"material_only",
-	"accessories_only",
-	"material_tailoring",
-	"material_tailoring_accessories",
-]);
+const OUTFIT_TIER_VALUES: ReadonlySet<string> = new Set(["material_only", "material_tailoring"]);
 const FINAL_DECISION_VALUES: ReadonlySet<string> = new Set(["honoured", "unable"]);
 const ROLE_VALUES: ReadonlySet<string> = new Set(["train", "groomsman"]);
 
@@ -63,6 +56,7 @@ export type WeddingTrainRawFields = {
 	accommodation_nights: string;
 	outfit: string;
 	outfit_tier: string;
+	outfit_self_confirm: boolean;
 	commit_attend: boolean;
 	commit_outfit: boolean;
 	commit_travel: boolean;
@@ -78,6 +72,7 @@ export const parseWeddingTrainFormData = (fd: FormData): WeddingTrainRawFields =
 	accommodation_nights: String(fd.get(WEDDING_TRAIN_FIELD.accommodationNights) ?? "").trim(),
 	outfit: String(fd.get(WEDDING_TRAIN_FIELD.outfit) ?? "").trim(),
 	outfit_tier: String(fd.get(WEDDING_TRAIN_FIELD.outfitTier) ?? "").trim(),
+	outfit_self_confirm: checkboxOn(fd, WEDDING_TRAIN_FIELD.outfitSelfConfirm),
 	commit_attend: checkboxOn(fd, WEDDING_TRAIN_FIELD.commitAttend),
 	commit_outfit: checkboxOn(fd, WEDDING_TRAIN_FIELD.commitOutfit),
 	commit_travel: checkboxOn(fd, WEDDING_TRAIN_FIELD.commitTravel),
@@ -120,6 +115,8 @@ export const validateWeddingTrainForm = (
 			fieldErrors[WEDDING_TRAIN_FIELD.outfit] = "Please select an outfit preference.";
 		} else if (raw.outfit === "team_organises" && !OUTFIT_TIER_VALUES.has(raw.outfit_tier)) {
 			fieldErrors[WEDDING_TRAIN_FIELD.outfitTier] = "Please select an outfit option.";
+		} else if (raw.outfit === "self_source" && !raw.outfit_self_confirm) {
+			fieldErrors[WEDDING_TRAIN_FIELD.outfitSelfConfirm] = "Please confirm you will follow the outfit guidelines.";
 		}
 	}
 
@@ -144,6 +141,7 @@ export const validateWeddingTrainForm = (
 			outfit_tier: OUTFIT_TIER_VALUES.has(raw.outfit_tier)
 				? (raw.outfit_tier as OutfitTierChoice)
 				: "",
+			outfit_self_confirm: raw.outfit_self_confirm,
 			commit_attend: raw.commit_attend,
 			commit_outfit: raw.commit_outfit,
 			commit_travel: raw.commit_travel,

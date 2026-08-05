@@ -36,15 +36,7 @@ const roleLabel = isGroomsman
 
 const tradTierPrice = (v: string) => {
 	if (v === "material_only") return COSTS.tradOutfitMaterial;
-	if (v === "accessories_only") return COSTS.tradOutfitAccessories;
-	if (v === "material_tailoring") return COSTS.tradOutfitMaterial + COSTS.tradOutfitTailoring;
-	return COSTS.tradOutfitMaterial + COSTS.tradOutfitTailoring + COSTS.tradOutfitAccessories;
-};
-const churchTierPrice = (v: string) => {
-	if (v === "material_only") return COSTS.churchOutfitMaterial;
-	if (v === "accessories_only") return 0;
-	if (v === "material_tailoring") return COSTS.churchOutfitMaterial + COSTS.churchOutfitTailoring;
-	return COSTS.churchOutfitMaterial + COSTS.churchOutfitTailoring;
+	return COSTS.tradOutfitMaterial + COSTS.tradOutfitTailoring;
 };
 ---
 
@@ -147,17 +139,14 @@ const churchTierPrice = (v: string) => {
 								))}
 							</ol>
 							<div class="wt__tiers-block">
-								<p class="wt__tiers-name">Church outfit</p>
+								<p class="wt__tiers-name">Church outfit — Tux</p>
 								<div class="wt__outfit-tiers">
-									{OUTFIT_TIERS.map(({ label, value }) => (
-										<div class="wt__outfit-tier">
-											<p class="wt__tier-label">{label}</p>
-											<p class="wt__tier-price">
-												{fmtNaira(churchTierPrice(value))}
-											</p>
-										</div>
-									))}
+									<div class="wt__outfit-tier">
+										<p class="wt__tier-label">Made with vendor</p>
+										<p class="wt__tier-price">{fmtNaira(COSTS.churchOutfitFull)}</p>
+									</div>
 								</div>
+								<p class="wt__tiers-note">Advised — ensures all tuxes are in sync</p>
 							</div>
 						</div>
 					</div>
@@ -199,15 +188,14 @@ const churchTierPrice = (v: string) => {
 						class="wt__form"
 						novalidate
 						method="post"
-						onsubmit="event.preventDefault()"
+						onsubmit="return false"
 						data-role={role}
 						data-cost-logistics={COSTS.logistics}
-						data-cost-accommodation-per-night={COSTS.accommodationPerNight}
+						data-cost-accommodation-per-night-min={COSTS.accommodationPerNightMin}
+						data-cost-accommodation-per-night-max={COSTS.accommodationPerNightMax}
 						data-cost-trad-outfit-material={COSTS.tradOutfitMaterial}
 						data-cost-trad-outfit-tailoring={COSTS.tradOutfitTailoring}
-						data-cost-trad-outfit-accessories={COSTS.tradOutfitAccessories}
-						data-cost-church-outfit-material={COSTS.churchOutfitMaterial}
-						data-cost-church-outfit-tailoring={COSTS.churchOutfitTailoring}
+						data-cost-church-outfit-full={COSTS.churchOutfitFull}
 					>
 						<p
 							id="wt-form-summary"
@@ -246,7 +234,7 @@ const churchTierPrice = (v: string) => {
 						<RsvpSection
 							headingId="wt-accommodation-heading"
 							title="Accommodation & Logistics"
-							lede="Everyone makes their own way to Abia State. The team can arrange your accommodation within Abia for the wedding events — or you're welcome to sort your own."
+							lede="Everyone makes their own way to Abia State. The team can arrange your accommodation within Abia for the wedding events — rooms are shared. Reach out if you'd prefer a private room."
 						>
 							<FormChoiceGroup
 								legend="Accommodation preference"
@@ -306,9 +294,19 @@ const churchTierPrice = (v: string) => {
 									name={WEDDING_TRAIN_FIELD.outfit}
 									value="self_source"
 								>
-									I'll source my own outfit and follow the guidelines
+									I'll source my own outfit
 								</FormChoice>
 							</FormChoiceGroup>
+
+							<div id="wt-outfit-self-source" class="wt__outfit-self-sub" hidden>
+								<FormCheck
+									id="wt-check-outfit-self-confirm"
+									name={WEDDING_TRAIN_FIELD.outfitSelfConfirm}
+								>
+									I confirm I will follow the outfit guidelines provided
+								</FormCheck>
+								<p id={`wt-error-${WEDDING_TRAIN_FIELD.outfitSelfConfirm}`} class="wt__self-confirm-error" hidden />
+							</div>
 
 							<div id="wt-outfit-tier" class="wt__outfit-tier-sub" hidden>
 								<FormChoiceGroup
@@ -338,7 +336,7 @@ const churchTierPrice = (v: string) => {
 									name={WEDDING_TRAIN_FIELD.commitAttend}
 								>
 									I understand the commitment involved and will be
-									available for the scheduled activities.
+									available.
 								</FormCheck>
 								<FormCheck
 									id="wt-check-commit-outfit"
@@ -385,7 +383,7 @@ const churchTierPrice = (v: string) => {
 								<tbody id="wt-cost-rows"></tbody>
 								<tfoot>
 									<tr class="wt__cost-total-row">
-										<td>Total</td>
+										<td>Amount due now</td>
 										<td id="wt-cost-total" class="wt__cost-total-value">₦—</td>
 									</tr>
 								</tfoot>
@@ -459,53 +457,45 @@ const churchTierPrice = (v: string) => {
 							<div class="wt__itinerary">
 								<p class="wt__account-heading">Itinerary</p>
 								<div class="wt__itinerary-day">
-									<p class="wt__itinerary-date">Sunday, 2nd</p>
+									<p class="wt__itinerary-date">Saturday, 2 January — Traditional Marriage</p>
 									<ol class="wt__itinerary-list">
-										<li>
-											<span class="wt__itinerary-time">10:00 AM</span>
-											Arrive at meeting point <span class="wt__itinerary-note">(TBC)</span>
-										</li>
-										<li>
-											<span class="wt__itinerary-time">11:00 AM</span>
-											Depart for traditional marriage venue
-										</li>
-										<li>
-											<span class="wt__itinerary-time">1:00 PM</span>
-											Occasion starts
-										</li>
+										{TRAD_SCHEDULE.map(({ time, label, desc }) => (
+											<li>
+												<span class="wt__itinerary-time">{time}</span>
+												<span>
+													{label}
+													{desc && <span class="wt__itinerary-note"> — {desc}</span>}
+												</span>
+											</li>
+										))}
 									</ol>
 								</div>
 								<div class="wt__itinerary-day">
-									<p class="wt__itinerary-date">Monday, 3rd</p>
+									<p class="wt__itinerary-date">Monday, 4 January — Church Wedding</p>
 									<ol class="wt__itinerary-list">
-										<li>
-											<span class="wt__itinerary-time">6:00 AM</span>
-											5k morning run
+										<li class="wt__itinerary-item--optional">
+											<span class="wt__itinerary-time">~6:00am</span>
+											<span>
+												5k morning run
+												<span class="wt__itinerary-note"> — optional</span>
+											</span>
 										</li>
-										<li>
-											<span class="wt__itinerary-time">7:00 AM</span>
-											Briefing at the reception venue
-										</li>
-										<li>
-											<span class="wt__itinerary-time">8:00 AM</span>
-											Breakfast &amp; getting ready
-										</li>
-										<li>
-											<span class="wt__itinerary-time">9:30 AM</span>
-											Visit the bride &amp; her girls
-										</li>
-										<li>
-											<span class="wt__itinerary-time">10:00 AM</span>
-											Ready for pictures
-										</li>
-										<li>
-											<span class="wt__itinerary-time">10:30 AM</span>
-											Head to church
-										</li>
+										{CHURCH_SCHEDULE.map(({ time, label, desc }) => (
+											<li>
+												<span class="wt__itinerary-time">{time}</span>
+												<span>
+													{label}
+													{desc && <span class="wt__itinerary-note"> — {desc}</span>}
+												</span>
+											</li>
+										))}
 									</ol>
 								</div>
 							</div>
 						)}
+						<p id="wt-success-measurement" class="wt__success-measurement" hidden>
+							We'll be in touch to collect your measurements — please respond promptly when we reach out.
+						</p>
 						<div class="wt__account wt__success-payment">
 							<p class="wt__account-heading">Payment details</p>
 							<dl class="wt__account-dl">
@@ -633,11 +623,13 @@ const churchTierPrice = (v: string) => {
 	.wt__info-img-wrap {
 		width: 100%;
 		overflow: hidden;
+		height: clamp(700px, 30vw, 280px);
 	}
 
 	.wt__info-img {
 		width: 100%;
-		height: auto;
+		height: 100%;
+		object-fit: cover;
 		display: block;
 	}
 
@@ -885,6 +877,7 @@ const churchTierPrice = (v: string) => {
 		line-height: 1.55;
 		color: #4a3d32;
 		font-style: italic;
+		text-align: center;
 	}
 
 	/* ── Accommodation nights sub-group ───────────────────────────── */
@@ -923,6 +916,33 @@ const churchTierPrice = (v: string) => {
 		border-radius: 0.35rem;
 		background: rgb(201 168 124 / 0.15);
 		border-left: 2px solid rgb(201 168 124 / 0.6);
+	}
+
+	/* ── Self-source confirmation sub-group ──────────────────────── */
+	.wt__outfit-self-sub {
+		margin-top: 0.75rem;
+		padding: 0.85rem 1rem;
+		border-radius: 0.65rem;
+		border: 1px solid rgb(201 168 124 / 0.35);
+		background: rgb(255 255 255 / 0.4);
+		display: flex;
+		flex-direction: column;
+		gap: 0.45rem;
+	}
+
+	.wt__outfit-self-sub[hidden] {
+		display: none !important;
+	}
+
+	.wt__self-confirm-error {
+		margin: 0;
+		font-size: 0.82rem;
+		font-weight: 600;
+		color: #b54a3a;
+	}
+
+	.wt__self-confirm-error[hidden] {
+		display: none !important;
 	}
 
 	/* ── Outfit tier sub-group ────────────────────────────────────── */
@@ -1032,6 +1052,12 @@ const churchTierPrice = (v: string) => {
 		text-align: right;
 		white-space: nowrap;
 		padding-left: 1rem;
+	}
+
+	:global(.wt__cost-tbc) {
+		color: var(--text-muted);
+		font-style: italic;
+		font-weight: 500;
 	}
 
 	/* ── Response trigger ──────────────────────────────────────────── */
@@ -1376,6 +1402,33 @@ const churchTierPrice = (v: string) => {
 		font-size: 0.85em;
 	}
 
+	.wt__itinerary-item--optional {
+		opacity: 0.6;
+		font-style: italic;
+	}
+
+	.wt__tiers-note {
+		margin: 0;
+		font-size: 0.8rem;
+		font-style: italic;
+		color: var(--text-muted);
+	}
+
+	.wt__success-measurement {
+		padding: 0.75rem 1rem;
+		border-radius: 0.6rem;
+		border: 1px solid rgb(201 168 124 / 0.4);
+		background: linear-gradient(135deg, rgb(255 251 243 / 0.95) 0%, rgb(245 232 214 / 0.45) 100%);
+		font-size: 0.88rem;
+		line-height: 1.5;
+		color: #4a3d32;
+		font-style: italic;
+	}
+
+	.wt__success-measurement[hidden] {
+		display: none !important;
+	}
+
 	:global(.wt-page.hero-page) {
 		overflow-x: visible;
 		min-height: 100vh;
@@ -1398,4 +1451,5 @@ const churchTierPrice = (v: string) => {
 			background-position: center top;
 		}
 	}
+
 </style>
