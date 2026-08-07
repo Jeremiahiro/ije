@@ -8,7 +8,7 @@ export const TRAD_SCHEDULE: ScheduleItem[] = [
   {
     time: "9:00am",
     label: "General Pictures with Bridal / Groom Train",
-    desc: "Location TBC",
+    desc: "Umuahia - Location TBC",
   },
   {
     time: "11:00am",
@@ -31,7 +31,7 @@ export const CHURCH_SCHEDULE: ScheduleItem[] = [
   {
     time: "9:00am",
     label: "General Pictures with Bridal / Groom Train",
-    desc: "Location TBC",
+    desc: "Umuahia - Location TBC",
   },
   {
     time: "11:00am",
