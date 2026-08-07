@@ -271,6 +271,7 @@ const mountCostSummary = (form: HTMLFormElement): void => {
 			accommodationMax: Number(form.dataset.costAccommodationPerNightMax ?? 0),
 			tradMaterial: Number(form.dataset.costTradOutfitMaterial ?? 0),
 			tradTailoring: Number(form.dataset.costTradOutfitTailoring ?? 0),
+			tradAccessories: Number(form.dataset.costTradOutfitAccessories ?? 0),
 			churchFull: Number(form.dataset.costChurchOutfitFull ?? 0),
 		};
 
@@ -280,6 +281,17 @@ const mountCostSummary = (form: HTMLFormElement): void => {
 			`<td class="wt__cost-row-amount">${fmtNaira(costs.logistics)}</td>` +
 			`</tr>`;
 		let total = costs.logistics;
+
+		html +=
+			`<tr class="wt__cost-row">` +
+			`<td class="wt__cost-row-label">Traditional accessories</td>` +
+			`<td class="wt__cost-row-amount">${fmtNaira(costs.tradAccessories)}</td>` +
+			`</tr>` +
+			`<tr class="wt__cost-sub-row">` +
+			`<td class="wt__cost-sub-label">Mandatory for all attendees</td>` +
+			`<td class="wt__cost-sub-amount"></td>` +
+			`</tr>`;
+		total += costs.tradAccessories;
 
 		if (teamSourcing) {
 			const includesChurch = effectiveScope === "both" || effectiveScope === "church_only";
@@ -306,18 +318,6 @@ const mountCostSummary = (form: HTMLFormElement): void => {
 					`<td class="wt__cost-sub-amount"></td>` +
 					`</tr>`;
 				total += costs.churchFull;
-			}
-
-			if (includesTrad && tier) {
-				html +=
-					`<tr class="wt__cost-row">` +
-					`<td class="wt__cost-row-label">Accessories</td>` +
-					`<td class="wt__cost-row-amount">${fmtNaira(0)}</td>` +
-					`</tr>` +
-					`<tr class="wt__cost-sub-row">` +
-					`<td class="wt__cost-sub-label">Provided</td>` +
-					`<td class="wt__cost-sub-amount"></td>` +
-					`</tr>`;
 			}
 		}
 
