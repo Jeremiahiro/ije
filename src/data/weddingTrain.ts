@@ -85,7 +85,7 @@ export const COSTS = {
 	logistics: 5000,
 	tradOutfitMaterial: 30000,
 	tradOutfitTailoring: 20000,
-	tradOutfitAccessories: 0,
+	tradOutfitAccessories: 15000,
 	churchOutfitFull: 200000,
 	accommodationPerNightMin: 20000,
 	accommodationPerNightMax: 35000,

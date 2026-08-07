@@ -113,6 +113,15 @@ const tradTierPrice = (v: string) => {
 								))}
 							</div>
 						</div>
+						<div class="wt__tiers-block">
+							<p class="wt__tiers-name">Traditional accessories</p>
+							<div class="wt__outfit-tiers">
+								<div class="wt__outfit-tier">
+									<p class="wt__tier-label">Mandatory for all attendees</p>
+									<p class="wt__tier-price">{fmtNaira(COSTS.tradOutfitAccessories)}</p>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 
@@ -199,6 +208,7 @@ const tradTierPrice = (v: string) => {
 						data-cost-trad-outfit-material={COSTS.tradOutfitMaterial}
 						data-cost-trad-outfit-tailoring={COSTS.tradOutfitTailoring}
 						data-cost-church-outfit-full={COSTS.churchOutfitFull}
+					data-cost-trad-outfit-accessories={COSTS.tradOutfitAccessories}
 					>
 						<p
 							id="wt-form-summary"
