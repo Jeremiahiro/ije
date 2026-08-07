@@ -26,13 +26,16 @@ interface Props {
 
 const { name, role } = Astro.props;
 
-const isGroomsman = role === "groomsman";
+const isGroomsman = role === "groomsman" || role === "both";
 const isValid = role !== "unknown";
 
 const thankYouWriteChars = ["T", "h", "a", "n", "k", " ", "y", "o", "u"];
-const roleLabel = isGroomsman
-	? "Groomsman — Traditional Marriage & Church Wedding"
-	: "Wedding Train Guest — Traditional Marriage";
+const roleItems =
+	role === "both"
+		? ["Wedding Train — Traditional Marriage", "Groomsman — Church Wedding"]
+		: role === "groomsman"
+			? ["Groomsman — Church Wedding"]
+			: ["Wedding Train — Traditional Marriage"];
 
 const tradTierPrice = (v: string) => {
 	if (v === "material_only") return COSTS.tradOutfitMaterial;
@@ -146,7 +149,7 @@ const tradTierPrice = (v: string) => {
 										<p class="wt__tier-price">{fmtNaira(COSTS.churchOutfitFull)}</p>
 									</div>
 								</div>
-								<p class="wt__tiers-note">Advised — ensures all tuxes are in sync</p>
+								<p class="wt__tiers-note">Advised — ensures all tuxes are in sync but you can use your own vendor</p>
 							</div>
 						</div>
 					</div>
@@ -221,7 +224,14 @@ const tradTierPrice = (v: string) => {
 							/>
 							<div class="wt__role-row">
 								<p class="wt__role-label">Participating as</p>
-								<p class="wt__role-value">{roleLabel}</p>
+								<ul class="wt__role-list">
+									{roleItems.map((item) => (
+										<li class="wt__role-item">
+											<span class="wt__role-check" aria-hidden="true">✓</span>
+											{item}
+										</li>
+									))}
+								</ul>
 							</div>
 							<input
 								type="hidden"
@@ -1153,7 +1163,7 @@ const tradTierPrice = (v: string) => {
 	.wt__role-row {
 		display: flex;
 		flex-direction: column;
-		gap: 0.3rem;
+		gap: 0.5rem;
 	}
 
 	.wt__role-label {
@@ -1163,12 +1173,30 @@ const tradTierPrice = (v: string) => {
 		color: #4a3d32;
 	}
 
-	.wt__role-value {
+	.wt__role-list {
 		margin: 0;
+		padding: 0;
+		list-style: none;
+		display: flex;
+		flex-direction: column;
+		gap: 0.35rem;
+	}
+
+	.wt__role-item {
+		display: flex;
+		align-items: baseline;
+		gap: 0.5rem;
 		font-size: 0.95rem;
 		font-weight: 500;
 		color: var(--text-muted);
 		font-style: italic;
+	}
+
+	.wt__role-check {
+		font-style: normal;
+		font-weight: 700;
+		color: #6e523c;
+		flex-shrink: 0;
 	}
 
 	/* ── Commitments ───────────────────────────────────────────────── */

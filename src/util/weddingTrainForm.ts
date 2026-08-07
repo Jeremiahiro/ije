@@ -14,7 +14,7 @@ export const WEDDING_TRAIN_FIELD = {
 	finalDecision: "final_decision",
 } as const;
 
-export type WeddingTrainRole = "train" | "groomsman" | "unknown";
+export type WeddingTrainRole = "train" | "groomsman" | "both" | "unknown";
 export type AccommodationChoice = "team_arrange" | "self_arrange";
 export type AccommodationNightsChoice = "3" | "4";
 export type OutfitChoice = "team_organises" | "self_source";
