@@ -41,6 +41,8 @@ const tradTierPrice = (v: string) => {
 	if (v === "material_only") return COSTS.tradOutfitMaterial;
 	return COSTS.tradOutfitMaterial + COSTS.tradOutfitTailoring;
 };
+
+const displayName = name.split(" ")[0]
 ---
 
 {
@@ -63,7 +65,7 @@ const tradTierPrice = (v: string) => {
 		>
 			<header class="wt__intro">
 				<h1 id="wt-heading" class="wt__title">
-					{name ? `Hello ${name}` : "Hello"}
+					{displayName ? `Hello ${displayName}` : "Hello"},
 				</h1>
 				<p class="wt__lede text-balance">
 					Thank you for being someone I value enough to invite to be part
