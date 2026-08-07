@@ -65,7 +65,7 @@ const tradTierPrice = (v: string) => {
 				<h1 id="wt-heading" class="wt__title">
 					{name ? `Hello ${name}` : "Hello"}
 				</h1>
-				<p class="wt__lede">
+				<p class="wt__lede text-balance">
 					Thank you for being someone I value enough to invite to be part
 					of one of the most important moments of my life.
 				</p>
@@ -244,7 +244,7 @@ const tradTierPrice = (v: string) => {
 						<RsvpSection
 							headingId="wt-accommodation-heading"
 							title="Accommodation & Logistics"
-							lede="Everyone makes their own way to Abia State. The team can arrange your accommodation within Abia for the wedding events — rooms are shared. Reach out if you'd prefer a private room."
+							lede="Everyone makes their own way to Abia State. The team can arrange your accommodation within Abia for the wedding events — rooms are shared and comes at a cost. Reach out if you'd prefer a private room."
 						>
 							<FormChoiceGroup
 								legend="Accommodation preference"
@@ -308,6 +308,34 @@ const tradTierPrice = (v: string) => {
 								</FormChoice>
 							</FormChoiceGroup>
 
+							{isGroomsman && (
+								<div id="wt-outfit-scope" class="wt__outfit-scope-sub" hidden>
+									<FormChoiceGroup
+										legend="Which outfit(s)?"
+										errorId={`wt-error-${WEDDING_TRAIN_FIELD.outfitScope}`}
+									>
+										<FormChoice
+											name={WEDDING_TRAIN_FIELD.outfitScope}
+											value="both"
+										>
+											Both (Traditional &amp; Church)
+										</FormChoice>
+										<FormChoice
+											name={WEDDING_TRAIN_FIELD.outfitScope}
+											value="trad_only"
+										>
+											Traditional only
+										</FormChoice>
+										<FormChoice
+											name={WEDDING_TRAIN_FIELD.outfitScope}
+											value="church_only"
+										>
+											Church only
+										</FormChoice>
+									</FormChoiceGroup>
+								</div>
+							)}
+
 							<div id="wt-outfit-self-source" class="wt__outfit-self-sub" hidden>
 								<FormCheck
 									id="wt-check-outfit-self-confirm"
@@ -320,7 +348,7 @@ const tradTierPrice = (v: string) => {
 
 							<div id="wt-outfit-tier" class="wt__outfit-tier-sub" hidden>
 								<FormChoiceGroup
-									legend="Which service would you like?"
+									legend="Traditional outfit — service level"
 									errorId={`wt-error-${WEDDING_TRAIN_FIELD.outfitTier}`}
 								>
 									{OUTFIT_TIERS.map(({ label, value }) => (
@@ -344,39 +372,46 @@ const tradTierPrice = (v: string) => {
 								<FormCheck
 									id="wt-check-commit-attend"
 									name={WEDDING_TRAIN_FIELD.commitAttend}
+									required
 								>
-									I understand the commitment involved and will be
-									available.
+									I understand the commitment involved and will be available.
 								</FormCheck>
+								<p id={`wt-error-${WEDDING_TRAIN_FIELD.commitAttend}`} class="wt__commit-error" hidden />
 								<FormCheck
 									id="wt-check-commit-outfit"
 									name={WEDDING_TRAIN_FIELD.commitOutfit}
+									required
 								>
-									I agree to wear the agreed outfit or follow the
-									provided guidelines.
+									I agree to wear the agreed outfit or follow the provided guidelines.
 								</FormCheck>
+								<p id={`wt-error-${WEDDING_TRAIN_FIELD.commitOutfit}`} class="wt__commit-error" hidden />
 								<FormCheck
 									id="wt-check-commit-travel"
 									name={WEDDING_TRAIN_FIELD.commitTravel}
+									required
 								>
-									I understand I am responsible for making my own way to
-									Abia State.
+									I understand I am responsible for making my own way to Abia State.
 								</FormCheck>
+								<p id={`wt-error-${WEDDING_TRAIN_FIELD.commitTravel}`} class="wt__commit-error" hidden />
 								<FormCheck
 									id="wt-check-commit-contact"
 									name={WEDDING_TRAIN_FIELD.commitContact}
+									required
 								>
-									I understand that any costs I select above are my
-									responsibility.
+									I understand that any costs I select above are my responsibility.
 								</FormCheck>
+								<p id={`wt-error-${WEDDING_TRAIN_FIELD.commitContact}`} class="wt__commit-error" hidden />
 								{isGroomsman && (
-									<FormCheck
-										id="wt-check-commit-church"
-										name={WEDDING_TRAIN_FIELD.commitChurch}
-									>
-										I understand my role extends to the church wedding on
-										4 January 2027.
-									</FormCheck>
+									<>
+										<FormCheck
+											id="wt-check-commit-church"
+											name={WEDDING_TRAIN_FIELD.commitChurch}
+											required
+										>
+											I understand my role extends to the church wedding on 4 January 2027.
+										</FormCheck>
+										<p id={`wt-error-${WEDDING_TRAIN_FIELD.commitChurch}`} class="wt__commit-error" hidden />
+									</>
 								)}
 							</div>
 						</RsvpSection>
@@ -400,20 +435,20 @@ const tradTierPrice = (v: string) => {
 							</table>
 							<div class="wt__account">
 								<p class="wt__account-heading">Payment details</p>
-								<dl class="wt__account-dl">
-									<div class="wt__account-row">
-										<dt>Bank</dt>
-										<dd>{ACCOUNT.bank}</dd>
+								<div class="wt__account-lines">
+									<div class="wt__account-line">
+										<span class="wt__account-line-label">Bank</span>
+										<span class="wt__account-line-value">{ACCOUNT.bank}</span>
 									</div>
-									<div class="wt__account-row">
-										<dt>Account name</dt>
-										<dd>{ACCOUNT.name}</dd>
+									<div class="wt__account-line">
+										<span class="wt__account-line-label">Account name</span>
+										<span class="wt__account-line-value">{ACCOUNT.name}</span>
 									</div>
-									<div class="wt__account-row">
-										<dt>Account number</dt>
-										<dd class="wt__account-number">{ACCOUNT.number}</dd>
+									<div class="wt__account-line">
+										<span class="wt__account-line-label">Account number</span>
+										<span class="wt__account-line-value wt__account-number">{ACCOUNT.number}</span>
 									</div>
-								</dl>
+								</div>
 								<p class="wt__payment-deadline">
 									Payment due on or before {PAYMENT_DEADLINE}
 								</p>
@@ -456,30 +491,53 @@ const tradTierPrice = (v: string) => {
 						</span>
 					</p>
 					<p id="wt-success-copy-honour" class="wt__success-copy">
-						Your response is in — I can't wait to have you there with me.
+						Your response is in — I can't wait to have you there.
 					</p>
 					<p id="wt-success-copy-unable" class="wt__success-copy" hidden>
 						I completely understand. Thank you for taking the time to let
 						me know — I hope to see you very soon.
 					</p>
 					<div id="wt-success-honour-details" class="wt__success-honour-details">
-						{isGroomsman && (
-							<div class="wt__itinerary">
-								<p class="wt__account-heading">Itinerary</p>
-								<div class="wt__itinerary-day">
-									<p class="wt__itinerary-date">Saturday, 2 January — Traditional Marriage</p>
-									<ol class="wt__itinerary-list">
-										{TRAD_SCHEDULE.map(({ time, label, desc }) => (
-											<li>
-												<span class="wt__itinerary-time">{time}</span>
-												<span>
-													{label}
-													{desc && <span class="wt__itinerary-note"> — {desc}</span>}
-												</span>
-											</li>
-										))}
-									</ol>
+						<p id="wt-success-measurement" class="wt__success-measurement" hidden>
+							We'll be in touch to collect your measurements — please respond promptly when we reach out.
+						</p>
+						<div class="wt__account wt__success-payment">
+							<p class="wt__account-heading">Payment details</p>
+							<div class="wt__account-lines">
+								<div class="wt__account-line">
+									<span class="wt__account-line-label">Bank</span>
+									<span class="wt__account-line-value">{ACCOUNT.bank}</span>
 								</div>
+								<div class="wt__account-line">
+									<span class="wt__account-line-label">Account name</span>
+									<span class="wt__account-line-value">{ACCOUNT.name}</span>
+								</div>
+								<div class="wt__account-line">
+									<span class="wt__account-line-label">Account number</span>
+									<span class="wt__account-line-value wt__account-number">{ACCOUNT.number}</span>
+								</div>
+							</div>
+							<p class="wt__payment-deadline">
+								Payment due on or before {PAYMENT_DEADLINE}
+							</p>
+						</div>
+						<div class="wt__itinerary">
+							<p class="wt__account-heading">Itinerary</p>
+							<div class="wt__itinerary-day">
+								<p class="wt__itinerary-date">Saturday, 2 January — Traditional Marriage</p>
+								<ol class="wt__itinerary-list">
+									{TRAD_SCHEDULE.map(({ time, label, desc }) => (
+										<li>
+											<span class="wt__itinerary-time">{time}</span>
+											<span>
+												{label}
+												{desc && <span class="wt__itinerary-note"> — {desc}</span>}
+											</span>
+										</li>
+									))}
+								</ol>
+							</div>
+							{isGroomsman && (
 								<div class="wt__itinerary-day">
 									<p class="wt__itinerary-date">Monday, 4 January — Church Wedding</p>
 									<ol class="wt__itinerary-list">
@@ -501,30 +559,7 @@ const tradTierPrice = (v: string) => {
 										))}
 									</ol>
 								</div>
-							</div>
-						)}
-						<p id="wt-success-measurement" class="wt__success-measurement" hidden>
-							We'll be in touch to collect your measurements — please respond promptly when we reach out.
-						</p>
-						<div class="wt__account wt__success-payment">
-							<p class="wt__account-heading">Payment details</p>
-							<dl class="wt__account-dl">
-								<div class="wt__account-row">
-									<dt>Bank</dt>
-									<dd>{ACCOUNT.bank}</dd>
-								</div>
-								<div class="wt__account-row">
-									<dt>Account name</dt>
-									<dd>{ACCOUNT.name}</dd>
-								</div>
-								<div class="wt__account-row">
-									<dt>Account number</dt>
-									<dd class="wt__account-number">{ACCOUNT.number}</dd>
-								</div>
-							</dl>
-							<p class="wt__payment-deadline">
-								Payment due on or before {PAYMENT_DEADLINE}
-							</p>
+							)}
 						</div>
 					</div>
 				</div>
@@ -813,10 +848,11 @@ const tradTierPrice = (v: string) => {
 
 	.wt__account {
 		border-top: 1px solid rgb(201 168 124 / 0.35);
-		padding-top: 0.65rem;
+		padding-top: 0.75rem;
 		display: flex;
 		flex-direction: column;
-		gap: 0.45rem;
+		align-items: center;
+		gap: 0.6rem;
 	}
 
 	.wt__account-heading {
@@ -826,29 +862,29 @@ const tradTierPrice = (v: string) => {
 		letter-spacing: 0.07em;
 		text-transform: uppercase;
 		color: #6e523c;
+		text-align: center;
 	}
 
-	.wt__account-dl {
-		margin: 0;
+	.wt__account-lines {
 		display: flex;
 		flex-direction: column;
-		gap: 0.25rem;
+		gap: 0.3rem;
 	}
 
-	.wt__account-row {
-		display: grid;
-		grid-template-columns: 8rem 1fr;
-		gap: 0.5rem;
+	.wt__account-line {
+		display: flex;
+		gap: 0.65rem;
 		font-size: 0.88rem;
-		line-height: 1.4;
+		line-height: 1.45;
 	}
 
-	.wt__account-row dt {
+	.wt__account-line-label {
 		color: var(--text-muted);
+		min-width: 8rem;
+		flex-shrink: 0;
 	}
 
-	.wt__account-row dd {
-		margin: 0;
+	.wt__account-line-value {
 		font-weight: 600;
 		color: #4a3d32;
 	}
@@ -864,6 +900,19 @@ const tradTierPrice = (v: string) => {
 		font-size: 0.825rem;
 		color: var(--text-muted);
 		font-style: italic;
+		text-align: center;
+	}
+
+	/* ── Commitment errors ─────────────────────────────────────────── */
+	.wt__commit-error {
+		margin: -0.3rem 0 0 1.95rem;
+		font-size: 0.82rem;
+		font-weight: 600;
+		color: #b54a3a;
+	}
+
+	.wt__commit-error[hidden] {
+		display: none !important;
 	}
 
 	/* ── Form card ─────────────────────────────────────────────────── */
@@ -928,7 +977,8 @@ const tradTierPrice = (v: string) => {
 		border-left: 2px solid rgb(201 168 124 / 0.6);
 	}
 
-	/* ── Self-source confirmation sub-group ──────────────────────── */
+	/* ── Scope & self-source sub-groups ──────────────────────────── */
+	.wt__outfit-scope-sub,
 	.wt__outfit-self-sub {
 		margin-top: 0.75rem;
 		padding: 0.85rem 1rem;
@@ -940,6 +990,7 @@ const tradTierPrice = (v: string) => {
 		gap: 0.45rem;
 	}
 
+	.wt__outfit-scope-sub[hidden],
 	.wt__outfit-self-sub[hidden] {
 		display: none !important;
 	}

@@ -15,13 +15,24 @@ const ERROR_IDS = Object.values(WEDDING_TRAIN_FIELD).map((name) => `wt-error-${n
 const inputByField: Partial<Record<string, string>> = {
 	[WEDDING_TRAIN_FIELD.fullName]: "wt-field-full-name",
 	[WEDDING_TRAIN_FIELD.outfitSelfConfirm]: "wt-check-outfit-self-confirm",
+	[WEDDING_TRAIN_FIELD.commitAttend]: "wt-check-commit-attend",
+	[WEDDING_TRAIN_FIELD.commitOutfit]: "wt-check-commit-outfit",
+	[WEDDING_TRAIN_FIELD.commitTravel]: "wt-check-commit-travel",
+	[WEDDING_TRAIN_FIELD.commitContact]: "wt-check-commit-contact",
+	[WEDDING_TRAIN_FIELD.commitChurch]: "wt-check-commit-church",
 };
 
 const focusOrder = [
 	WEDDING_TRAIN_FIELD.fullName,
 	WEDDING_TRAIN_FIELD.accommodation,
 	WEDDING_TRAIN_FIELD.outfit,
+	WEDDING_TRAIN_FIELD.outfitScope,
 	WEDDING_TRAIN_FIELD.outfitTier,
+	WEDDING_TRAIN_FIELD.commitAttend,
+	WEDDING_TRAIN_FIELD.commitOutfit,
+	WEDDING_TRAIN_FIELD.commitTravel,
+	WEDDING_TRAIN_FIELD.commitContact,
+	WEDDING_TRAIN_FIELD.commitChurch,
 ];
 
 const RADIO_GROUP_FIELDS = new Set<string>([
@@ -175,6 +186,7 @@ const makeOutfitRows = (
 };
 
 const mountCostSummary = (form: HTMLFormElement): void => {
+	const scopeGroup = document.getElementById("wt-outfit-scope");
 	const tierGroup = document.getElementById("wt-outfit-tier");
 	const selfSourceGroup = document.getElementById("wt-outfit-self-source");
 	const nightsGroup = document.getElementById("wt-accommodation-nights");
@@ -186,14 +198,36 @@ const mountCostSummary = (form: HTMLFormElement): void => {
 		form.querySelector<HTMLInputElement>(`input[name="${name}"]:checked`)?.value ?? "";
 
 	const updateAll = (): void => {
+		const role = form.dataset.role ?? "";
 		const outfit = getVal(WEDDING_TRAIN_FIELD.outfit);
+		const scope = getVal(WEDDING_TRAIN_FIELD.outfitScope);
 		const tier = getVal(WEDDING_TRAIN_FIELD.outfitTier);
 		const accommodation = getVal(WEDDING_TRAIN_FIELD.accommodation);
 		const nights = getVal(WEDDING_TRAIN_FIELD.accommodationNights);
 
-		// Show / hide tier sub-group
+		const isGroomsmanRole = role === "groomsman" || role === "both";
+		const teamSourcing = outfit === "team_organises";
+
+		// Show / hide scope sub-group (groomsman/both only)
+		if (scopeGroup) {
+			const showScope = teamSourcing && isGroomsmanRole;
+			scopeGroup.hidden = !showScope;
+			if (!showScope) {
+				for (const r of form.querySelectorAll<HTMLInputElement>(
+					`input[name="${WEDDING_TRAIN_FIELD.outfitScope}"]`,
+				)) {
+					r.checked = false;
+				}
+			}
+		}
+
+		// Effective scope: groomsman/both reads the radio; train-only implies trad_only
+		const effectiveScope = isGroomsmanRole ? scope : "trad_only";
+		const includesTrad = effectiveScope === "both" || effectiveScope === "trad_only";
+
+		// Show / hide tier sub-group (only when trad is being sourced)
 		if (tierGroup) {
-			const showTier = outfit === "team_organises";
+			const showTier = teamSourcing && includesTrad && (!isGroomsmanRole || scope !== "");
 			tierGroup.hidden = !showTier;
 			if (!showTier) {
 				for (const r of form.querySelectorAll<HTMLInputElement>(
@@ -231,7 +265,6 @@ const mountCostSummary = (form: HTMLFormElement): void => {
 
 		if (!costSummary || !costRowsEl || !costTotalEl) return;
 
-		const role = form.dataset.role ?? "";
 		const costs = {
 			logistics: Number(form.dataset.costLogistics ?? 0),
 			accommodationMin: Number(form.dataset.costAccommodationPerNightMin ?? 0),
@@ -248,17 +281,21 @@ const mountCostSummary = (form: HTMLFormElement): void => {
 			`</tr>`;
 		let total = costs.logistics;
 
-		if (outfit === "team_organises" && tier) {
-			const trad = makeOutfitRows(
-				"Traditional outfit",
-				tier,
-				costs.tradMaterial,
-				costs.tradTailoring,
-			);
-			html += trad.html;
-			total += trad.total;
+		if (teamSourcing) {
+			const includesChurch = effectiveScope === "both" || effectiveScope === "church_only";
 
-			if (role === "groomsman") {
+			if (includesTrad && tier) {
+				const trad = makeOutfitRows(
+					"Traditional outfit",
+					tier,
+					costs.tradMaterial,
+					costs.tradTailoring,
+				);
+				html += trad.html;
+				total += trad.total;
+			}
+
+			if (includesChurch) {
 				html +=
 					`<tr class="wt__cost-row">` +
 					`<td class="wt__cost-row-label">Church outfit (Tux)</td>` +
@@ -271,15 +308,17 @@ const mountCostSummary = (form: HTMLFormElement): void => {
 				total += costs.churchFull;
 			}
 
-			html +=
-				`<tr class="wt__cost-row">` +
-				`<td class="wt__cost-row-label">Accessories</td>` +
-				`<td class="wt__cost-row-amount">${fmtNaira(0)}</td>` +
-				`</tr>` +
-				`<tr class="wt__cost-sub-row">` +
-				`<td class="wt__cost-sub-label">Provided</td>` +
-				`<td class="wt__cost-sub-amount"></td>` +
-				`</tr>`;
+			if (includesTrad && tier) {
+				html +=
+					`<tr class="wt__cost-row">` +
+					`<td class="wt__cost-row-label">Accessories</td>` +
+					`<td class="wt__cost-row-amount">${fmtNaira(0)}</td>` +
+					`</tr>` +
+					`<tr class="wt__cost-sub-row">` +
+					`<td class="wt__cost-sub-label">Provided</td>` +
+					`<td class="wt__cost-sub-amount"></td>` +
+					`</tr>`;
+			}
 		}
 
 		if (accommodation === "team_arrange") {
@@ -305,6 +344,7 @@ const mountCostSummary = (form: HTMLFormElement): void => {
 
 	for (const name of [
 		WEDDING_TRAIN_FIELD.outfit,
+		WEDDING_TRAIN_FIELD.outfitScope,
 		WEDDING_TRAIN_FIELD.outfitTier,
 		WEDDING_TRAIN_FIELD.outfitSelfConfirm,
 		WEDDING_TRAIN_FIELD.accommodation,
@@ -318,6 +358,40 @@ const mountCostSummary = (form: HTMLFormElement): void => {
 	updateAll();
 };
 
+type StoredSubmission = { decision: "honoured" | "unable"; needsMeasurement: boolean };
+
+const submissionKey = (): string => {
+	const n = new URLSearchParams(window.location.search).get("n") ?? "";
+	return `wt_submitted_${n}`;
+};
+
+const saveSubmission = (decision: "honoured" | "unable", needsMeasurement = false): void => {
+	try { localStorage.setItem(submissionKey(), JSON.stringify({ decision, needsMeasurement })); } catch { /* storage unavailable */ }
+};
+
+const loadSubmission = (): StoredSubmission | null => {
+	try {
+		const raw = localStorage.getItem(submissionKey());
+		return raw ? (JSON.parse(raw) as StoredSubmission) : null;
+	} catch { return null; }
+};
+
+const restoreSuccessState = (stored: StoredSubmission, success: HTMLElement): void => {
+	const copyHonour = document.getElementById("wt-success-copy-honour");
+	const copyUnable = document.getElementById("wt-success-copy-unable");
+	const honourDetails = document.getElementById("wt-success-honour-details");
+	const measurementNote = document.getElementById("wt-success-measurement");
+
+	if (stored.decision === "unable") {
+		if (copyHonour) copyHonour.hidden = true;
+		if (copyUnable) copyUnable.hidden = false;
+		if (honourDetails) honourDetails.hidden = true;
+	}
+
+	if (measurementNote) measurementNote.hidden = !stored.needsMeasurement;
+	success.hidden = false;
+};
+
 export const mountWeddingTrainPage = (): void => {
 	const decisionPrompt = document.getElementById("wt-decision-prompt");
 	const triggerHonour = document.getElementById("wt-trigger-honour");
@@ -325,6 +399,15 @@ export const mountWeddingTrainPage = (): void => {
 	const formBody = document.getElementById("wt-form-body");
 	const form = document.getElementById("wt-form");
 	const success = document.getElementById("wt-success");
+
+	// Already submitted — skip straight to success screen
+	const stored = loadSubmission();
+	if (stored && success instanceof HTMLElement) {
+		if (decisionPrompt) decisionPrompt.hidden = true;
+		if (formBody) formBody.hidden = true;
+		restoreSuccessState(stored, success);
+		return;
+	}
 
 	if (decisionPrompt && formBody && form instanceof HTMLFormElement && success) {
 		triggerHonour?.addEventListener("click", () => {
@@ -366,6 +449,7 @@ export const mountWeddingTrainPage = (): void => {
 			if (copyUnable) copyUnable.hidden = false;
 			if (honourDetails) honourDetails.hidden = true;
 
+			saveSubmission("unable");
 			decisionPrompt.hidden = true;
 			success.hidden = false;
 			scrollSuccessBelowHeader(success);
@@ -417,17 +501,19 @@ export const mountWeddingTrainPage = (): void => {
 			return;
 		}
 
+		const outfitVal = form.querySelector<HTMLInputElement>(
+			`input[name="${WEDDING_TRAIN_FIELD.outfit}"]:checked`,
+		)?.value;
+		const needsMeasurement = outfitVal === "team_organises";
+
+		saveSubmission("honoured", needsMeasurement);
+
 		form.hidden = true;
 		success.hidden = false;
 		scrollSuccessBelowHeader(success);
 		success.focus({ preventScroll: true });
 
 		const measurementNote = document.getElementById("wt-success-measurement");
-		if (measurementNote) {
-			const outfitVal = form.querySelector<HTMLInputElement>(
-				`input[name="${WEDDING_TRAIN_FIELD.outfit}"]:checked`,
-			)?.value;
-			measurementNote.hidden = outfitVal !== "team_organises";
-		}
+		if (measurementNote) measurementNote.hidden = !needsMeasurement;
 	});
 };
