@@ -16,14 +16,6 @@ import {
     <p class="asoebi__intro">{asoebiPageIntro}</p>
   </header>
 
-  <!-- Notice banner -->
-  <ContentCard variant="primary" class="asoebi__notice" data-reveal data-delay="1">
-    <p class="asoebi__notice-text">
-      <strong>Details incoming:</strong> Exact fabric codes, swatch references, and vendor links will be confirmed here and via email by
-      <strong>August 15, 2026</strong>. Colors shown below are indicative.
-    </p>
-  </ContentCard>
-
   <!-- Event color palettes -->
   <div class="asoebi__events">
     {asoEbiEvents.map((event, eventIndex) => (
@@ -43,20 +35,12 @@ import {
               ></div>
               <div class="asoebi__color-info">
                 <p class="asoebi__color-name">{color.name}</p>
-                <p class="asoebi__color-desc">{color.description}</p>
-                <p class="asoebi__color-hex">{color.hex}</p>
               </div>
             </div>
           ))}
         </div>
 
         <ContentCard variant="default" class="asoebi__event-details">
-          <p class="asoebi__fabrics-label">Suggested fabrics</p>
-          <ul class="asoebi__fabrics">
-            {event.fabrics.map((fabric) => (
-              <li>{fabric}</li>
-            ))}
-          </ul>
           <p class="asoebi__event-notes">{event.notes}</p>
         </ContentCard>
       </section>
@@ -80,9 +64,11 @@ import {
   <!-- Contact -->
   <ContentCard variant="secondary" class="asoebi__contact" data-reveal>
     <p class="asoebi__contact-note">{asoebiContact.note}</p>
-    <a class="asoebi__contact-email" href={`mailto:${asoebiContact.email}`}>
-      {asoebiContact.email}
-    </a>
+    {asoebiContact.email && (
+      <a class="asoebi__contact-email" href={`mailto:${asoebiContact.email}`}>
+        {asoebiContact.email}
+      </a>
+    )}
   </ContentCard>
 </div>
 
@@ -126,22 +112,6 @@ import {
     font-size: clamp(0.95rem, 2vw, 1.05rem);
     line-height: 1.82;
     color: rgb(58 46 38 / 0.85);
-  }
-
-  /* Notice */
-
-  .asoebi__notice {
-    max-width: 52rem;
-    margin-inline: auto !important;
-    width: 100%;
-  }
-
-  .asoebi__notice-text {
-    margin: 0;
-    font-size: 0.9rem;
-    line-height: 1.72;
-    color: rgb(58 46 38 / 0.9);
-    text-align: center;
   }
 
   /* Events */
@@ -216,21 +186,6 @@ import {
     font-size: 0.9rem;
     font-weight: 700;
     color: #3a2e26;
-  }
-
-  .asoebi__color-desc {
-    margin: 0.2rem 0 0;
-    font-size: 0.8rem;
-    line-height: 1.55;
-    color: rgb(58 46 38 / 0.75);
-  }
-
-  .asoebi__color-hex {
-    margin: 0.3rem 0 0;
-    font-size: 0.72rem;
-    font-family: monospace;
-    letter-spacing: 0.06em;
-    color: rgb(92 74 61 / 0.55);
   }
 
   /* Fabrics + notes card */
