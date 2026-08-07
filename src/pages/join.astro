@@ -12,8 +12,9 @@ const parseNames = (raw: string): string[] =>
 		.map((n) => n.trim())
 		.filter(Boolean);
 
-const trainNames = parseNames(import.meta.env.TRAIN_NAMES ?? "");
-const groomsmenNames = parseNames(import.meta.env.GROOMSMEN_NAMES ?? "");
+const both = parseNames(import.meta.env.BOTH_NAMES ?? "");
+const trainNames = [...both, ...parseNames(import.meta.env.TRAIN_NAMES ?? "")];
+const groomsmenNames = [...both, ...parseNames(import.meta.env.GROOMSMEN_NAMES ?? "")];
 
 const w = Astro.url.searchParams.get("n")?.trim() ?? "";
 
@@ -25,7 +26,8 @@ const wNorm = normalize(w);
 const inTrain = wNorm.length > 0 && trainNames.some((n) => normalize(n) === wNorm);
 const inGroomsmen = wNorm.length > 0 && groomsmenNames.some((n) => normalize(n) === wNorm);
 
-const role: WeddingTrainRole = inGroomsmen ? "groomsman" : inTrain ? "train" : "unknown";
+const role: WeddingTrainRole =
+	inGroomsmen && inTrain ? "both" : inGroomsmen ? "groomsman" : inTrain ? "train" : "unknown";
 
 const toTitleCase = (s: string) => s.replace(/\b\w/g, (c) => c.toUpperCase());
 
