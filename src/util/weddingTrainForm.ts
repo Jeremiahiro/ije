@@ -4,6 +4,7 @@ export const WEDDING_TRAIN_FIELD = {
 	accommodation: "accommodation",
 	accommodationNights: "accommodation_nights",
 	outfit: "outfit",
+	outfitScope: "outfit_scope",
 	outfitTier: "outfit_tier",
 	outfitSelfConfirm: "outfit_self_confirm",
 	commitAttend: "commit_attend",
@@ -18,15 +19,17 @@ export type WeddingTrainRole = "train" | "groomsman" | "both" | "unknown";
 export type AccommodationChoice = "team_arrange" | "self_arrange";
 export type AccommodationNightsChoice = "3" | "4";
 export type OutfitChoice = "team_organises" | "self_source";
+export type OutfitScopeChoice = "both" | "trad_only" | "church_only";
 export type OutfitTierChoice = "material_only" | "material_tailoring";
 export type FinalDecision = "honoured" | "unable";
 
 export type WeddingTrainFormValues = {
 	full_name: string;
-	role: "train" | "groomsman";
+	role: "train" | "groomsman" | "both";
 	accommodation: AccommodationChoice;
 	accommodation_nights: AccommodationNightsChoice | "";
 	outfit: OutfitChoice;
+	outfit_scope: OutfitScopeChoice | "";
 	outfit_tier: OutfitTierChoice | "";
 	outfit_self_confirm: boolean;
 	commit_attend: boolean;
@@ -42,9 +45,10 @@ export type WeddingTrainRecord = WeddingTrainFormValues;
 const ACCOMMODATION_VALUES: ReadonlySet<string> = new Set(["team_arrange", "self_arrange"]);
 const ACCOMMODATION_NIGHTS_VALUES: ReadonlySet<string> = new Set(["3", "4"]);
 const OUTFIT_VALUES: ReadonlySet<string> = new Set(["team_organises", "self_source"]);
+const OUTFIT_SCOPE_VALUES: ReadonlySet<string> = new Set(["both", "trad_only", "church_only"]);
 const OUTFIT_TIER_VALUES: ReadonlySet<string> = new Set(["material_only", "material_tailoring"]);
 const FINAL_DECISION_VALUES: ReadonlySet<string> = new Set(["honoured", "unable"]);
-const ROLE_VALUES: ReadonlySet<string> = new Set(["train", "groomsman"]);
+const ROLE_VALUES: ReadonlySet<string> = new Set(["train", "groomsman", "both"]);
 
 const checkboxOn = (fd: FormData, name: string): boolean =>
 	String(fd.get(name) ?? "").toLowerCase() === "yes" || fd.get(name) === "on";
@@ -55,6 +59,7 @@ export type WeddingTrainRawFields = {
 	accommodation: string;
 	accommodation_nights: string;
 	outfit: string;
+	outfit_scope: string;
 	outfit_tier: string;
 	outfit_self_confirm: boolean;
 	commit_attend: boolean;
@@ -71,6 +76,7 @@ export const parseWeddingTrainFormData = (fd: FormData): WeddingTrainRawFields =
 	accommodation: String(fd.get(WEDDING_TRAIN_FIELD.accommodation) ?? "").trim(),
 	accommodation_nights: String(fd.get(WEDDING_TRAIN_FIELD.accommodationNights) ?? "").trim(),
 	outfit: String(fd.get(WEDDING_TRAIN_FIELD.outfit) ?? "").trim(),
+	outfit_scope: String(fd.get(WEDDING_TRAIN_FIELD.outfitScope) ?? "").trim(),
 	outfit_tier: String(fd.get(WEDDING_TRAIN_FIELD.outfitTier) ?? "").trim(),
 	outfit_self_confirm: checkboxOn(fd, WEDDING_TRAIN_FIELD.outfitSelfConfirm),
 	commit_attend: checkboxOn(fd, WEDDING_TRAIN_FIELD.commitAttend),
@@ -113,10 +119,28 @@ export const validateWeddingTrainForm = (
 
 		if (!OUTFIT_VALUES.has(raw.outfit)) {
 			fieldErrors[WEDDING_TRAIN_FIELD.outfit] = "Please select an outfit preference.";
-		} else if (raw.outfit === "team_organises" && !OUTFIT_TIER_VALUES.has(raw.outfit_tier)) {
-			fieldErrors[WEDDING_TRAIN_FIELD.outfitTier] = "Please select an outfit option.";
+		} else if (raw.outfit === "team_organises") {
+			const isGroomsmanRole = raw.role === "groomsman" || raw.role === "both";
+			if (isGroomsmanRole && !OUTFIT_SCOPE_VALUES.has(raw.outfit_scope)) {
+				fieldErrors[WEDDING_TRAIN_FIELD.outfitScope] = "Please select which outfit(s) to source.";
+			} else {
+				const scope = isGroomsmanRole ? raw.outfit_scope : "trad_only";
+				if (scope !== "church_only" && !OUTFIT_TIER_VALUES.has(raw.outfit_tier)) {
+					fieldErrors[WEDDING_TRAIN_FIELD.outfitTier] = "Please select a service level for the traditional outfit.";
+				}
+			}
 		} else if (raw.outfit === "self_source" && !raw.outfit_self_confirm) {
 			fieldErrors[WEDDING_TRAIN_FIELD.outfitSelfConfirm] = "Please confirm you will follow the outfit guidelines.";
+		}
+	}
+
+	if (raw.final_decision !== "unable") {
+		if (!raw.commit_attend) fieldErrors[WEDDING_TRAIN_FIELD.commitAttend] = "Please confirm your availability.";
+		if (!raw.commit_outfit) fieldErrors[WEDDING_TRAIN_FIELD.commitOutfit] = "Please confirm the outfit commitment.";
+		if (!raw.commit_travel) fieldErrors[WEDDING_TRAIN_FIELD.commitTravel] = "Please confirm your travel responsibility.";
+		if (!raw.commit_contact) fieldErrors[WEDDING_TRAIN_FIELD.commitContact] = "Please confirm your cost responsibility.";
+		if (["groomsman", "both"].includes(raw.role) && !raw.commit_church) {
+			fieldErrors[WEDDING_TRAIN_FIELD.commitChurch] = "Please confirm your church wedding commitment.";
 		}
 	}
 
@@ -132,12 +156,15 @@ export const validateWeddingTrainForm = (
 		ok: true,
 		values: {
 			full_name: raw.full_name,
-			role: raw.role as "train" | "groomsman",
+			role: raw.role as "train" | "groomsman" | "both",
 			accommodation: raw.accommodation as AccommodationChoice,
 			accommodation_nights: ACCOMMODATION_NIGHTS_VALUES.has(raw.accommodation_nights)
 				? (raw.accommodation_nights as AccommodationNightsChoice)
 				: "",
 			outfit: raw.outfit as OutfitChoice,
+			outfit_scope: OUTFIT_SCOPE_VALUES.has(raw.outfit_scope)
+				? (raw.outfit_scope as OutfitScopeChoice)
+				: "",
 			outfit_tier: OUTFIT_TIER_VALUES.has(raw.outfit_tier)
 				? (raw.outfit_tier as OutfitTierChoice)
 				: "",

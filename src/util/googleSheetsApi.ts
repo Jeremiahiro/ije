@@ -53,6 +53,8 @@ export const appendRowsToSheet = async (
 		// Write headers when the sheet has no rows yet (new or manually cleared).
 		const allRows = sheetIsEmpty && opts?.headers ? [opts.headers, ...rows] : rows;
 
+		if (allRows.length === 0) return { ok: true };
+
 		await sheets.spreadsheets.batchUpdate({
 			spreadsheetId,
 			requestBody: {
