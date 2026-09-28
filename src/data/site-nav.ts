@@ -15,7 +15,7 @@ export type HomeEventPreview = {
 
 export const homePageContent = {
 	subheading:
-		"We are so grateful to celebrate with you. Here are the key details for our wedding celebrations in Abia State, Nigeria.",
+		"We are so grateful to celebrate with you. Here are the key details for our wedding celebrations in Owerri, Imo State, Nigeria.",
 	primaryCta: {
 		label: "RSVP",
 		href: "/rsvp",
@@ -23,15 +23,15 @@ export const homePageContent = {
 	events: [
 		{
 			title: "Traditional Marriage (Ịgba Nkwụ)",
-			dateLabel: "January 2, 2027",
+			dateLabel: "December 23, 2026 · 1:00 pm",
 			location:
-				"Onuoha's Country Home, Okai-Item, Bende Local Government Area in Abia State, Nigeria.",
+				"Late Mr. Kenneth Chukwuma Ibekwe's Compound, Umunebo Obokwu, Obinze, Owerri West LGA, Imo State.",
 			href: "/schedule#traditional-marriage",
 		},
 		{
-			title: "Church Wedding",
-			dateLabel: "January 4, 2027",
-			location: "Methodist Theological Institute (MTI), Michael Okpara Boulevard, Umuahia, Abia State.",
+			title: "Church Wedding & Reception",
+			dateLabel: "December 26, 2026 · 10:00 am",
+			location: "St. James Anglican Church, Uzii, Owerri, Imo State.",
 			href: "/schedule#church-wedding",
 		},
 	] as HomeEventPreview[],
@@ -90,9 +90,11 @@ const allNavItems: NavEntry[] = [
 	},
 ];
 
-/** Nav links, minus pages switched off in `src/config/event.ts` and an empty registry. */
+/** Nav links, minus pages switched off in `src/config/event.ts` and the registry when hidden. */
 export const navItems: NavTopLink[] = allNavItems
-	.filter(({ page, href }) => (page ? isPageEnabled(page) : href !== ""))
+	.filter(({ page, href }) =>
+		page ? isPageEnabled(page) : href !== "" && event.showRegistryInNav,
+	)
 	.map(({ page: _page, ...link }) => link);
 
 export function navHref(path: string, slug: string): string {

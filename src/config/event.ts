@@ -39,16 +39,18 @@ export const event = {
   locationLabel: "Owerri, Imo State, Nigeria",
 
   /** The footer counts down to this moment (ISO 8601 with UTC offset). */
-  countdownTarget: "2027-01-04T10:00:00+01:00",
-  countdownLabel: "January 4, 2027",
+  countdownTarget: "2026-12-26T10:00:00+01:00",
+  countdownLabel: "December 26, 2026",
 
   rsvpDeadline: {
     iso: "2026-10-01",
     label: "October 1, 2026",
   },
 
-  /** Leave empty to hide the Registry link. */
+  /** Leave empty to hide the Registry link everywhere. */
   registryHref: "https://www.zola.com/wedding/cynthiaandkelechi2026/registry",
+  /** Show "Registry" in the header and footer nav (the FAQ link is unaffected). */
+  showRegistryInNav: false,
 
   /** Tab names in the Google Sheet. The tabs are created on first write. */
   sheets: {
@@ -59,9 +61,9 @@ export const event = {
   /** Turn off pages this couple doesn't need. Disabled pages return 404 and leave the nav. */
   pages: {
     schedule: true,
-    travel: true,
+    travel: false,
     faq: true,
-    thingsToDo: true,
+    thingsToDo: false,
     asoebi: true,
     rsvp: true,
     join: true,

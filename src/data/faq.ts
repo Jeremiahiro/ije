@@ -109,15 +109,4 @@ export const weddingFaq: FaqItem[] = [
       { type: "text", value: " for details on each event." },
     ],
   },
-  {
-    question: "Do you have any hotel recommendations?",
-    answer: [
-      {
-        type: "text",
-        value: "Yes. We have listed nearby hotel recommendations on our ",
-      },
-      { type: "link", label: "Travel", href: "/travel#hotels" },
-      { type: "text", value: " page." },
-    ],
-  },
 ];
