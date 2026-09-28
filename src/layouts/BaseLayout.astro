@@ -3,7 +3,6 @@ import "@/styles/global.css";
 import Analytics from "@vercel/analytics/astro";
 import Footer from "@/components/Footer.astro";
 import Header from "@/components/Header.astro";
-import SiteGate from "@/components/SiteGate.astro";
 
 interface Props {
   title: string;
@@ -70,7 +69,6 @@ const resolvedOgDescription = ogDescription ?? description;
     initScrollReveal();
   </script>
   <body class:list={[bodyClass]}>
-    <SiteGate />
     <Header />
     <div class="site-shell">
       <slot />

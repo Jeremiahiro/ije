@@ -1,4 +1,5 @@
 import type { APIRoute } from "astro";
+import { safeEqual } from "@/util/siteGate";
 import { initWeddingTrainSheet } from "@/util/weddingTrainSheet";
 
 export const prerender = false;
@@ -10,10 +11,10 @@ const json = (body: unknown, status = 200): Response =>
 	});
 
 export const POST: APIRoute = async ({ request }) => {
-	const secret = import.meta.env.PUBLIC_SITE_GATE_PASSWORD?.trim();
-	const auth = request.headers.get("authorization");
+	const secret = import.meta.env.ADMIN_SECRET?.trim();
+	const auth = request.headers.get("authorization") ?? "";
 
-	if (!secret || auth !== `Bearer ${secret}`) {
+	if (!secret || !safeEqual(auth, `Bearer ${secret}`)) {
 		return json({ ok: false, reason: "unauthorized" }, 401);
 	}
 

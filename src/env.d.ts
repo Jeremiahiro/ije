@@ -1,7 +1,8 @@
 /// <reference types="astro/client" />
 
 interface ImportMetaEnv {
-	readonly PUBLIC_SITE_GATE_PASSWORD?: string;
+	readonly SITE_GATE_PASSWORD?: string;
+	readonly ADMIN_SECRET?: string;
 	readonly GOOGLE_SPREADSHEET_ID?: string;
 	readonly GOOGLE_SERVICE_ACCOUNT_EMAIL?: string;
 	readonly GOOGLE_PRIVATE_KEY?: string;
