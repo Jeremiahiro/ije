@@ -6,7 +6,7 @@ import FormChoice from "@/components/forms/FormChoice.astro";
 import FormChoiceGroup from "@/components/forms/FormChoiceGroup.astro";
 import RsvpSection from "@/components/rsvp/RsvpSection.astro";
 import WeddingTrainFormField from "@/components/wedding-train/WeddingTrainFormField.astro";
-import { WEDDING_TRAIN_FIELD } from "@/util/weddingTrainForm";
+import { WEDDING_TRAIN_FIELD, WEDDING_TRAIN_HONEYPOT_FIELD } from "@/util/weddingTrainForm";
 import type { WeddingTrainRole } from "@/util/weddingTrainForm";
 import {
 	TRAD_SCHEDULE,
@@ -213,6 +213,17 @@ const displayName = name.split(" ")[0]
 						data-cost-church-outfit-full={COSTS.churchOutfitFull}
 					data-cost-trad-outfit-accessories={COSTS.tradOutfitAccessories}
 					>
+						<div class="wt__hp" aria-hidden="true">
+							<label for="wt-company">Company (leave this field empty)</label>
+							<input
+								id="wt-company"
+								type="text"
+								name={WEDDING_TRAIN_HONEYPOT_FIELD}
+								tabindex="-1"
+								autocomplete="off"
+							/>
+						</div>
+
 						<p
 							id="wt-form-summary"
 							class="wt__summary"
@@ -582,6 +593,15 @@ const displayName = name.split(" ")[0]
 }
 
 <style>
+	/* Honeypot: kept in the DOM and submitted, but hidden from real users */
+	.wt__hp {
+		position: absolute;
+		left: -9999px;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+	}
+
 	/* ── Invalid state ─────────────────────────────────────────────── */
 	.wt__invalid-card {
 		max-width: min(40rem, 100%);

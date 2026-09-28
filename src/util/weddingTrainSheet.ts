@@ -1,7 +1,9 @@
+import { event } from "@/config/event";
 import type { WeddingTrainRecord } from "@/util/weddingTrainForm";
 import { appendRowsToSheet } from "@/util/googleSheetsApi";
+import { sanitizeSheetCell } from "@/util/sheetCell";
 
-const SHEET_NAME = "Groom's Train";
+const SHEET_NAME = event.sheets.weddingTrain;
 
 
 const ROLE_LABELS: Record<"train" | "groomsman" | "both", string> = {
@@ -43,7 +45,7 @@ export type WeddingTrainSheetRow = {
 	final_decision: string;
 };
 
-const recordToWeddingTrainSheetRow = (
+export const recordToWeddingTrainSheetRow = (
 	record: WeddingTrainRecord,
 	opts?: { submittedAt?: string },
 ): WeddingTrainSheetRow => ({
@@ -55,14 +57,15 @@ const recordToWeddingTrainSheetRow = (
 	final_decision: FINAL_DECISION_LABELS[record.final_decision] ?? record.final_decision,
 });
 
-const rowToValues = (row: WeddingTrainSheetRow): string[] => [
-	row.submitted_at,
-	row.full_name,
-	row.role,
-	row.accommodation_nights,
-	row.outfit,
-	row.final_decision,
-];
+export const rowToValues = (row: WeddingTrainSheetRow): string[] =>
+	[
+		row.submitted_at,
+		row.full_name,
+		row.role,
+		row.accommodation_nights,
+		row.outfit,
+		row.final_decision,
+	].map(sanitizeSheetCell);
 
 export type ForwardWeddingTrainResult = { ok: true } | { ok: false; reason: "upstream" };
 

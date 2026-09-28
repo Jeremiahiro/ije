@@ -15,6 +15,14 @@ export const WEDDING_TRAIN_FIELD = {
 	finalDecision: "final_decision",
 } as const;
 
+/** Hidden field real users never fill; bots usually do. */
+export const WEDDING_TRAIN_HONEYPOT_FIELD = "company";
+
+/** Max character lengths for free-text fields (defense against oversized payloads). */
+export const WEDDING_TRAIN_MAX_LEN = {
+	full_name: 100,
+} as const;
+
 export type WeddingTrainRole = "train" | "groomsman" | "both" | "unknown";
 export type AccommodationChoice = "team_arrange" | "self_arrange";
 export type AccommodationNightsChoice = "3" | "4";
@@ -100,6 +108,8 @@ export const validateWeddingTrainForm = (
 		fieldErrors[WEDDING_TRAIN_FIELD.fullName] = "Enter your full name.";
 	} else if (raw.full_name.length < 2) {
 		fieldErrors[WEDDING_TRAIN_FIELD.fullName] = "Name looks too short.";
+	} else if (raw.full_name.length > WEDDING_TRAIN_MAX_LEN.full_name) {
+		fieldErrors[WEDDING_TRAIN_FIELD.fullName] = "Name is too long.";
 	}
 
 	if (!ROLE_VALUES.has(raw.role)) {

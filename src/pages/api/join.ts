@@ -3,6 +3,7 @@ import {
 	buildWeddingTrainRecord,
 	parseWeddingTrainFormData,
 	validateWeddingTrainForm,
+	WEDDING_TRAIN_HONEYPOT_FIELD,
 } from "@/util/weddingTrainForm";
 import { forwardWeddingTrainToGoogleSheet } from "@/util/weddingTrainSheet";
 
@@ -24,6 +25,11 @@ export const POST: APIRoute = async ({ request }) => {
 		formData = await request.formData();
 	} catch {
 		return json({ ok: false, kind: "invalid_body", message: "Invalid form data." }, 400);
+	}
+
+	// Honeypot: bots fill the hidden field. Pretend success and drop the submission.
+	if (String(formData.get(WEDDING_TRAIN_HONEYPOT_FIELD) ?? "").trim()) {
+		return json({ ok: true });
 	}
 
 	const validation = validateWeddingTrainForm(parseWeddingTrainFormData(formData));
