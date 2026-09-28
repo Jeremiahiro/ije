@@ -16,6 +16,7 @@ const { next, error = false } = Astro.props;
 		aria-modal="true"
 		aria-labelledby="site-gate-label"
 	>
+		<img class="site-gate__monogram" src="/assets/monogram-gold.webp" alt="" width="270" height="240" />
 		<label id="site-gate-label" for="site-gate-input" class="site-gate__label">
 			Password
 		</label>
@@ -87,6 +88,14 @@ const { next, error = false } = Astro.props;
 			0 18px 44px rgb(20 14 10 / 0.28);
 		backdrop-filter: blur(10px);
 		-webkit-backdrop-filter: blur(10px);
+	}
+
+	.site-gate__monogram {
+		display: block;
+		width: auto;
+		height: 4.5rem;
+		margin: 0.25rem auto 1rem;
+		filter: drop-shadow(0 1px 6px rgb(20 14 10 / 0.25));
 	}
 
 	.site-gate__label {
