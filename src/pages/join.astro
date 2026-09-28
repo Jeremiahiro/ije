@@ -3,6 +3,7 @@ export const prerender = false;
 
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import WeddingTrainContent from "@/components/wedding-train/WeddingTrainContent.astro";
+import { coupleNames } from "@/config/event";
 import { siteTitleSuffix } from "@/data/site-nav";
 import type { WeddingTrainRole } from "@/util/weddingTrainForm";
 
@@ -36,8 +37,7 @@ const matchedName = allNames.find((n) => normalize(n) === wNorm);
 const displayName = toTitleCase((matchedName ?? w).replace(/-/g, " ").trim());
 
 const title = `Join the Wedding Train · ${siteTitleSuffix}`;
-const description =
-	"Joining details for the wedding train — Jane & Jeremiah's wedding, January 2027.";
+const description = `Joining details for the wedding train — ${coupleNames}'s wedding.`;
 ---
 
 <BaseLayout title={title} description={description}>

@@ -1,12 +1,12 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import EventIcon from "@/components/EventIcon.astro";
+import { coupleFullNames, event } from "@/config/event";
 import { siteTitleSuffix } from "@/data/site-nav";
 import { schedulePageData } from "@/data/schedule";
 
 const title = `Schedule · ${siteTitleSuffix}`;
-const description =
-  "Ceremony schedule for Jane Onuoha and Jeremiah Iromaka-Amajọ, including event dates and venues in Abia State, Nigeria.";
+const description = `Ceremony schedule for ${coupleFullNames}, including event dates and venues in ${event.locationLabel}.`;
 const canonicalHref = new URL("/schedule", Astro.url.origin).href;
 ---
 

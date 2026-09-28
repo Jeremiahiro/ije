@@ -1,4 +1,5 @@
 ---
+import { event } from "@/config/event";
 import ContentCard from "@/components/ContentCard.astro";
 import HeroPageSurface from "@/components/HeroPageSurface.astro";
 import FormCheck from "@/components/forms/FormCheck.astro";
@@ -147,7 +148,7 @@ const thankYouWriteChars = ["T", "h", "a", "n", "k", "\u00A0", "y", "o", "u"];
 				<ContentCard variant="primary" class="rsvp__callout" role="note">
 					<p class="rsvp__callout-text">
 						<strong>Please respond by</strong>
-						<time datetime="2026-10-01">October 1, 2026</time>
+						<time datetime={event.rsvpDeadline.iso}>{event.rsvpDeadline.label}</time>
 						<br /> It helps us finalize numbers and plan for guests
 						traveling from abroad.
 					</p>

@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { event } from "@/config/event";
 import { RSVP_FIELD, RSVP_HONEYPOT_FIELD } from "@/util/rsvpForm";
 import { POST } from "@/pages/api/rsvp";
 
@@ -72,7 +73,11 @@ describe("POST /api/rsvp", () => {
 		expect(res.status).toBe(200);
 		expect(await res.json()).toEqual({ ok: true });
 		expect(appendRowsToSheet).toHaveBeenCalledTimes(1);
-		expect(appendRowsToSheet).toHaveBeenCalledWith("RSVPs", expect.any(Array));
+		expect(appendRowsToSheet).toHaveBeenCalledWith(
+			event.sheets.rsvp,
+			expect.any(Array),
+			expect.objectContaining({ headers: expect.any(Array) }),
+		);
 	});
 
 	it("returns 502 when the upstream sheet write fails", async () => {

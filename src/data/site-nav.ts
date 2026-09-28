@@ -1,11 +1,10 @@
+import { coupleNames, event, isPageEnabled, type PageKey } from "@/config/event";
+
 /** Shared nav + routes for Header and static pages */
-export const siteTitleSuffix = "Jane & Jeremiah";
-export const bride = "Jane Onuoha";
-export const groom = "Jeremiah Iromaka-Amajọ";
+export const siteTitleSuffix = coupleNames;
 export const defaultPageDescription = `${siteTitleSuffix} · Wedding details coming soon.`;
 
-export const registryHref =
-	"https://www.zola.com/wedding/jeremiahandjane2026/registry";
+export const registryHref = event.registryHref;
 
 export type HomeEventPreview = {
 	title: string;
@@ -45,18 +44,22 @@ export type NavTopLink = {
 	target: "_self" | "_blank";
 };
 
-export const navItems: NavTopLink[] = [
+type NavEntry = NavTopLink & { page?: PageKey };
+
+const allNavItems: NavEntry[] = [
 	{
 		kind: "link",
 		label: "Schedule",
 		href: "/schedule",
 		target: "_self",
+		page: "schedule",
 	},
 	{
 		kind: "link",
 		label: "Travel",
 		href: "/travel",
 		target: "_self",
+		page: "travel",
 	},
 	{
 		kind: "link",
@@ -69,20 +72,28 @@ export const navItems: NavTopLink[] = [
 		label: "FAQs",
 		href: "/faq",
 		target: "_self",
+		page: "faq",
 	},
 	{
 		kind: "link",
 		label: "Things to Do",
 		href: "/things-to-do",
 		target: "_self",
+		page: "thingsToDo",
 	},
 	{
 		kind: "link",
 		label: "Asoebi",
 		href: "/asoebi",
 		target: "_self",
+		page: "asoebi",
 	},
 ];
+
+/** Nav links, minus pages switched off in `src/config/event.ts` and an empty registry. */
+export const navItems: NavTopLink[] = allNavItems
+	.filter(({ page, href }) => (page ? isPageEnabled(page) : href !== ""))
+	.map(({ page: _page, ...link }) => link);
 
 export function navHref(path: string, slug: string): string {
 	return `${path.replace(/\/$/, "")}/${slug}`;

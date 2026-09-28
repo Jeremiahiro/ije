@@ -1,3 +1,5 @@
+import { coupleNames } from "@/config/event";
+
 export type ScheduleEventIcon = "marriage" | "church" | "reception" | "party";
 
 export type ScheduleEvent = {
@@ -61,11 +63,11 @@ const makeAppleCalendarHref = (
   const uidBase = `${title}-${startUtc}`
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-");
-  const uid = `${uidBase}@jane-jeremiah-wedding`;
+  const uid = `${uidBase}@${coupleNames.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-wedding`;
   const lines = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
-    "PRODID:-//Jane & Jeremiah Wedding//Schedule//EN",
+    `PRODID:-//${coupleNames} Wedding//Schedule//EN`,
     "CALSCALE:GREGORIAN",
     "METHOD:PUBLISH",
     "BEGIN:VEVENT",
@@ -100,14 +102,14 @@ export const schedulePageData: SchedulePageData = {
           // colorsOfTheDay: "Tan & Brown",
           mapHref: "https://maps.app.goo.gl/a5tYqVVXab4BL5tE9",
           googleCalendarHref: makeGoogleCalendarHref(
-            "Jane & Jeremiah's Traditional Marriage (Ịgba Nkwụ)",
+            `${coupleNames}'s Traditional Marriage (Ịgba Nkwụ)`,
             "20270102T100000Z",
             "20270102T150000Z",
             "Onuoha's Country Home, Okai Item, Abia State, Nigeria",
             // "Colors of the day: Tan & Brown",
           ),
           appleCalendarHref: makeAppleCalendarHref(
-            "Jane & Jeremiah's Traditional Marriage (Ịgba Nkwụ)",
+            `${coupleNames}'s Traditional Marriage (Ịgba Nkwụ)`,
             "20270102T100000Z",
             "20270102T150000Z",
             "Onuoha's Country Home, Okai Item, Abia State, Nigeria",
@@ -129,14 +131,14 @@ export const schedulePageData: SchedulePageData = {
           // colorsOfTheDay: "Emerald Green",
           mapHref: "https://maps.app.goo.gl/5CS31ViRC9K63Qev7",
           googleCalendarHref: makeGoogleCalendarHref(
-            "Jane & Jeremiah's Church Wedding",
+            `${coupleNames}'s Church Wedding`,
             "20270104T100000Z",
             "20270104T120000Z",
             "Methodist Theological Institute (MTI), Michael Okpara Boulevard, Umuahia, Abia State, Nigeria",
             // "Colors of the day: Emerald Green",
           ),
           appleCalendarHref: makeAppleCalendarHref(
-            "Jane & Jeremiah's Church Wedding",
+            `${coupleNames}'s Church Wedding`,
             "20270104T100000Z",
             "20270104T120000Z",
             "Methodist Theological Institute (MTI), Michael Okpara Boulevard, Umuahia, Abia State, Nigeria",
@@ -152,13 +154,13 @@ export const schedulePageData: SchedulePageData = {
             "International Conference Centre (ICC), Umuahia, Abia State, Nigeria",
           mapHref: "https://maps.app.goo.gl/xccY3nSsnxXVcPDH7",
           googleCalendarHref: makeGoogleCalendarHref(
-            "Jane & Jeremiah's Wedding Reception",
+            `${coupleNames}'s Wedding Reception`,
             "20270104T130000Z",
             "20270104T160000Z",
             "International Conference Centre (ICC), Umuahia, Abia State, Nigeria",
           ),
           appleCalendarHref: makeAppleCalendarHref(
-            "Jane & Jeremiah's Wedding Reception",
+            `${coupleNames}'s Wedding Reception`,
             "20270104T130000Z",
             "20270104T160000Z",
             "International Conference Centre (ICC), Umuahia, Abia State, Nigeria",
@@ -172,13 +174,13 @@ export const schedulePageData: SchedulePageData = {
             "International Conference Centre (ICC), Umuahia, Abia State, Nigeria",
           mapHref: "https://maps.app.goo.gl/xccY3nSsnxXVcPDH7",
           googleCalendarHref: makeGoogleCalendarHref(
-            "Jane & Jeremiah's After Party",
+            `${coupleNames}'s After Party`,
             "20270104T170000Z",
             "20270105T010000Z",
             "International Conference Centre (ICC), Umuahia, Abia State, Nigeria",
           ),
           appleCalendarHref: makeAppleCalendarHref(
-            "Jane & Jeremiah's After Party",
+            `${coupleNames}'s After Party`,
             "20270104T170000Z",
             "20270105T010000Z",
             "International Conference Centre (ICC), Umuahia, Abia State, Nigeria",

@@ -1,11 +1,12 @@
 ---
 import TravelContent from "@/components/travel/TravelContent.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
+import { coupleNames } from "@/config/event";
 import { siteTitleSuffix } from "@/data/site-nav";
 
 const pageTitle = "Travel";
 const description =
-	"Travel information for Jane & Jeremiah’s wedding: Lagos and Owerri flights, hotel options in Lagos and Umuahia, visa guidance for international guests, and coordinated ground transportation.";
+	`Travel information for ${coupleNames}’s wedding: Lagos and Owerri flights, hotel options in Lagos and Umuahia, visa guidance for international guests, and coordinated ground transportation.`;
 const title = `${pageTitle} · ${siteTitleSuffix}`;
 const canonicalHref = new URL("/travel", Astro.url.origin).href;
 ---

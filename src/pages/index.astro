@@ -1,19 +1,21 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import {
-  bride,
-  groom,
+  coupleFullNames,
+  event,
+  isPageEnabled,
+} from "@/config/event";
+import {
   homePageContent,
   navItems,
   siteTitleSuffix,
 } from "@/data/site-nav";
 
 const title = `${siteTitleSuffix}`;
-const description =
-  "Wedding details for Jeremiah Iromaka-Amajọ and Jane Onuoha, including celebration dates, venue highlights, and RSVP access.";
+const description = `Wedding details for ${coupleFullNames}, including celebration dates, venue highlights, and RSVP access.`;
 const coupleMarqueeImages = [1, 2, 3, 4].map((photoNumber) => ({
   src: `/assets/couple/${photoNumber}.webp`,
-  alt: `${bride} and ${groom} portrait ${photoNumber}`,
+  alt: `${coupleFullNames} portrait ${photoNumber}`,
 }));
 
 const quickLinks = navItems
@@ -29,15 +31,17 @@ const quickLinks = navItems
       <div class="home-hero__bg" aria-hidden="true"></div>
       <div class="home-hero__scrim" aria-hidden="true"></div>
       <div class="home-hero__content">
-        <p class="home-hero__eyebrow">January 2 &amp; 4, 2027 · Abia State, Nigeria</p>
+        <p class="home-hero__eyebrow">{event.dateLabel} · {event.locationLabel}</p>
         <h1 id="home-title" class="home-hero__title">
-          <span>{bride.split(" ")[0]}</span>
+          <span>{event.partnerOne.firstName}</span>
           <span aria-hidden="true" class="home-hero__amp">&amp;</span>
-          <span>{groom.split(" ")[0]}</span>
+          <span>{event.partnerTwo.firstName}</span>
         </h1>
-        <a class="home-hero__cta" href={homePageContent.primaryCta.href}>
-          {homePageContent.primaryCta.label}
-        </a>
+        {isPageEnabled("rsvp") ? (
+          <a class="home-hero__cta" href={homePageContent.primaryCta.href}>
+            {homePageContent.primaryCta.label}
+          </a>
+        ) : null}
       </div>
       <a class="home-hero__scroll-hint" href="#events" aria-label="Scroll to celebrations">
         <span aria-hidden="true">Scroll</span>

@@ -1,7 +1,9 @@
 ---
+import { coupleInitials, isPageEnabled } from "@/config/event";
 import { navItems } from "@/data/site-nav";
 
-const brandAlt = "J & J";
+const brandAlt = coupleInitials;
+const showRsvp = isPageEnabled("rsvp");
 const logoSrc = "/assets/logo-n.png";
 const cta = { href: "/rsvp", label: "RSVP" } as const;
 
@@ -23,7 +25,7 @@ const isCurrent = (href: string): boolean => {
 				</a>
 
 				<div class="app-header__idle-actions">
-					<a class="app-header__cta" href={cta.href}>{cta.label}</a>
+					{showRsvp ? <a class="app-header__cta" href={cta.href}>{cta.label}</a> : null}
 					<button
 						type="button"
 						class="app-header__menu"

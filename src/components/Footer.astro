@@ -1,8 +1,12 @@
 ---
+import { event } from "@/config/event";
 import { navItems, siteTitleSuffix } from "@/data/site-nav";
 
-const year = 2027;
+const year = new Date(event.countdownTarget).getFullYear();
+const brandLead = siteTitleSuffix[0];
 const brandMiddle = siteTitleSuffix.slice(1);
+const secondInitial = event.partnerTwo.firstName[0];
+const { countdownTarget, countdownLabel } = event;
 const footerNavLinks = navItems.filter((n) => n.target === "_self")
 ---
 
@@ -21,7 +25,7 @@ const footerNavLinks = navItems.filter((n) => n.target === "_self")
     <p class="site-footer__brand" aria-label={siteTitleSuffix}>
       <span class="site-footer__brand-stage">
         <span class="site-footer__brand-row">
-          <span class="site-footer__brand-lead">J</span>
+          <span class="site-footer__brand-lead">{brandLead}</span>
           <span
             class="site-footer__brand-segment site-footer__brand-segment--full"
             >{brandMiddle}</span
@@ -30,13 +34,18 @@ const footerNavLinks = navItems.filter((n) => n.target === "_self")
             class="site-footer__brand-segment site-footer__brand-segment--initials"
             aria-hidden="true"
           >
-            &#x2665;&#xFE0E;J
+            &#x2665;&#xFE0E;{secondInitial}
           </span>
         </span>
       </span>
     </p>
 
-    <p class="site-footer__countdown" aria-live="polite"></p>
+    <p
+      class="site-footer__countdown"
+      aria-live="polite"
+      data-target={countdownTarget}
+      data-label={countdownLabel}
+    ></p>
 
     <p class="site-footer__meta">&copy; {year} · With love</p>
   </div>
@@ -264,17 +273,19 @@ const footerNavLinks = navItems.filter((n) => n.target === "_self")
   }
 
   function updateCountdown(el: HTMLElement) {
-    const wedding = new Date("2027-01-04T10:00:00+01:00");
+    const wedding = new Date(el.dataset.target ?? "");
+    const label = el.dataset.label ?? "";
+    if (Number.isNaN(wedding.getTime())) return;
     const now = new Date();
     const msLeft = wedding.getTime() - now.getTime();
     const days = Math.max(0, Math.ceil(msLeft / 86400000));
 
     if (days === 0) {
-      el.textContent = "Today · January 4, 2027";
+      el.textContent = `Today · ${label}`;
     } else if (days === 1) {
-      el.textContent = "Tomorrow · January 4, 2027";
+      el.textContent = `Tomorrow · ${label}`;
     } else {
-      el.textContent = `${days.toLocaleString()} days · January 4, 2027`;
+      el.textContent = `${days.toLocaleString()} days · ${label}`;
     }
   }
 
