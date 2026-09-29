@@ -56,7 +56,6 @@ describe("isDisabledPath", () => {
 			expect(isDisabledPath("/join")).toBe(true);
 			expect(isDisabledPath("/join/")).toBe(true);
 			expect(isDisabledPath("/api/join")).toBe(true);
-			expect(isDisabledPath("/api/init-train-sheet")).toBe(true);
 			expect(isDisabledPath("/joined")).toBe(false);
 		} finally {
 			event.pages.join = original;

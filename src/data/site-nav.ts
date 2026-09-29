@@ -81,13 +81,7 @@ const allNavItems: NavEntry[] = [
 		target: "_self",
 		page: "thingsToDo",
 	},
-	{
-		kind: "link",
-		label: "Asoebi",
-		href: "/asoebi",
-		target: "_self",
-		page: "asoebi",
-	},
+	// Asoebi and Join are reached through personal links (?n=name), not the nav.
 ];
 
 /** Nav links, minus pages switched off in `src/config/event.ts` and the registry when hidden. */

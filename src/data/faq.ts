@@ -1,3 +1,4 @@
+import { event } from "@/config/event";
 import { registryHref } from "@/data/site-nav";
 
 export type FaqAnswerPart =
@@ -16,13 +17,7 @@ export const weddingFaq: FaqItem[] = [
       {
         type: "text",
         value:
-          "We're having two events: Traditional Ceremony and White Wedding. For the Traditional Ceremony, come in Nigerian traditional attire (Ankara, Brocade, Atiku Lace, and more). If you're part of our Aso Ebi group, see our ",
-      },
-      { type: "link", label: "Asoebi", href: "/asoebi" },
-      {
-        type: "text",
-        value:
-          " page for details. For the White Wedding, formal or semi-formal church-appropriate attire is perfect: suits, dresses, and your best dance shoes. See the ",
+          "We're having two events: Traditional Ceremony and White Wedding. For the Traditional Ceremony, come in Nigerian traditional attire (Ankara, Brocade, Atiku Lace, and more). If you're part of our Aso Ebi group, use the personal asoebi link we sent you for details. For the White Wedding, formal or semi-formal church-appropriate attire is perfect: suits, dresses, and your best dance shoes. See the ",
       },
       { type: "link", label: "Schedule", href: "/schedule" },
       { type: "text", value: " for ceremony dates and times." },
@@ -34,12 +29,7 @@ export const weddingFaq: FaqItem[] = [
       {
         type: "text",
         value:
-          "Aso Ebi is a matching fabric chosen for family and close friends during the Traditional Ceremony to symbolize unity and support. Participation is optional. Visit our ",
-      },
-      { type: "link", label: "Asoebi", href: "/asoebi" },
-      {
-        type: "text",
-        value: " page for details.",
+          "Aso Ebi is a matching fabric chosen for family and close friends to symbolize unity and support. Participation is optional. If you'd like to join, use the personal asoebi link we sent you.",
       },
     ],
   },
@@ -70,7 +60,7 @@ export const weddingFaq: FaqItem[] = [
   {
     question: "When should I RSVP by?",
     answer: [
-      { type: "text", value: "Please RSVP by October 1, 2026 on our " },
+      { type: "text", value: `Please RSVP by ${event.rsvpDeadline.label} on our ` },
       { type: "link", label: "RSVP", href: "/rsvp" },
       { type: "text", value: " page." },
     ],

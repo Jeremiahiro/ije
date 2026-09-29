@@ -3,4 +3,4 @@ import { createInterestHandler } from "@/util/interestApi";
 
 export const prerender = false;
 
-export const POST = createInterestHandler({ list: "join", sheetName: event.sheets.groomsmen });
+export const POST = createInterestHandler({ list: "asoebi", sheetName: event.sheets.asoebi });

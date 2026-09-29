@@ -43,8 +43,14 @@ export const event = {
   countdownLabel: "December 26, 2026",
 
   rsvpDeadline: {
-    iso: "2026-10-01",
-    label: "October 1, 2026",
+    iso: "2026-11-30",
+    label: "November 30, 2026",
+  },
+
+  /** Last day to register on the Asoebi and Groomsmen pages (shown on both). */
+  interestDeadline: {
+    iso: "2026-10-31",
+    label: "October 31, 2026",
   },
 
   /** Leave empty to hide the Registry link everywhere. */
@@ -52,10 +58,15 @@ export const event = {
   /** Show "Registry" in the header and footer nav (the FAQ link is unaffected). */
   showRegistryInNav: false,
 
-  /** Tab names in the Google Sheet. The tabs are created on first write. */
+  /**
+   * Tab names in the Google Sheet. They must match TABS in apps-script/Code.gs,
+   * whose "Set up tabs & protections" menu creates them.
+   */
   sheets: {
     rsvp: "RSVPs",
-    weddingTrain: "Groom's Train",
+    guests: "Guests",
+    asoebi: "Asoebi",
+    groomsmen: "Groomsmen",
   },
 
   /** Turn off pages this couple doesn't need. Disabled pages return 404 and leave the nav. */
@@ -83,7 +94,8 @@ export const pagePaths: Record<PageKey, string> = {
 /** API routes that only exist to serve a page; they are switched off with it. */
 const pageApiPaths: Partial<Record<PageKey, string[]>> = {
   rsvp: ["/api/rsvp"],
-  join: ["/api/join", "/api/init-train-sheet"],
+  join: ["/api/join"],
+  asoebi: ["/api/asoebi"],
 };
 
 /** "Cynthia & Kelechi" */
