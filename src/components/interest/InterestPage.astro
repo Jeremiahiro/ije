@@ -80,7 +80,7 @@ const id = (suffix: string) => `${idPrefix}-${suffix}`;
 							<div class="interest__panel-grid">
 								<figure class="interest__photo">
 									{tab.image ? (
-										<img src={tab.image} alt={tab.imageAlt} loading="lazy" decoding="async" />
+										<img src={tab.image} alt={tab.imageAlt} loading={i === 0 ? "eager" : "lazy"} decoding="async" />
 									) : (
 										<div class="interest__photo-placeholder" role="img" aria-label={`${tab.imageAlt} (coming soon)`}>
 											<span>Fabric photo coming soon</span>
@@ -305,11 +305,18 @@ const id = (suffix: string) => `${idPrefix}-${suffix}`;
 		background: rgb(255 255 255 / 0.4);
 	}
 
+	/* Real outfit/fabric images often carry labels and detail panels: show them whole.
+	   The fixed shape above is only for the "coming soon" placeholder. */
+	.interest__photo:has(img) {
+		aspect-ratio: auto;
+	}
+
 	.interest__photo img {
 		display: block;
 		width: 100%;
-		height: 100%;
-		object-fit: cover;
+		height: auto;
+		max-height: 80vh;
+		object-fit: contain;
 	}
 
 	.interest__photo-placeholder {

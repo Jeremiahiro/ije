@@ -40,10 +40,12 @@ export const joinPageContent: InterestPageContent = {
 			id: "traditional",
 			label: "Traditional",
 			date: "Wednesday, December 23, 2026",
-			imageAlt: "Wedding train fabric for the Traditional Marriage",
+			image: "/assets/outfits/groomsmen-traditional.webp",
+			imageAlt:
+				"The groom's train traditional outfit: an olive-green tailored set with 3/4 sleeves, a red cap, double-strand coral neck beads and coral wrist beads",
 			guidance: [
-				"The train wears matching traditional attire sewn from the fabric shown here.",
-				"Colours of the day are Brown, Green, Burnt Orange, Champagne Gold and Tan. Keep accessories within this palette.",
+				"The groom's train wears a tailored olive-green set: a 3/4-sleeve top with matching trousers.",
+				"Finished with a traditional red cap, double-strand coral neck beads and coral wrist beads, with black shoes.",
 				"We'll share fabric, tailoring and payment details on WhatsApp once you register your interest.",
 			],
 		},
