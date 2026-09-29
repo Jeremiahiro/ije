@@ -33,33 +33,82 @@ Disabled pages return 404 and drop out of the nav (restart `pnpm dev` after togg
 | `travel-flights.ts`, `travel-hotels.ts`, `travel-visa.ts` | Travel |
 | `things-to-do.ts` | Things to do |
 | `faq.ts` | FAQ |
-| `asoebi.ts` | Asoebi |
+| `interestPages.ts` | Asoebi and Join / wedding train: tab text, fabric photos, form copy |
 | `about-wedding-party.ts` | Wedding party |
-| `weddingTrain.ts` | Join / wedding train (including the contact person) |
 
-Some copy still lives in components, notably
-`src/components/wedding-train/WeddingTrainContent.astro` (event dates) and the page
-descriptions in `src/pages/*.astro`. Search for the previous couple's names, cities and dates
-before launch.
+Some copy still lives in the page descriptions in `src/pages/*.astro`. Search for the previous
+couple's names, cities and dates before launch.
+
+#### Personal-link pages: `/asoebi` and `/join`
+
+Both pages open only through a personal link such as `/asoebi?n=ada&c=K7Q2M9`, for guests
+ticked **Asoebi** or **Groomsmen** on the sheet's **Guests** tab (see step 4). The code `c` grants
+access; the first name `n` only personalises the link. The sheet writes each guest's links for
+you. Each page has Traditional and White Wedding tabs and an "I'm interested" form (name, email,
+WhatsApp, Traditional / White / Both). Responses land on the **Asoebi** / **Groomsmen** tabs as
+**Pending**. The pages are not in the nav.
+
+#### Admin page: `/admin`
+
+Signed in with `ADMIN_CODE`. Shows the Asoebi and Groomsmen responses with **Confirm** /
+**Decline**, and a guest list summary (guests and plus ones per category). Confirming a response
+(here, or by setting its Status in the sheet) updates the guest on **Guests**: Source gains
+"Asoebi" / "Groomsmen" and Plus One becomes at least 1.
 
 ### 3. Images: `public/`
 
 - `public/assets/couple/1.jpeg` (home hero) and `1–4.webp` (home marquee, gate background)
-- `public/assets/logo-n.png`, `logo-icon.png` and the `wedding_*.png` / city `.webp` images
+- `public/assets/monogram-*.webp` (header logo, password page) and the city `.webp` images
 - Favicons (`favicon.ico`, `favicon-*.png`, `apple-touch-icon.png`, `android-chrome-*.png`)
   and `site.webmanifest`
 
 Files in `public/` are served directly and are **not** behind the password gate.
 
-### 4. Backend: a new Google Sheet per couple
+### 4. Backend: Google Sheets via Apps Script
 
-1. Create a Google Cloud service account and download its JSON key.
-2. Create a new spreadsheet and share it with the service account email (Editor).
-3. Set the environment variables below. The sheet tabs are created on first write.
-4. Optional: create the wedding-train tab up front with
-   `curl -X POST -H "Authorization: Bearer $ADMIN_SECRET" https://<site>/api/init-train-sheet`
+The site never talks to Google directly. It calls an Apps Script web app attached to the
+couple's workbook (`apps-script/Code.gs`), which reads and writes the tabs.
 
-Never reuse the previous couple's spreadsheet: it holds their guests' personal data.
+**Set up the workbook** (a new one per couple — never reuse the previous couple's, it holds
+their guests' personal data): create an empty Google Sheet. The script's setup (below) creates
+and formats every tab:
+
+| Tab | Columns | Who fills it |
+|---|---|---|
+| **Guests** (the guest list) | Code, Name, Category, Source, Plus One, Asoebi ☐, Groomsmen ☐, Asoebi Link, Groomsmen Link | The couple adds rows (Name, Category, Plus One, ticks). The script fills Code and the links. |
+| **Asoebi**, **Groomsmen** | Submitted At, Code, Name, Email, WhatsApp, Events, Status | The website. The couple changes Status (Pending → Confirmed / Declined). |
+| **RSVPs** | RSVP answers | The website. |
+
+Category is a dropdown: Friends of groom, Friends of bride, Family of groom, Family of bride,
+Work colleagues, Others. Guests added directly have Source "Direct" (blank).
+
+**Deploy the script:**
+
+1. In the workbook: Extensions → Apps Script. Replace the editor's contents with
+   `apps-script/Code.gs`, set `SITE_URL` at the top to the site's address, and save.
+2. Project Settings (gear icon) → Script properties → add `SITE_SECRET` with a long random value
+   (`openssl rand -base64 32`).
+3. Reload the sheet. A **Wedding site** menu appears: run **Set up tabs & protections** and
+   authorise when asked. It creates the tabs, dropdowns and checkboxes, locks the columns the
+   website fills (only the sheet owner can edit them; Status stays editable), and installs the
+   trigger that fills codes/links and updates Guests when a response is confirmed. It's safe to
+   run again. **Generate missing codes & links** refreshes every row.
+4. Deploy → New deployment → type **Web app**. Execute as **Me**, Who has access **Anyone**.
+   Authorise when asked. Copy the web app URL (ends in `/exec`).
+5. Set `APPS_SCRIPT_URL` (that URL) and `APPS_SCRIPT_SECRET` (the same `SITE_SECRET`) in `.env`
+   and in Vercel.
+
+"Anyone" only means the URL is callable without a Google login; every request must carry the
+secret, and the script can only append rows, read the Guests / Asoebi / Groomsmen tabs, and
+change a response's Status.
+
+**After editing `Code.gs`:** Deploy → Manage deployments → edit (pencil) → Version: **New
+version** → Deploy. This keeps the same URL; a brand-new deployment gets a new one.
+
+**If the sheet can't be reached**, the site keeps using the last guest list it read (cached for
+a minute). If it has never read one (e.g. just after a deploy during an outage), personal links
+are trusted and show the first name from the link. Forms can't save until the sheet is
+back and show a "try again" message. Errors are logged in Vercel as `[appsScript]` / `[guests]`.
 
 ### 5. Environment variables (Vercel → Project → Settings → Environment Variables)
 
@@ -68,9 +117,9 @@ See `.env.example`.
 | Variable | Purpose |
 |---|---|
 | `SITE_GATE_PASSWORD` | Password for the whole site. Empty = public. Checked server-side only. |
-| `ADMIN_SECRET` | Bearer token for admin endpoints. Long, random, different from the gate password. |
-| `GOOGLE_SPREADSHEET_ID`, `GOOGLE_SERVICE_ACCOUNT_EMAIL`, `GOOGLE_PRIVATE_KEY` | Google Sheets access |
-| `BOTH_NAMES`, `TRAIN_NAMES`, `GROOMSMEN_NAMES` | Comma-separated invitee lists for `/join?n=<name>` |
+| `APPS_SCRIPT_URL` | The Apps Script web app URL (ends in `/exec`) |
+| `APPS_SCRIPT_SECRET` | Must match the script's `SITE_SECRET` property |
+| `ADMIN_CODE` | Code for `/admin`. Empty = admin page off. Long, and different from the site password. |
 
 Do not prefix secrets with `PUBLIC_`; Astro ships those to the browser.
 
@@ -93,18 +142,20 @@ Open issues to keep in mind (or fix) before handing the site to a couple.
 - **Images are public.** Everything in `public/` (couple photos, logo) is served straight from
   Vercel's CDN, bypassing the middleware, so anyone with a direct URL can open it. To protect
   them, move them out of `public/` and serve them through a route the middleware covers.
-- **No limit on password attempts.** `/api/unlock` and the admin bearer check accept unlimited
-  guesses. Use a password that isn't easy to guess, and a long random `ADMIN_SECRET`. A fix
+- **No limit on password attempts.** `/api/unlock` accepts unlimited guesses. Use a password
+  that isn't easy to guess. A fix
   would be rate limiting per IP (e.g. Vercel Firewall rules or Upstash Redis).
 - **One shared password.** Every guest uses the same password, so it can be passed on freely,
   and revoking access means changing it, which signs everyone out.
 - **Prerendered pages skip the gate.** Middleware only runs for server-rendered pages; adding
   `export const prerender = true` to a page makes it public.
+- **Apps Script limits.** Google caps how many script runs happen at once (about 30 per
+  account), so a large burst of simultaneous submissions could see some "try again" errors.
 - **Form spam.** The RSVP and wedding-train forms only have a honeypot field: no captcha or
   rate limit. With the gate on, only visitors who know the password can submit.
 - **New sheet-writing code must escape cells.** Values that start with `=`, `+`, `-` or `@`
   become formulas in Google Sheets. Pass every user-supplied cell through
-  `sanitizeSheetCell` (`src/util/sheetCell.ts`), as `rsvpSheet.ts` and `weddingTrainSheet.ts` do.
+  `sanitizeSheetCell` (`src/util/sheetCell.ts`), as `rsvpSheet.ts` and `interestSheet.ts` do.
 
 **Development**
 
