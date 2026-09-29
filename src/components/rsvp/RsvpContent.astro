@@ -147,7 +147,7 @@ const thankYouWriteChars = ["T", "h", "a", "n", "k", "\u00A0", "y", "o", "u"];
 
 				<ContentCard variant="primary" class="rsvp__callout" role="note">
 					<p class="rsvp__callout-text">
-						<strong>Please respond by</strong>
+						<strong>Deadline for registration and commitment:</strong>
 						<time datetime={event.rsvpDeadline.iso}>{event.rsvpDeadline.label}</time>
 						<br /> It helps us finalize numbers and plan for guests
 						traveling from abroad.
@@ -455,6 +455,10 @@ const thankYouWriteChars = ["T", "h", "a", "n", "k", "\u00A0", "y", "o", "u"];
 	.rsvp__callout-text strong {
 		font-weight: 700;
 		color: #6e523c;
+	}
+
+	.rsvp__callout-text time {
+		white-space: nowrap;
 	}
 
 	.rsvp__callout-text time {

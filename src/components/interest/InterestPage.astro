@@ -47,7 +47,8 @@ const id = (suffix: string) => `${idPrefix}-${suffix}`;
 					<p class="interest__greeting">Hi {firstName},</p>
 					<p class="interest__lede">{content.intro}</p>
 					<p class="interest__deadline">
-						Please register by <time datetime={event.interestDeadline.iso}>{event.interestDeadline.label}</time>
+						Deadline for registration and commitment:
+						<time datetime={event.interestDeadline.iso}>{event.interestDeadline.label}</time>
 					</p>
 				</header>
 
@@ -234,6 +235,7 @@ const id = (suffix: string) => `${idPrefix}-${suffix}`;
 	.interest__deadline time {
 		font-weight: 700;
 		color: var(--text-primary);
+		white-space: nowrap;
 	}
 
 	:global(.content-card.interest__card) {
