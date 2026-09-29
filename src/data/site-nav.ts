@@ -4,7 +4,11 @@ import { coupleNames, event, isPageEnabled, type PageKey } from "@/config/event"
 export const siteTitleSuffix = coupleNames;
 export const defaultPageDescription = `${siteTitleSuffix} · Wedding details coming soon.`;
 
-export const registryHref = event.registryHref;
+const registryComingSoon = event.comingSoon.includes("registry");
+
+/** While the registry is coming soon, links point at the site's /registry notice. */
+export const registryHref = registryComingSoon ? "/registry" : event.registryHref;
+export const registryIsExternal = !registryComingSoon;
 
 export type HomeEventPreview = {
 	title: string;
@@ -65,7 +69,7 @@ const allNavItems: NavEntry[] = [
 		kind: "link",
 		label: "Registry",
 		href: registryHref,
-		target: "_blank",
+		target: registryIsExternal ? "_blank" : "_self",
 	},
 	{
 		kind: "link",
@@ -84,10 +88,15 @@ const allNavItems: NavEntry[] = [
 	// Asoebi and Join are reached through personal links (?n=name), not the nav.
 ];
 
-/** Nav links, minus pages switched off in `src/config/event.ts` and the registry when hidden. */
+/**
+ * Nav links, minus pages switched off in `src/config/event.ts`. The registry
+ * shows while it's coming soon, or once live when showRegistryInNav is on.
+ */
 export const navItems: NavTopLink[] = allNavItems
 	.filter(({ page, href }) =>
-		page ? isPageEnabled(page) : href !== "" && event.showRegistryInNav,
+		page
+			? isPageEnabled(page)
+			: registryComingSoon || (href !== "" && event.showRegistryInNav),
 	)
 	.map(({ page: _page, ...link }) => link);
 

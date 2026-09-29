@@ -59,6 +59,13 @@ export const event = {
   showRegistryInNav: false,
 
   /**
+   * Pages that show a "Coming soon" notice instead of their content. They stay
+   * in the nav. Remove an entry once it's ready (for the registry, /registry then
+   * forwards to registryHref and the nav links straight to it).
+   */
+  comingSoon: ["travel", "registry"] as ("travel" | "registry")[],
+
+  /**
    * Tab names in the Google Sheet. They must match TABS in apps-script/Code.gs,
    * whose "Set up tabs & protections" menu creates them.
    */
@@ -78,7 +85,7 @@ export const event = {
   /** Turn off pages this couple doesn't need. Disabled pages return 404 and leave the nav. */
   pages: {
     schedule: true,
-    travel: false,
+    travel: true,
     faq: true,
     thingsToDo: false,
     asoebi: true,
