@@ -17,7 +17,11 @@ const title = `Asoebi · ${siteTitleSuffix}`;
 const description = `Asoebi for ${coupleNames}'s Traditional Marriage and White Wedding.`;
 ---
 
-<BaseLayout title={title} description={description}>
+<BaseLayout
+	title={title}
+	description={description}
+	loader={invitee ? { kind: "seal", guestName: invitee.name } : undefined}
+>
 	<meta slot="head" name="robots" content="noindex" />
 	<InterestPage
 		content={asoebiPageContent}

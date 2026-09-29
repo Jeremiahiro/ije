@@ -31,7 +31,11 @@ const quickLinks = navItems
   .slice(0, 4);
 ---
 
-<BaseLayout title={title} description={description}>
+<BaseLayout
+  title={title}
+  description={description}
+  loader={{ kind: "welcome", photo: "/assets/loaders/welcome.webp" }}
+>
   <main class="home-page">
 
     <!-- 1. Full-viewport hero -->

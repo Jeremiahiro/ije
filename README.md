@@ -55,6 +55,14 @@ Signed in with `ADMIN_CODE`. Shows the Asoebi and Groomsmen responses with **Con
 (here, or by setting its Status in the sheet) updates the guest on **Guests**: Source gains
 "Asoebi" / "Groomsmen" and Plus One becomes at least 1.
 
+#### Page loaders
+
+Pages choose a full-screen loader through `BaseLayout`'s `loader` prop
+(`src/components/loader/PageLoader.astro`): `welcome` on Home, `seal` on RSVP and the invite
+pages (the card greets the guest by first name), and `curtain` with a page title and photo
+elsewhere. Home and the seal play once per visit; a tap or key press skips them, and visitors who
+reduce motion never see them. Background photos are in `public/assets/loaders/`.
+
 ### 3. Images: `public/`
 
 - `public/assets/couple/1.jpeg` (home hero) and `1–4.webp` (home marquee, gate background)

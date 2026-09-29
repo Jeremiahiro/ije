@@ -11,6 +11,11 @@ const title = `${pageTitle} · ${siteTitleSuffix}`;
 const canonicalHref = new URL("/faq", Astro.url.origin).href;
 ---
 
-<BaseLayout title={title} description={description} canonicalHref={canonicalHref}>
+<BaseLayout
+	title={title}
+	description={description}
+	canonicalHref={canonicalHref}
+	loader={{ kind: "curtain", title: "FAQs", photo: "/assets/loaders/faq.webp" }}
+>
 	<FaqContent />
 </BaseLayout>

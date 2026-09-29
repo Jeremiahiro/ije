@@ -17,7 +17,11 @@ const title = `Join the Wedding Train · ${siteTitleSuffix}`;
 const description = `Join the wedding train for ${coupleNames}'s wedding.`;
 ---
 
-<BaseLayout title={title} description={description}>
+<BaseLayout
+	title={title}
+	description={description}
+	loader={invitee ? { kind: "seal", guestName: invitee.name } : undefined}
+>
 	<meta slot="head" name="robots" content="noindex" />
 	<InterestPage
 		content={joinPageContent}

@@ -12,7 +12,10 @@ if (!event.comingSoon.includes("registry") && event.registryHref) {
 }
 ---
 
-<BaseLayout title={`Registry · ${siteTitleSuffix}`}>
+<BaseLayout
+	title={`Registry · ${siteTitleSuffix}`}
+	loader={{ kind: "curtain", title: "Registry", photo: "/assets/loaders/registry.webp" }}
+>
 	<ComingSoonNotice
 		eyebrow="Registry"
 		title="Gifts & Registry"
