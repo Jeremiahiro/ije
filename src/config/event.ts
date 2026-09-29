@@ -69,6 +69,12 @@ export const event = {
     groomsmen: "Groomsmen",
   },
 
+  /**
+   * Site-wide password page (SITE_GATE_PASSWORD). When false the site is open;
+   * /asoebi and /join still require a valid invite code and /admin its ADMIN_CODE.
+   */
+  passwordGate: false,
+
   /** Turn off pages this couple doesn't need. Disabled pages return 404 and leave the nav. */
   pages: {
     schedule: true,

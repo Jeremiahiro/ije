@@ -1,12 +1,16 @@
 import { createHash, createHmac, timingSafeEqual } from "node:crypto";
 import type { AstroCookies } from "astro";
+import { event } from "@/config/event";
 
 export const GATE_COOKIE = "site_gate";
 export const GATE_TTL_SECONDS = 36 * 60 * 60;
 
-/** The gate is on only when SITE_GATE_PASSWORD is set. Never expose this to the client. */
+/**
+ * The gate is on only when `event.passwordGate` is true and SITE_GATE_PASSWORD
+ * is set; "" means off. Never expose this to the client.
+ */
 export const getGatePassword = (): string =>
-	import.meta.env.SITE_GATE_PASSWORD?.trim() ?? "";
+	event.passwordGate ? (import.meta.env.SITE_GATE_PASSWORD?.trim() ?? "") : "";
 
 const sha256 = (value: string): Buffer => createHash("sha256").update(value).digest();
 

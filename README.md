@@ -116,7 +116,7 @@ See `.env.example`.
 
 | Variable | Purpose |
 |---|---|
-| `SITE_GATE_PASSWORD` | Password for the whole site. Empty = public. Checked server-side only. |
+| `SITE_GATE_PASSWORD` | Password for the whole site, used only when `passwordGate` is `true` in `src/config/event.ts`. Checked server-side only. |
 | `APPS_SCRIPT_URL` | The Apps Script web app URL (ends in `/exec`) |
 | `APPS_SCRIPT_SECRET` | Must match the script's `SITE_SECRET` property |
 | `ADMIN_CODE` | Code for `/admin`. Empty = admin page off. Long, and different from the site password. |
@@ -124,6 +124,10 @@ See `.env.example`.
 Do not prefix secrets with `PUBLIC_`; Astro ships those to the browser.
 
 ## How the password gate works
+
+The gate is off while `passwordGate` is `false` in `src/config/event.ts` (the default for
+Cynthia & Kelechi): the site is open, `/asoebi` and `/join` still need a valid invite code, and
+`/admin` its `ADMIN_CODE`. Set it to `true` (and set `SITE_GATE_PASSWORD`) to turn it back on.
 
 `src/middleware.ts` redirects every page request without a valid `site_gate` cookie to
 `/unlock` (API routes get a 401). The form posts to `/api/unlock`, which compares the password
