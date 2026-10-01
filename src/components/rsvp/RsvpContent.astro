@@ -1,5 +1,6 @@
 ---
 import { event } from "@/config/event";
+import AddToCalendar from "@/components/calendar/AddToCalendar.astro";
 import ContentCard from "@/components/ContentCard.astro";
 import HeroPageSurface from "@/components/HeroPageSurface.astro";
 import FormCheck from "@/components/forms/FormCheck.astro";
@@ -352,6 +353,7 @@ const thankYouWriteChars = ["T", "h", "a", "n", "k", "\u00A0", "y", "o", "u"];
 				<p class="rsvp__success-copy">
 					Your RSVP is in — thank you! We can’t wait to celebrate with you. If anything changes, just let us know.
 				</p>
+				<AddToCalendar />
 			</div>
 		</div>
 	</ContentCard>

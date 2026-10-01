@@ -3,13 +3,15 @@
  * Personal-link page with Traditional / White Wedding tabs and an
  * "I'm interested" form. Used by /join (wedding train) and /asoebi.
  */
+import AddToCalendar from "@/components/calendar/AddToCalendar.astro";
 import ContentCard from "@/components/ContentCard.astro";
 import HeroPageSurface from "@/components/HeroPageSurface.astro";
 import FormChoice from "@/components/forms/FormChoice.astro";
 import FormChoiceGroup from "@/components/forms/FormChoiceGroup.astro";
 import FormField from "@/components/forms/FormField.astro";
-import { event } from "@/config/event";
+import { coupleNames, event } from "@/config/event";
 import type { InterestPageContent } from "@/data/interestPages";
+import { weeklyReminder } from "@/util/calendar";
 import type { Invitee } from "@/util/inviteList";
 import {
 	INTEREST_EVENT_LABELS,
@@ -30,6 +32,16 @@ interface Props {
 const { content, endpoint, invitee, idPrefix } = Astro.props;
 const firstName = invitee?.name.split(" ")[0] ?? "";
 const id = (suffix: string) => `${idPrefix}-${suffix}`;
+
+// Weekly nudge from next week until the registration deadline (dates in Nigeria).
+const today = new Date().toLocaleDateString("en-CA", { timeZone: "Africa/Lagos" });
+const reminderEvent = weeklyReminder(
+	`${content.eyebrow} reminder · ${coupleNames}'s wedding`,
+	`Deadline for registration and commitment: ${event.interestDeadline.label}.\n${Astro.url.href}`,
+	today,
+	event.interestDeadline.iso,
+);
+const reminder = reminderEvent && { event: reminderEvent, label: `${content.eyebrow} weekly reminder` };
 ---
 
 <HeroPageSurface bgSrc="/assets/rsvp.webp" surfaceClass="interest-page" ariaLabelledBy={id("heading")}>
@@ -168,6 +180,7 @@ const id = (suffix: string) => `${idPrefix}-${suffix}`;
 					<div class="interest__dialog-body interest__success" data-success-view hidden>
 						<h2 class="interest__success-title" tabindex="-1">{content.successTitle}</h2>
 						<p class="interest__success-copy">{content.successMessage}</p>
+						<AddToCalendar reminder={reminder} />
 						<button type="button" class="interest__cta" data-close-form>Done</button>
 					</div>
 				</dialog>
@@ -462,7 +475,7 @@ const id = (suffix: string) => `${idPrefix}-${suffix}`;
 	}
 
 	.interest__success-copy {
-		margin: 0 0 1.5rem;
+		margin: 0;
 		line-height: 1.6;
 		color: var(--text-muted);
 	}
