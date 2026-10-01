@@ -55,6 +55,10 @@ Signed in with `ADMIN_CODE`. Shows the Asoebi and Groomsmen responses with **Con
 (here, or by setting its Status in the sheet) updates the guest on **Guests**: Source gains
 "Asoebi" / "Groomsmen" and Plus One becomes at least 1.
 
+**Invite** adds someone to **Guests** for asoebi and/or groomsmen (name, category, plus ones) and
+shows their personal links to copy or share on WhatsApp. **RSVP link** builds a `/rsvp?n=…` link
+that greets the guest by name. Both use the address the admin page is open on.
+
 #### Page loaders
 
 Pages choose a full-screen loader through `BaseLayout`'s `loader` prop

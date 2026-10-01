@@ -1,3 +1,4 @@
+import { inviteLink, type InviteKind } from "@/util/inviteLinks";
 import { rsvpLink } from "@/util/rsvpLink";
 
 const mountTabs = (root: HTMLElement): void => {
@@ -71,6 +72,16 @@ const mountStatusButtons = (root: HTMLElement): void => {
 	}
 };
 
+const copyToClipboard = async (input: HTMLInputElement, status: HTMLElement): Promise<void> => {
+	try {
+		await navigator.clipboard.writeText(input.value);
+		status.textContent = "Link copied.";
+	} catch {
+		input.select();
+		status.textContent = "Couldn't copy. The link is selected; copy it manually.";
+	}
+};
+
 /** "RSVP link" dialog: type a name, copy or share the personal link. */
 const mountRsvpLinkDialog = (root: HTMLElement): void => {
 	const dialog = root.querySelector<HTMLDialogElement>("[data-rsvp-link-dialog]");
@@ -107,18 +118,109 @@ const mountRsvpLinkDialog = (root: HTMLElement): void => {
 	form.addEventListener("submit", async (e) => {
 		e.preventDefault();
 		if (!output.value) return;
-		try {
-			await navigator.clipboard.writeText(output.value);
-			status.textContent = "Link copied.";
-		} catch {
-			output.select();
-			status.textContent = "Couldn't copy. The link is selected; copy it manually.";
-		}
+		await copyToClipboard(output, status);
 	});
 
 	dialog.querySelector("[data-close-dialog]")?.addEventListener("click", () => dialog.close());
 	dialog.addEventListener("click", (e) => {
 		if (e.target === dialog) dialog.close();
+	});
+};
+
+/** "Invite" dialog: add someone to Guests for asoebi / groomsmen, then copy their links. */
+const mountInviteDialog = (root: HTMLElement): void => {
+	const dialog = root.querySelector<HTMLDialogElement>("[data-invite-dialog]");
+	const form = dialog?.querySelector<HTMLFormElement>("[data-invite-form]");
+	const result = dialog?.querySelector<HTMLElement>("[data-invite-result]");
+	const error = dialog?.querySelector<HTMLElement>("[data-invite-error]");
+	const submit = dialog?.querySelector<HTMLButtonElement>("[data-invite-submit]");
+	const added = dialog?.querySelector<HTMLElement>("[data-invite-added]");
+	const status = dialog?.querySelector<HTMLElement>("[data-invite-status]");
+	if (!dialog || !form || !result || !error || !submit || !added || !status) return;
+
+	const showForm = () => {
+		form.reset();
+		form.hidden = false;
+		result.hidden = true;
+		error.hidden = true;
+		status.textContent = "";
+	};
+
+	root.querySelector("[data-open-invite]")?.addEventListener("click", () => {
+		showForm();
+		dialog.showModal();
+		form.querySelector<HTMLInputElement>('[name="name"]')?.focus();
+	});
+	dialog.querySelector("[data-invite-again]")?.addEventListener("click", () => {
+		showForm();
+		form.querySelector<HTMLInputElement>('[name="name"]')?.focus();
+	});
+	dialog.querySelector("[data-close-dialog]")?.addEventListener("click", () => dialog.close());
+	dialog.addEventListener("click", (e) => {
+		if (e.target === dialog) dialog.close();
+	});
+
+	for (const block of dialog.querySelectorAll<HTMLElement>("[data-invite-link]")) {
+		const output = block.querySelector<HTMLInputElement>("[data-link-output]");
+		if (!output) continue;
+		output.addEventListener("focus", () => output.select());
+		block.querySelector("[data-copy-link]")?.addEventListener("click", () => copyToClipboard(output, status));
+	}
+
+	form.addEventListener("submit", async (e) => {
+		e.preventDefault();
+		error.hidden = true;
+		const data = new FormData(form);
+		const payload = {
+			name: String(data.get("name") ?? ""),
+			category: String(data.get("category") ?? ""),
+			plusOne: Number(data.get("plusOne") || 0),
+			asoebi: data.get("asoebi") === "on",
+			groomsmen: data.get("groomsmen") === "on",
+		};
+
+		submit.disabled = true;
+		submit.textContent = "Adding…";
+		try {
+			const response = await fetch("/api/admin/guest", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(payload),
+			});
+			if (response.status === 401) {
+				window.location.reload();
+				return;
+			}
+			const body = (await response.json().catch(() => null)) as
+				| { ok?: boolean; code?: string; name?: string; message?: string }
+				| null;
+			if (!response.ok || !body?.ok || !body.code) {
+				error.textContent = body?.message ?? "Couldn't add them to the sheet. Try again.";
+				error.hidden = false;
+				return;
+			}
+
+			const name = body.name ?? payload.name;
+			added.textContent = `${name} is on the guest list. Send them their link:`;
+			for (const block of dialog.querySelectorAll<HTMLElement>("[data-invite-link]")) {
+				const kind = block.dataset.inviteLink as InviteKind;
+				block.hidden = !payload[kind];
+				if (block.hidden) continue;
+				const link = inviteLink(window.location.origin, kind, name, body.code);
+				const output = block.querySelector<HTMLInputElement>("[data-link-output]");
+				const share = block.querySelector<HTMLAnchorElement>("[data-share-link]");
+				if (output) output.value = link;
+				if (share) share.href = `https://wa.me/?text=${encodeURIComponent(link)}`;
+			}
+			form.hidden = true;
+			result.hidden = false;
+		} catch {
+			error.textContent = "Couldn't reach the server. Check your connection and try again.";
+			error.hidden = false;
+		} finally {
+			submit.disabled = false;
+			submit.textContent = "Add and get link";
+		}
 	});
 };
 
@@ -128,4 +230,5 @@ export const mountAdminDashboard = (): void => {
 	mountTabs(root);
 	mountStatusButtons(root);
 	mountRsvpLinkDialog(root);
+	mountInviteDialog(root);
 };

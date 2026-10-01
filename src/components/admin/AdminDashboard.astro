@@ -4,6 +4,7 @@
  * list from the RSVPs tab. Confirming updates the guest's row on the Guests tab.
  */
 import type { InterestResponse } from "@/util/interestSheet";
+import { GUEST_CATEGORIES } from "@/util/inviteLinks";
 import type { RsvpGuest } from "@/util/rsvpSheet";
 
 interface Props {
@@ -49,6 +50,9 @@ const formatDate = (iso: string) => {
 	<header class="dash__head">
 		<h1 class="dash__title">Admin</h1>
 		<div class="dash__head-actions">
+			<button type="button" class="dash__action dash__action--confirm" data-open-invite>
+				Invite
+			</button>
 			<button type="button" class="dash__action dash__action--confirm" data-open-rsvp-link>
 				RSVP link
 			</button>
@@ -91,6 +95,60 @@ const formatDate = (iso: string) => {
 				</div>
 				<p class="dash__hint" role="status" aria-live="polite" data-rsvp-link-status></p>
 			</form>
+		</div>
+	</dialog>
+
+	<dialog class="dash__dialog" aria-labelledby="invite-title" data-invite-dialog>
+		<div class="dash__dialog-body">
+			<div class="dash__dialog-head">
+				<h2 id="invite-title" class="dash__dialog-title">Invite to asoebi / groomsmen</h2>
+				<button type="button" class="dash__close" data-close-dialog aria-label="Close">
+					<span aria-hidden="true">×</span>
+				</button>
+			</div>
+
+			<form class="dash__link-form" data-invite-form novalidate>
+				<label class="dash__label" for="invite-name">Name</label>
+				<input id="invite-name" class="dash__input" type="text" name="name" maxlength="100" autocomplete="off" required />
+
+				<label class="dash__label" for="invite-category">Category</label>
+				<select id="invite-category" class="dash__input" name="category" required>
+					<option value="">Choose…</option>
+					{GUEST_CATEGORIES.map((c) => <option value={c}>{c}</option>)}
+				</select>
+
+				<label class="dash__label" for="invite-plus-one">Plus ones</label>
+				<input id="invite-plus-one" class="dash__input dash__input--short" type="number" name="plusOne" min="0" max="10" value="0" inputmode="numeric" />
+
+				<fieldset class="dash__checks">
+					<legend class="dash__label">Invite to</legend>
+					<label><input type="checkbox" name="asoebi" /> Asoebi</label>
+					<label><input type="checkbox" name="groomsmen" /> Groomsmen</label>
+				</fieldset>
+
+				<p class="dash__error" role="alert" data-invite-error hidden></p>
+				<div class="dash__dialog-actions">
+					<button type="submit" class="dash__action dash__action--confirm" data-invite-submit>Add and get link</button>
+				</div>
+			</form>
+
+			<div class="dash__link-form" data-invite-result hidden>
+				<p class="dash__hint dash__hint--lead" data-invite-added></p>
+				{(["asoebi", "groomsmen"] as const).map((kind) => (
+					<div class="dash__invite-link" data-invite-link={kind} hidden>
+						<label class="dash__label" for={`invite-link-${kind}`}>{kind === "asoebi" ? "Asoebi link" : "Groomsmen link"}</label>
+						<input id={`invite-link-${kind}`} class="dash__input dash__input--link" type="text" readonly data-link-output />
+						<div class="dash__dialog-actions">
+							<button type="button" class="dash__action dash__action--confirm" data-copy-link>Copy link</button>
+							<a class="dash__action dash__action--link" href="#" target="_blank" rel="noopener noreferrer" data-share-link>Share on WhatsApp</a>
+						</div>
+					</div>
+				))}
+				<p class="dash__hint" role="status" aria-live="polite" data-invite-status></p>
+				<div class="dash__dialog-actions">
+					<button type="button" class="dash__action" data-invite-again>Invite someone else</button>
+				</div>
+			</div>
 		</div>
 	</dialog>
 
@@ -441,6 +499,53 @@ const formatDate = (iso: string) => {
 	.dash__input--link {
 		color: var(--text-muted);
 		font-size: 0.85rem;
+	}
+
+	.dash__input--short {
+		max-width: 6rem;
+	}
+
+	.dash__checks {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem 1.25rem;
+		margin: 0.25rem 0 0.5rem;
+		padding: 0;
+		border: none;
+	}
+
+	.dash__checks legend {
+		margin-bottom: 0.35rem;
+		padding: 0;
+	}
+
+	.dash__checks label {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4rem;
+		cursor: pointer;
+	}
+
+	.dash__error {
+		margin: 0;
+		font-size: 0.85rem;
+		color: rgb(150 45 35);
+	}
+
+	.dash__invite-link {
+		display: grid;
+		gap: 0.5rem;
+		margin-bottom: 0.75rem;
+	}
+
+	.dash__invite-link[hidden],
+	.dash__link-form[hidden] {
+		display: none;
+	}
+
+	.dash__hint--lead {
+		font-size: 0.95rem;
+		color: var(--text-primary);
 	}
 
 	.dash__hint {
