@@ -1,0 +1,29 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import ComingSoonNotice from "@/components/ComingSoonNotice.astro";
+import RegistryContent from "@/components/registry/RegistryContent.astro";
+import { coupleNames, event } from "@/config/event";
+import { siteTitleSuffix } from "@/data/site-nav";
+
+const description = `Gifts for ${coupleNames}’s wedding: cash gifts and bank transfers only, with account details.`;
+const canonicalHref = new URL("/registry", Astro.url.origin).href;
+---
+
+<BaseLayout
+	title={`Registry · ${siteTitleSuffix}`}
+	description={description}
+	canonicalHref={canonicalHref}
+	loader={{ kind: "curtain", title: "Registry", photo: "/assets/loaders/registry.webp" }}
+>
+	{
+		event.comingSoon.includes("registry") ? (
+			<ComingSoonNotice
+				eyebrow="Registry"
+				title="Gifts & Registry"
+				message="Your presence is the greatest gift. For those who have asked, our gift details will be shared here soon."
+			/>
+		) : (
+			<RegistryContent />
+		)
+	}
+</BaseLayout>

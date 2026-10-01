@@ -1,19 +1,20 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { event } from "@/config/event";
 import { RSVP_FIELD, RSVP_HONEYPOT_FIELD } from "@/util/rsvpForm";
 import { POST } from "@/pages/api/rsvp";
 
-vi.mock("@/util/googleSheetsApi", () => ({
+vi.mock("@/util/googleSheetsApi", async (importOriginal) => ({
+	...(await importOriginal<typeof import("@/util/googleSheetsApi")>()),
 	appendRowsToSheet: vi.fn().mockResolvedValue({ ok: true }),
 }));
 
 import { appendRowsToSheet } from "@/util/googleSheetsApi";
 
-const SHEET_ID = "fake-spreadsheet-id";
-
 const validForm = (extra: Record<string, string> = {}): FormData => {
 	const f = new FormData();
 	f.set(RSVP_FIELD.fullName, "Ada Okonkwo");
 	f.set(RSVP_FIELD.email, "ada@example.com");
+	f.set(RSVP_FIELD.phone, "+2348031234567");
 	f.set(RSVP_FIELD.countryResidence, "nigeria");
 	f.set(RSVP_FIELD.eventTraditional, "yes");
 	for (const [k, v] of Object.entries(extra)) f.set(k, v);
@@ -29,9 +30,8 @@ const post = (form: FormData): Promise<Response> => {
 };
 
 beforeEach(() => {
-	vi.stubEnv("GOOGLE_SPREADSHEET_ID", SHEET_ID);
-	vi.stubEnv("GOOGLE_SERVICE_ACCOUNT_EMAIL", "sa@project.iam.gserviceaccount.com");
-	vi.stubEnv("GOOGLE_PRIVATE_KEY", "fake-key");
+	vi.stubEnv("APPS_SCRIPT_URL", "https://script.google.com/macros/s/fake/exec");
+	vi.stubEnv("APPS_SCRIPT_SECRET", "fake-secret");
 	vi.mocked(appendRowsToSheet).mockResolvedValue({ ok: true });
 });
 
@@ -41,8 +41,8 @@ afterEach(() => {
 });
 
 describe("POST /api/rsvp", () => {
-	it("returns 503 when the spreadsheet ID is not configured", async () => {
-		vi.stubEnv("GOOGLE_SPREADSHEET_ID", "");
+	it("returns 503 when the Apps Script is not configured", async () => {
+		vi.stubEnv("APPS_SCRIPT_URL", "");
 
 		const res = await post(validForm());
 		expect(res.status).toBe(503);
@@ -72,7 +72,11 @@ describe("POST /api/rsvp", () => {
 		expect(res.status).toBe(200);
 		expect(await res.json()).toEqual({ ok: true });
 		expect(appendRowsToSheet).toHaveBeenCalledTimes(1);
-		expect(appendRowsToSheet).toHaveBeenCalledWith("RSVPs", expect.any(Array));
+		expect(appendRowsToSheet).toHaveBeenCalledWith(
+			event.sheets.rsvp,
+			expect.any(Array),
+			expect.objectContaining({ headers: expect.any(Array) }),
+		);
 	});
 
 	it("returns 502 when the upstream sheet write fails", async () => {

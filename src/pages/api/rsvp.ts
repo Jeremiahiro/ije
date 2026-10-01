@@ -1,11 +1,15 @@
 import type { APIRoute } from "astro";
+import { normalizePhoneField } from "@/util/phoneNumber";
 import {
 	buildRsvpRecord,
 	parseRsvpFormData,
+	RSVP_FIELD,
 	RSVP_HONEYPOT_FIELD,
 	validateRsvpForm,
 } from "@/util/rsvpForm";
+import { isSheetsConfigured } from "@/util/googleSheetsApi";
 import { forwardRsvpToGoogleSheet } from "@/util/rsvpSheet";
+import { rsvpMessage, sendTelegram } from "@/util/notify";
 
 export const prerender = false;
 
@@ -16,7 +20,7 @@ const json = (body: unknown, status = 200): Response =>
 	});
 
 export const POST: APIRoute = async ({ request }) => {
-	if (!import.meta.env.GOOGLE_SPREADSHEET_ID?.trim()) {
+	if (!isSheetsConfigured()) {
 		return json({ ok: false, kind: "not_configured" }, 503);
 	}
 
@@ -32,10 +36,13 @@ export const POST: APIRoute = async ({ request }) => {
 		return json({ ok: true });
 	}
 
+	const phoneError = normalizePhoneField(formData, RSVP_FIELD.phone, "Enter a valid phone number.");
 	const validation = validateRsvpForm(parseRsvpFormData(formData));
-	if (!validation.ok) {
+	if (phoneError || !validation.ok) {
+		const fieldErrors = validation.ok ? {} : validation.fieldErrors;
+		if (phoneError) fieldErrors[RSVP_FIELD.phone] = phoneError;
 		return json(
-			{ ok: false, kind: "validation", fieldErrors: validation.fieldErrors },
+			{ ok: false, kind: "validation", fieldErrors },
 			400,
 		);
 	}
@@ -54,6 +61,7 @@ export const POST: APIRoute = async ({ request }) => {
 		);
 	}
 
+	await sendTelegram(rsvpMessage(record));
 	return json({ ok: true });
 };
 

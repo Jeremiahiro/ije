@@ -92,6 +92,15 @@ describe("validateRsvpForm", () => {
 		expect(result.fieldErrors[RSVP_FIELD.plusOneName]).toBeDefined();
 	});
 
+	it("requires a phone number but not an email", () => {
+		const noPhone = validateRsvpForm(parseRsvpFormData(fd({ [RSVP_FIELD.phone]: "" })));
+		expect(noPhone.ok).toBe(false);
+		if (noPhone.ok) return;
+		expect(noPhone.fieldErrors[RSVP_FIELD.phone]).toBeDefined();
+
+		expect(validateRsvpForm(parseRsvpFormData(fd({ [RSVP_FIELD.email]: "" }))).ok).toBe(true);
+	});
+
 	it("rejects invalid email", () => {
 		const form = fd({ [RSVP_FIELD.email]: "not-an-email" });
 		const result = validateRsvpForm(parseRsvpFormData(form));
@@ -114,11 +123,21 @@ describe("validateRsvpForm", () => {
 		expect(result.ok).toBe(true);
 	});
 
-	it("requires international travel fields for UK guests", () => {
+	it("allows UK guests to leave travel dates blank", () => {
 		const form = fd({
 			[RSVP_FIELD.countryResidence]: "uk",
 			[RSVP_FIELD.expectedArrival]: "",
 			[RSVP_FIELD.expectedDeparture]: "",
+		});
+		const result = validateRsvpForm(parseRsvpFormData(form));
+		expect(result.ok).toBe(true);
+	});
+
+	it("rejects malformed travel dates for UK guests", () => {
+		const form = fd({
+			[RSVP_FIELD.countryResidence]: "uk",
+			[RSVP_FIELD.expectedArrival]: "Jan 2",
+			[RSVP_FIELD.expectedDeparture]: "2027/01/10",
 		});
 		const result = validateRsvpForm(parseRsvpFormData(form));
 		expect(result.ok).toBe(false);
@@ -181,8 +200,8 @@ describe("buildRsvpRecord", () => {
 			country_residence: "nigeria",
 			other_country: "",
 			full_name: "Test",
-			email: "t@example.com",
-			phone: "",
+			email: "",
+			phone: "+2348000000000",
 			party_size: 1,
 			plus_one_name: "",
 			event_traditional: true,
@@ -194,7 +213,8 @@ describe("buildRsvpRecord", () => {
 			message_couple: "",
 		};
 		const row = buildRsvpRecord(values);
-		expect(row.phone).toBeNull();
+		expect(row.email).toBeNull();
+		expect(row.phone).toBe("+2348000000000");
 		expect(row.plus_one_name).toBeNull();
 		expect(row.message_couple).toBeNull();
 	});
