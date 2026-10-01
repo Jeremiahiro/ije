@@ -47,11 +47,51 @@ const formatDate = (iso: string) => {
 <section class="dash" data-admin-dashboard>
 	<header class="dash__head">
 		<h1 class="dash__title">Admin</h1>
-		<form method="post" action="/api/admin/login">
-			<input type="hidden" name="logout" value="1" />
-			<button type="submit" class="dash__signout">Sign out</button>
-		</form>
+		<div class="dash__head-actions">
+			<button type="button" class="dash__action dash__action--confirm" data-open-rsvp-link>
+				RSVP link
+			</button>
+			<form method="post" action="/api/admin/login">
+				<input type="hidden" name="logout" value="1" />
+				<button type="submit" class="dash__signout">Sign out</button>
+			</form>
+		</div>
 	</header>
+
+	<dialog class="dash__dialog" aria-labelledby="rsvp-link-title" data-rsvp-link-dialog>
+		<div class="dash__dialog-body">
+			<div class="dash__dialog-head">
+				<h2 id="rsvp-link-title" class="dash__dialog-title">RSVP link</h2>
+				<button type="button" class="dash__close" data-close-dialog aria-label="Close">
+					<span aria-hidden="true">×</span>
+				</button>
+			</div>
+			<form class="dash__link-form" data-rsvp-link-form>
+				<label class="dash__label" for="rsvp-link-name">Name to greet</label>
+				<input
+					id="rsvp-link-name"
+					class="dash__input"
+					type="text"
+					maxlength="80"
+					autocomplete="off"
+					placeholder="Mr. & Mrs. Anderson"
+					data-rsvp-link-name
+				/>
+				<p class="dash__hint">Shown exactly as typed: “Hi Mr. &amp; Mrs. Anderson,”</p>
+
+				<label class="dash__label" for="rsvp-link-output">Link</label>
+				<input id="rsvp-link-output" class="dash__input dash__input--link" type="text" readonly data-rsvp-link-output />
+
+				<div class="dash__dialog-actions">
+					<button type="submit" class="dash__action dash__action--confirm" data-copy-rsvp-link disabled>Copy link</button>
+					<a class="dash__action dash__action--link" href="#" target="_blank" rel="noopener noreferrer" data-share-rsvp-link aria-disabled="true">
+						Share on WhatsApp
+					</a>
+				</div>
+				<p class="dash__hint" role="status" aria-live="polite" data-rsvp-link-status></p>
+			</form>
+		</div>
+	</dialog>
 
 	<div class="dash__tabs" role="tablist" aria-label="Lists">
 		{lists.map((list, i) => (
@@ -170,6 +210,12 @@ const formatDate = (iso: string) => {
 		margin: 0;
 		font-size: clamp(2rem, 5vw, 2.75rem);
 		font-weight: 400;
+	}
+
+	.dash__head-actions {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
 	}
 
 	.dash__signout {
@@ -306,6 +352,99 @@ const formatDate = (iso: string) => {
 	.dash__action[disabled] {
 		opacity: 0.45;
 		cursor: default;
+	}
+
+	.dash__action--link {
+		text-decoration: none;
+	}
+
+	.dash__action--link[aria-disabled="true"] {
+		opacity: 0.45;
+		pointer-events: none;
+	}
+
+	.dash__dialog {
+		/* Tailwind's reset zeroes margins; restore the browser's modal centring */
+		margin: auto;
+		width: min(30rem, calc(100vw - 2rem));
+		padding: 0;
+		border: 1px solid rgb(255 255 255 / 0.7);
+		border-radius: 1.25rem;
+		background: #f7f2eb;
+		color: var(--text-primary);
+		box-shadow: 0 24px 60px rgb(20 14 10 / 0.3);
+		font-family: var(--font-body);
+	}
+
+	.dash__dialog::backdrop {
+		background: rgb(30 20 12 / 0.45);
+		backdrop-filter: blur(4px);
+	}
+
+	/* Padding lives here so a click on the dialog element itself means the backdrop. */
+	.dash__dialog-body {
+		padding: clamp(1.25rem, 4vw, 1.75rem);
+	}
+
+	.dash__dialog-head {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-bottom: 1rem;
+	}
+
+	.dash__dialog-title {
+		margin: 0;
+		font-size: 1.5rem;
+		font-weight: 400;
+	}
+
+	.dash__close {
+		border: none;
+		background: none;
+		color: var(--text-muted);
+		font-size: 1.6rem;
+		line-height: 1;
+		cursor: pointer;
+	}
+
+	.dash__link-form {
+		display: grid;
+		gap: 0.5rem;
+	}
+
+	.dash__label {
+		font-size: 0.84rem;
+		font-weight: 600;
+	}
+
+	.dash__input {
+		width: 100%;
+		box-sizing: border-box;
+		padding: 0.7rem 0.9rem;
+		border-radius: 0.55rem;
+		border: 1px solid rgb(110 82 60 / 0.22);
+		background: rgb(255 252 247 / 0.92);
+		font: inherit;
+	}
+
+	.dash__input--link {
+		color: var(--text-muted);
+		font-size: 0.85rem;
+	}
+
+	.dash__hint {
+		min-height: 1.2em;
+		margin: 0 0 0.5rem;
+		font-size: 0.8rem;
+		color: var(--text-muted);
+	}
+
+	.dash__dialog-actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+		margin-top: 0.5rem;
 	}
 
 	.dash__table {
