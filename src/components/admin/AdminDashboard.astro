@@ -299,11 +299,11 @@ const formatDate = (iso: string) => {
 										{g.name}
 										{g.plusOneOf && <span class="dash__plus-one">Plus one of {g.plusOneOf}</span>}
 									</td>
-									<td>{eventsLabel(g)}</td>
-									<td>{g.phone && <a href={`tel:${g.phone}`}>{g.phone}</a>}</td>
-									<td>{g.country}</td>
-									<td>{travelLabel(g)}</td>
-									<td>{formatDate(g.submittedAt)}</td>
+									<td data-label="Events">{eventsLabel(g)}</td>
+									<td data-label="Phone">{g.phone && <a href={`tel:${g.phone}`}>{g.phone}</a>}</td>
+									<td data-label="From">{g.country}</td>
+									<td data-label="Travel">{travelLabel(g)}</td>
+									<td data-label="RSVPed">{formatDate(g.submittedAt)}</td>
 								</tr>
 							))}
 						</tbody>
@@ -328,8 +328,10 @@ const formatDate = (iso: string) => {
 
 	.dash__head {
 		display: flex;
+		flex-wrap: wrap;
 		align-items: center;
 		justify-content: space-between;
+		gap: 0.75rem 1rem;
 		margin-bottom: 1.25rem;
 	}
 
@@ -341,13 +343,16 @@ const formatDate = (iso: string) => {
 
 	.dash__head-actions {
 		display: flex;
+		flex-wrap: wrap;
 		align-items: center;
-		gap: 1rem;
+		gap: 0.5rem 0.75rem;
 	}
 
 	.dash__signout {
+		padding: 0.5rem 0.25rem;
 		border: none;
 		background: none;
+		white-space: nowrap;
 		color: var(--text-muted);
 		font: inherit;
 		text-decoration: underline;
@@ -356,9 +361,14 @@ const formatDate = (iso: string) => {
 
 	.dash__tabs {
 		display: flex;
-		flex-wrap: wrap;
 		gap: 0.35rem;
 		width: fit-content;
+		max-width: 100%;
+		box-sizing: border-box;
+		/* One row; scrolls sideways rather than wrapping if it ever runs out of room. */
+		overflow-x: auto;
+		scrollbar-width: none;
+		-webkit-overflow-scrolling: touch;
 		margin-bottom: 1.25rem;
 		padding: 0.3rem;
 		border-radius: 9999px;
@@ -366,7 +376,27 @@ const formatDate = (iso: string) => {
 		border: 1px solid rgb(255 255 255 / 0.8);
 	}
 
+	.dash__tabs::-webkit-scrollbar {
+		display: none;
+	}
+
+	/* Phones: all tabs visible at once, two per row. */
+	@media (max-width: 640px) {
+		.dash__tabs {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			width: 100%;
+			border-radius: 1.25rem;
+		}
+
+		.dash__tab {
+			justify-content: center;
+		}
+	}
+
 	.dash__tab {
+		flex-shrink: 0;
+		white-space: nowrap;
 		display: inline-flex;
 		align-items: center;
 		gap: 0.4rem;
@@ -460,6 +490,12 @@ const formatDate = (iso: string) => {
 	}
 
 	.dash__action {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 2.5rem;
+		box-sizing: border-box;
+		white-space: nowrap;
 		padding: 0.45rem 0.9rem;
 		border-radius: 9999px;
 		border: 1px solid rgb(110 82 60 / 0.35);
@@ -581,8 +617,16 @@ const formatDate = (iso: string) => {
 	.dash__checks label {
 		display: inline-flex;
 		align-items: center;
-		gap: 0.4rem;
+		gap: 0.5rem;
+		padding: 0.35rem 0;
 		cursor: pointer;
+	}
+
+	.dash__checks input {
+		width: 1.2rem;
+		height: 1.2rem;
+		margin: 0;
+		accent-color: #6e523c;
 	}
 
 	.dash__error {
@@ -632,11 +676,24 @@ const formatDate = (iso: string) => {
 		gap: 0.5rem;
 	}
 
+	/* Six totals: 2 per row on phones, 3 on tablets, all in one row on wide screens. */
 	.dash__summary {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr));
+		grid-template-columns: repeat(2, minmax(0, 1fr));
 		gap: 0.6rem;
 		margin: 0 0 1.25rem;
+	}
+
+	@media (min-width: 641px) {
+		.dash__summary {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
+	}
+
+	@media (min-width: 960px) {
+		.dash__summary {
+			grid-template-columns: repeat(6, minmax(0, 1fr));
+		}
 	}
 
 	.dash__stat {
@@ -690,6 +747,67 @@ const formatDate = (iso: string) => {
 		padding: 0.6rem 1rem;
 		text-align: left;
 		border-bottom: 1px solid rgb(110 82 60 / 0.12);
+	}
+
+	/* Phones: each guest becomes a card, each cell a "Label  value" line. */
+	@media (max-width: 640px) {
+		.dash__table--guests,
+		.dash__table--guests tbody,
+		.dash__table--guests tr,
+		.dash__table--guests td {
+			display: block;
+		}
+
+		.dash__table--guests {
+			background: none;
+		}
+
+		.dash__table--guests thead {
+			display: none;
+		}
+
+		.dash__table--guests tr {
+			margin-bottom: 0.65rem;
+			padding: 0.75rem 1rem;
+			border-radius: 1rem;
+			background: rgb(255 255 255 / 0.6);
+			border: 1px solid rgb(255 255 255 / 0.8);
+		}
+
+		.dash__table--guests td {
+			display: flex;
+			justify-content: space-between;
+			gap: 1rem;
+			padding: 0.3rem 0;
+			border: none;
+			text-align: right;
+		}
+
+		.dash__table--guests td:empty {
+			display: none;
+		}
+
+		.dash__table--guests td::before {
+			content: attr(data-label);
+			flex-shrink: 0;
+			font-size: 0.75rem;
+			font-weight: 700;
+			letter-spacing: 0.06em;
+			text-transform: uppercase;
+			color: var(--text-muted);
+			text-align: left;
+		}
+
+		.dash__table--guests td:first-child {
+			display: block;
+			padding-bottom: 0.4rem;
+			font-weight: 700;
+			text-align: left;
+		}
+
+		.dash__table--guests td:first-child::before {
+			content: none;
+		}
 	}
 
 </style>
