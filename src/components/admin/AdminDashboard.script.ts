@@ -138,6 +138,12 @@ const mountInviteDialog = (root: HTMLElement): void => {
 	const status = dialog?.querySelector<HTMLElement>("[data-invite-status]");
 	if (!dialog || !form || !result || !error || !submit || !added || !status) return;
 
+	// After adding someone, reload on close so they appear on the Invitations tab.
+	let addedSomeone = false;
+	dialog.addEventListener("close", () => {
+		if (addedSomeone) window.location.reload();
+	});
+
 	const showForm = () => {
 		form.reset();
 		form.hidden = false;
@@ -212,6 +218,7 @@ const mountInviteDialog = (root: HTMLElement): void => {
 				if (output) output.value = link;
 				if (share) share.href = `https://wa.me/?text=${encodeURIComponent(link)}`;
 			}
+			addedSomeone = true;
 			form.hidden = true;
 			result.hidden = false;
 		} catch {
@@ -224,6 +231,23 @@ const mountInviteDialog = (root: HTMLElement): void => {
 	});
 };
 
+/** Invitations tab: each "Copy link" button copies its data-copy-value. */
+const mountCopyButtons = (root: HTMLElement): void => {
+	for (const button of root.querySelectorAll<HTMLButtonElement>("[data-copy-value]")) {
+		button.addEventListener("click", async () => {
+			const label = button.textContent;
+			try {
+				await navigator.clipboard.writeText(button.dataset.copyValue ?? "");
+				button.textContent = "Copied";
+			} catch {
+				window.prompt("Copy this link:", button.dataset.copyValue ?? "");
+				return;
+			}
+			window.setTimeout(() => (button.textContent = label), 2000);
+		});
+	}
+};
+
 export const mountAdminDashboard = (): void => {
 	const root = document.querySelector<HTMLElement>("[data-admin-dashboard]");
 	if (!root) return;
@@ -231,4 +255,5 @@ export const mountAdminDashboard = (): void => {
 	mountStatusButtons(root);
 	mountRsvpLinkDialog(root);
 	mountInviteDialog(root);
+	mountCopyButtons(root);
 };

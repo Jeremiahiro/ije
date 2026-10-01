@@ -1,10 +1,12 @@
 ---
 /**
- * Admin view: Asoebi and Groomsmen responses (confirm / decline) and the guest
- * list from the RSVPs tab. Confirming updates the guest's row on the Guests tab.
+ * Admin view: Asoebi and Groomsmen responses (confirm / decline), the people
+ * invited to them with their personal links, and the guest list from the RSVPs
+ * tab. Confirming updates the guest's row on the Guests tab.
  */
 import type { InterestResponse } from "@/util/interestSheet";
-import { GUEST_CATEGORIES } from "@/util/inviteLinks";
+import type { Guest } from "@/util/inviteList";
+import { GUEST_CATEGORIES, inviteLink, type InviteKind } from "@/util/inviteLinks";
 import type { RsvpGuest } from "@/util/rsvpSheet";
 
 interface Props {
@@ -12,9 +14,18 @@ interface Props {
 	asoebi: InterestResponse[] | null;
 	groomsmen: InterestResponse[] | null;
 	rsvps: RsvpGuest[] | null;
+	/** Guests ticked for asoebi and/or groomsmen. */
+	invitees: Guest[] | null;
+	/** The address the admin page is open on, for building links. */
+	origin: string;
 }
 
-const { asoebi, groomsmen, rsvps } = Astro.props;
+const { asoebi, groomsmen, rsvps, invitees, origin } = Astro.props;
+
+const inviteKinds = (g: Guest): { kind: InviteKind; label: string }[] => [
+	...(g.asoebi ? [{ kind: "asoebi" as const, label: "Asoebi" }] : []),
+	...(g.groomsmen ? [{ kind: "groomsmen" as const, label: "Groomsmen" }] : []),
+];
 
 const lists = [
 	{ id: "asoebi", label: "Asoebi", rows: asoebi },
@@ -171,6 +182,17 @@ const formatDate = (iso: string) => {
 			type="button"
 			role="tab"
 			class="dash__tab"
+			id="dash-tab-invites"
+			aria-controls="dash-panel-invites"
+			aria-selected="false"
+			tabindex="-1"
+		>
+			Invitations
+		</button>
+		<button
+			type="button"
+			role="tab"
+			class="dash__tab"
 			id="dash-tab-guests"
 			aria-controls="dash-panel-guests"
 			aria-selected="false"
@@ -211,6 +233,43 @@ const formatDate = (iso: string) => {
 			)}
 		</section>
 	))}
+
+	<section class="dash__panel" role="tabpanel" id="dash-panel-invites" aria-labelledby="dash-tab-invites" hidden>
+		{invitees === null ? (
+			<p class="dash__empty">Couldn't read the Guests tab. Check the Apps Script setup and reload.</p>
+		) : invitees.length === 0 ? (
+			<p class="dash__empty">No one has been invited to asoebi or groomsmen yet. Use <strong>Invite</strong> above.</p>
+		) : (
+			<ul class="dash__responses">
+				{invitees.map((g) => (
+					<li class="dash__response dash__invitee">
+						<div class="dash__who">
+							<p class="dash__name">{g.name}</p>
+							<p class="dash__meta">
+								{[g.category, g.plusOne ? `+${g.plusOne}` : "", g.code].filter(Boolean).join(" · ")}
+							</p>
+						</div>
+						<div class="dash__invitee-links">
+							{inviteKinds(g).map(({ kind, label }) => {
+								const link = inviteLink(origin, kind, g.name, g.code);
+								return (
+									<div class="dash__invitee-link">
+										<span class="dash__status">{label}</span>
+										<button type="button" class="dash__action dash__action--confirm" data-copy-value={link} title={link}>
+											Copy link
+										</button>
+										<a class="dash__action dash__action--link" href={`https://wa.me/?text=${encodeURIComponent(link)}`} target="_blank" rel="noopener noreferrer">
+											WhatsApp
+										</a>
+									</div>
+								);
+							})}
+						</div>
+					</li>
+				))}
+			</ul>
+		)}
+	</section>
 
 	<section class="dash__panel" role="tabpanel" id="dash-panel-guests" aria-labelledby="dash-tab-guests" hidden>
 		{rsvps === null ? (
@@ -560,6 +619,17 @@ const formatDate = (iso: string) => {
 		flex-wrap: wrap;
 		gap: 0.5rem;
 		margin-top: 0.5rem;
+	}
+
+	.dash__invitee-links {
+		display: grid;
+		gap: 0.5rem;
+	}
+
+	.dash__invitee-link {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
 	}
 
 	.dash__summary {
