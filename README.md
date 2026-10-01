@@ -20,7 +20,7 @@ On Vercel, set `ENABLE_EXPERIMENTAL_COREPACK=1` so builds use the same pinned ve
 
 ### 1. Identity and settings: `src/config/event.ts`
 
-Names, dates, location, RSVP deadline, production URL, registry link, Google Sheet tab names,
+Names, dates, location, RSVP deadline, production URL, gift account details, Google Sheet tab names,
 and which pages are switched on. Everything that repeats across the site reads from here.
 Disabled pages return 404 and drop out of the nav (restart `pnpm dev` after toggling one).
 
