@@ -128,8 +128,21 @@ See `.env.example`.
 | `APPS_SCRIPT_URL` | The Apps Script web app URL (ends in `/exec`) |
 | `APPS_SCRIPT_SECRET` | Must match the script's `SITE_SECRET` property |
 | `ADMIN_CODE` | Code for `/admin`. Empty = admin page off. Long, and different from the site password. |
+| `TELEGRAM_BOT_TOKEN` | Bot token from @BotFather, for alerts. Empty = alerts off. |
+| `TELEGRAM_CHAT_ID` | The chat the alerts go to (a group ID starts with `-`). |
 
 Do not prefix secrets with `PUBLIC_`; Astro ships those to the browser.
+
+### 6. Telegram alerts (optional)
+
+Every saved RSVP, asoebi and groomsmen sign-up sends a message to a Telegram chat
+(`src/util/notify.ts`). If Telegram can't be reached, the submission still succeeds.
+
+1. In Telegram, message **@BotFather**, send `/newbot` and follow the prompts. Copy the token.
+2. Create a group, add the bot, and send any message in it (or just message the bot directly).
+3. Open `https://api.telegram.org/bot<TOKEN>/getUpdates` and copy `"chat":{"id": …}`. A group's
+   ID is negative, e.g. `-1001234567890`.
+4. Set `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` in Vercel (and `.env` locally), then redeploy.
 
 ## How the password gate works
 
