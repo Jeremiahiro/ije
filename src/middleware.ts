@@ -16,7 +16,9 @@ export const onRequest = defineMiddleware(async (context, next) => {
 	const pathname = context.url.pathname.replace(/\/+$/, "") || "/";
 
 	if (isDisabledPath(pathname)) {
-		return new Response("Not found", { status: 404 });
+		return pathname.startsWith("/api/")
+			? new Response("Not found", { status: 404 })
+			: context.rewrite("/404");
 	}
 
 	const password = getGatePassword();
