@@ -15,7 +15,8 @@
  *
  * The site POSTs JSON { secret, action, ... }:
  *   append     { sheet, headers?, rows }             add rows (tab created if missing)
- *   read       { sheet }                             tab values as text (READABLE_TABS only)
+ *   read       { sheet }                             tab values as text (READABLE_TABS only;
+ *                                                    the admin page reads RSVPs for its guest list)
  *   setStatus  { sheet, submittedAt, code, status }  update a response's Status
  * Replies are JSON: { ok: true, values? } or { ok: false, error }.
  */
@@ -43,7 +44,7 @@ const RESPONSE_TABS = {
   Groomsmen: { source: "Groomsmen", flag: "Groomsmen", linkHeader: "Groomsmen Link", path: "/join" },
 };
 
-const READABLE_TABS = [TABS.guests, TABS.asoebi, TABS.groomsmen];
+const READABLE_TABS = [TABS.guests, TABS.asoebi, TABS.groomsmen, TABS.rsvps];
 const PROTECTION_NOTE = "Filled by the website — edit through /admin or ask the sheet owner";
 const CODE_ALPHABET = "ABCDEFGHJKMNPQRSTUVWXYZ23456789"; // no 0/O, 1/I/L
 const ROWS_TO_FORMAT = 1000;

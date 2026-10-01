@@ -51,7 +51,7 @@ WhatsApp, Traditional / White / Both). Responses land on the **Asoebi** / **Groo
 #### Admin page: `/admin`
 
 Signed in with `ADMIN_CODE`. Shows the Asoebi and Groomsmen responses with **Confirm** /
-**Decline**, and a guest list summary (guests and plus ones per category). Confirming a response
+**Decline**, and the guest list from the **RSVPs** tab (totals, events, phone numbers and travel dates). Confirming a response
 (here, or by setting its Status in the sheet) updates the guest on **Guests**: Source gains
 "Asoebi" / "Groomsmen" and Plus One becomes at least 1.
 

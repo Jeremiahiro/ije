@@ -8,8 +8,8 @@ import { event } from "@/config/event";
 import { siteTitleSuffix } from "@/data/site-nav";
 import { getAdminCode, isAdmin } from "@/util/adminAuth";
 import { readSheetValues } from "@/util/googleSheetsApi";
-import { loadGuests, type Guest } from "@/util/inviteList";
 import { parseResponseRows, type InterestResponse } from "@/util/interestSheet";
+import { parseRsvpRows, type RsvpGuest } from "@/util/rsvpSheet";
 
 Astro.response.headers.set("Cache-Control", "no-store");
 
@@ -20,18 +20,18 @@ const error = Astro.url.searchParams.has("error");
 let data: {
 	asoebi: InterestResponse[] | null;
 	groomsmen: InterestResponse[] | null;
-	guests: Guest[] | null;
+	rsvps: RsvpGuest[] | null;
 } | null = null;
 if (signedIn) {
-	const [asoebi, groomsmen, guests] = await Promise.all([
+	const [asoebi, groomsmen, rsvps] = await Promise.all([
 		readSheetValues(event.sheets.asoebi),
 		readSheetValues(event.sheets.groomsmen),
-		loadGuests({ fresh: true }),
+		readSheetValues(event.sheets.rsvp),
 	]);
 	data = {
 		asoebi: asoebi.ok ? parseResponseRows(asoebi.values) : null,
 		groomsmen: groomsmen.ok ? parseResponseRows(groomsmen.values) : null,
-		guests,
+		rsvps: rsvps.ok ? parseRsvpRows(rsvps.values) : null,
 	};
 }
 ---
