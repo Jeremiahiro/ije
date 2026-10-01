@@ -33,7 +33,7 @@ export const event = {
   } satisfies Person,
 
   /** Production URL, used for canonical links and the sitemap. No trailing slash. */
-  siteUrl: "https://cynthiaandkelechi.com",
+  siteUrl: "https://ck-2026.vercel.app",
 
   /** Hero eyebrow on the home page. */
   dateLabel: "December 23 & 26, 2026",

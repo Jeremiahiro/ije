@@ -24,7 +24,7 @@
  */
 
 /** Your site's address, no trailing slash. Used to build personal links. */
-const SITE_URL = "https://cynthiaandkelechi.com";
+const SITE_URL = "https://ck-2026.vercel.app";
 
 const TABS = { guests: "Guests", asoebi: "Asoebi", groomsmen: "Groomsmen", rsvps: "RSVPs" };
 
