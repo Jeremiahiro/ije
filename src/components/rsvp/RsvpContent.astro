@@ -70,19 +70,19 @@ const personalFields: SimpleField[] = [
 		name: RSVP_FIELD.email,
 		label: "Email address",
 		variant: "email",
+		optional: true,
 		autocomplete: "email",
 		inputmode: "email",
-		required: true,
 	},
 	{
 		id: fieldIds.phone,
 		name: RSVP_FIELD.phone,
 		label: "Phone number",
 		variant: "tel",
-		optional: true,
 		autocomplete: "tel",
 		inputmode: "tel",
 		hint: "Pick your country from the flag, then type your number",
+		required: true,
 	},
 ];
 

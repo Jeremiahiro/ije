@@ -84,8 +84,8 @@ const primaryGuestFields = (
 	const { country, other_country } = countryLabelForRecord(record);
 	return {
 		submitted_at: submittedAt,
-		email: record.email,
-		phone: record.phone ?? "",
+		email: record.email ?? "",
+		phone: record.phone,
 		country,
 		other_country,
 		event_traditional: boolLabel(record.event_traditional),

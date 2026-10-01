@@ -137,7 +137,7 @@ const formatDate = (iso: string) => {
 									{r.events} · {formatDate(r.submittedAt)} · {r.code}
 								</p>
 								<p class="dash__meta">
-									<a href={`mailto:${r.email}`}>{r.email}</a> ·{" "}
+									{r.email && <><a href={`mailto:${r.email}`}>{r.email}</a> ·{" "}</>}
 									<a href={`https://wa.me/${r.whatsapp.replace(/\D/g, "").replace(/^0/, "234")}`} target="_blank" rel="noopener noreferrer">{r.whatsapp}</a>
 								</p>
 							</div>
