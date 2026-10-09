@@ -1,0 +1,245 @@
+---
+import ContentCard from "@/components/ContentCard.astro";
+import HeroPageSurface from "@/components/HeroPageSurface.astro";
+import {
+	contributionLinks,
+	zolaRegistryHref,
+	zolaRegistryKey,
+} from "@/data/registry";
+
+const hasContributionLinks = contributionLinks.length > 0;
+---
+
+<HeroPageSurface
+	bgSrc="/assets/faq.webp"
+	surfaceClass="registry-page"
+	ariaLabelledBy="registry-heading"
+>
+	<ContentCard variant="secondary" class="registry-page__card" data-reveal>
+		<p class="registry-page__eyebrow">Gifts & contributions</p>
+		<h1 id="registry-heading" class="registry-page__title">Registry</h1>
+		<p class="registry-page__lede">
+			Your presence with us in Nigeria means everything. If you would like
+			to give something as well, our Zola registry has gifts and cash funds
+			you can contribute to in any amount — no target or thermometer.
+		</p>
+
+		<section
+			class="registry-page__section"
+			aria-labelledby="registry-gifts-heading"
+		>
+			<h2 id="registry-gifts-heading" class="registry-page__section-title">
+				Our registry
+			</h2>
+			<p class="registry-page__section-copy">
+				Browse gifts or contribute to a cash fund below. Prefer a new
+				tab? Use the link under the registry.
+			</p>
+
+			<div class="registry-page__embed" data-zola-embed>
+				<a
+					class="zola-registry-embed"
+					href={zolaRegistryHref}
+					data-registry-key={zolaRegistryKey}
+				>
+					Our Zola Wedding Registry
+				</a>
+			</div>
+
+			<p class="registry-page__fallback">
+				<a
+					href={zolaRegistryHref}
+					target="_blank"
+					rel="noopener noreferrer"
+					class="registry-page__text-link"
+				>
+					Open our Zola registry
+				</a>
+			</p>
+		</section>
+
+		{
+			hasContributionLinks && (
+				<section
+					class="registry-page__section"
+					aria-labelledby="registry-other-heading"
+				>
+					<h2
+						id="registry-other-heading"
+						class="registry-page__section-title"
+					>
+						Other ways to contribute
+					</h2>
+					<p class="registry-page__section-copy">
+						Send a contribution in the amount you choose — no
+						fundraising goal.
+					</p>
+					<div class="registry-page__actions">
+						{contributionLinks.map((link) => (
+							<a
+								href={link.href}
+								target="_blank"
+								rel="noopener noreferrer"
+								class="registry-page__btn registry-page__btn--primary"
+							>
+								{link.label}
+							</a>
+						))}
+					</div>
+				</section>
+			)
+		}
+
+		<p class="registry-page__note">
+			Guests in Nigeria who prefer a local bank transfer can message us
+			for details — we keep account numbers off this page.
+		</p>
+	</ContentCard>
+</HeroPageSurface>
+
+<script is:inline>
+	!(function (e, t, n) {
+		var s,
+			a = e.getElementsByTagName(t)[0];
+		e.getElementById(n) ||
+			((s = e.createElement(t)),
+			(s.id = n),
+			(s.async = !0),
+			(s.src = "https://widget.zola.com/js/widget.js"),
+			a.parentNode.insertBefore(s, a));
+	})(document, "script", "zola-wjs");
+</script>
+
+<style>
+	.registry-page__card {
+		max-width: 44rem;
+		margin-inline: auto;
+	}
+
+	.registry-page__eyebrow {
+		margin: 0;
+		font-size: 0.6875rem;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.2em;
+		color: rgb(92 74 61 / 0.78);
+	}
+
+	.registry-page__title {
+		margin: 0.45rem 0 0;
+		font-size: clamp(1.75rem, 4.5vw, 2.35rem);
+	}
+
+	.registry-page__lede {
+		margin: 0.65rem 0 0;
+		color: var(--text-muted);
+		line-height: 1.65;
+		text-wrap: pretty;
+	}
+
+	.registry-page__section {
+		margin-top: 1.75rem;
+		padding-top: 1.5rem;
+		border-top: 1px solid rgb(96 72 53 / 0.18);
+	}
+
+	.registry-page__section-title {
+		margin: 0;
+		font-family: var(--font-heading);
+		font-size: clamp(1.35rem, 3vw, 1.65rem);
+		font-weight: 400;
+		line-height: 1.15;
+		color: #3a2e26;
+	}
+
+	.registry-page__section-copy {
+		margin: 0.55rem 0 0;
+		color: var(--text-muted);
+		line-height: 1.6;
+		font-size: 0.95rem;
+	}
+
+	.registry-page__embed {
+		margin-top: 1.15rem;
+		min-height: 4rem;
+	}
+
+	.registry-page__fallback {
+		margin: 0.85rem 0 0;
+		font-size: 0.875rem;
+	}
+
+	.registry-page__text-link {
+		color: #6e523c;
+		font-weight: 600;
+		text-decoration: underline;
+		text-decoration-color: rgb(91 66 50 / 0.4);
+		text-underline-offset: 0.14em;
+		transition: text-decoration-color 0.2s;
+	}
+
+	.registry-page__text-link:hover {
+		text-decoration-color: rgb(91 66 50 / 0.85);
+	}
+
+	.registry-page__actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.65rem;
+		margin-top: 1rem;
+	}
+
+	.registry-page__btn {
+		box-sizing: border-box;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.4rem;
+		padding: 0.78rem 1.15rem;
+		border-radius: 0.7rem;
+		font-size: 0.9rem;
+		font-weight: 700;
+		text-decoration: none;
+		border: 1px solid transparent;
+		box-shadow: 0 4px 14px rgb(78 59 44 / 0.12);
+		transition:
+			background 0.15s ease,
+			border-color 0.15s ease,
+			color 0.15s ease,
+			transform 0.15s ease,
+			box-shadow 0.15s ease;
+	}
+
+	.registry-page__btn--primary {
+		background: #6e523c;
+		border-color: #6e523c;
+		color: #fff;
+	}
+
+	.registry-page__btn--primary:hover {
+		background: #5e4734;
+		transform: translateY(-1px);
+		box-shadow: 0 8px 20px rgb(78 59 44 / 0.24);
+	}
+
+	.registry-page__btn:focus-visible {
+		outline: 2px solid #4e3b2c;
+		outline-offset: 2px;
+	}
+
+	.registry-page__note {
+		margin: 1.75rem 0 0;
+		padding-top: 1.25rem;
+		border-top: 1px solid rgb(96 72 53 / 0.18);
+		font-size: 0.875rem;
+		line-height: 1.6;
+		color: var(--text-muted);
+		text-wrap: pretty;
+	}
+
+	@media (min-width: 1024px) {
+		:global(.registry-page .hero-page__bg) {
+			background-position: center top;
+		}
+	}
+</style>

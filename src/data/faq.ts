@@ -1,4 +1,4 @@
-import { registryHref } from "@/data/site-nav";
+import { registryPageHref } from "@/data/registry";
 
 export type FaqAnswerPart =
 	| { type: "text"; value: string }
@@ -46,14 +46,13 @@ export const weddingFaq: FaqItem[] = [
   {
     question: "Do you have a gift registry?",
     answer: [
-      { type: "text", value: "Yes. Please visit our " },
+      { type: "text", value: "Yes. Visit our " },
       {
         type: "link",
         label: "Registry",
-        href: registryHref,
-        external: true,
+        href: registryPageHref,
       },
-      { type: "text", value: " on Zola for gift options." },
+      { type: "text", value: " page for gifts and cash funds on Zola." },
     ],
   },
   {

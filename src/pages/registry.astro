@@ -1,0 +1,15 @@
+---
+import RegistryContent from "@/components/registry/RegistryContent.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { siteTitleSuffix } from "@/data/site-nav";
+
+const pageTitle = "Registry";
+const description =
+	"Gift registry and cash funds for Jane & Jeremiah’s wedding. Browse our Zola registry or contribute in any amount.";
+const title = `${pageTitle} · ${siteTitleSuffix}`;
+const canonicalHref = new URL("/registry", Astro.url.origin).href;
+---
+
+<BaseLayout title={title} description={description} canonicalHref={canonicalHref}>
+	<RegistryContent />
+</BaseLayout>

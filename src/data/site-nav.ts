@@ -1,10 +1,9 @@
+import { registryPageHref } from "@/data/registry";
+
 /** Shared nav + routes for Header and static pages */
 export const siteTitleSuffix = "Jane & Jeremiah";
 export const bride = "Jane Onuoha";
 export const groom = "Jeremiah Iromaka-Amajọ";
-
-export const registryHref =
-	"https://www.zola.com/wedding/jeremiahandjane2026/registry";
 
 export type HomeEventPreview = {
 	title: string;
@@ -60,8 +59,8 @@ export const navItems: NavTopLink[] = [
 	{
 		kind: "link",
 		label: "Registry",
-		href: registryHref,
-		target: "_blank",
+		href: registryPageHref,
+		target: "_self",
 	},
 	{
 		kind: "link",
