@@ -204,6 +204,7 @@ const canonicalHref = new URL("/schedule", Astro.url.origin).href;
     font-size: clamp(2.1rem, 7vw, 4rem);
     line-height: 0.95;
     color: #3f2e22;
+    text-wrap: balance;
   }
 
   .schedule-page__events {
@@ -272,13 +273,7 @@ const canonicalHref = new URL("/schedule", Astro.url.origin).href;
     width: 100%;
     max-width: 34rem;
     text-align: center;
-    background: linear-gradient(
-      135deg,
-      rgb(255 255 255 / 0.55) 0%,
-      rgb(255 255 255 / 0.28) 100%
-    );
-    backdrop-filter: blur(14px) saturate(130%);
-    -webkit-backdrop-filter: blur(14px) saturate(130%);
+    background: rgb(255 252 247 / 0.94);
     border: 1px solid rgb(255 255 255 / 0.72);
     box-shadow:
       0 8px 32px rgb(110 82 60 / 0.12),

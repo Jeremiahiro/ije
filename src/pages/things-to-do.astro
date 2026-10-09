@@ -116,6 +116,7 @@ const canonicalHref = new URL("/things-to-do", Astro.url.origin).href;
     font-size: clamp(2.5rem, 7vw, 4.5rem);
     line-height: 1;
     color: #3f2e22;
+    text-wrap: balance;
   }
 
   .things-page__lede {
@@ -125,6 +126,7 @@ const canonicalHref = new URL("/things-to-do", Astro.url.origin).href;
     font-size: clamp(0.95rem, 2vw, 1.05rem);
     line-height: 1.82;
     color: rgb(58 46 38 / 0.82);
+    text-wrap: pretty;
   }
 
   /* Regions */
@@ -184,9 +186,7 @@ const canonicalHref = new URL("/things-to-do", Astro.url.origin).href;
     padding: clamp(1.35rem, 3vw, 1.75rem);
     border: 1px solid rgb(255 255 255 / 0.6);
     border-radius: 1.5rem;
-    background: rgb(255 255 255 / 0.4);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    background: rgb(255 255 255 / 0.9);
     box-shadow: 0 14px 40px rgb(110 82 60 / 0.09);
     transition:
       transform 220ms ease,

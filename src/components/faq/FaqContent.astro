@@ -302,18 +302,8 @@ import { weddingFaq } from "@/data/faq";
 		transition: transform 0.42s cubic-bezier(0.34, 1.56, 0.64, 1);
 	}
 
-	@keyframes faq-icon-spin {
-		from { transform: rotate(45deg); }
-		to { transform: rotate(405deg); }
-	}
-
 	.faq-page__question[aria-expanded="true"] .faq-page__icon {
 		transform: rotate(45deg);
-		animation: faq-icon-spin 3s linear 0.42s infinite;
-	}
-
-	.faq-page__question[aria-expanded="true"]:hover .faq-page__icon {
-		animation-play-state: paused;
 	}
 
 	.faq-page__answer-shell {

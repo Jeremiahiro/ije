@@ -10,7 +10,10 @@ const json = (body: unknown, status = 200): Response =>
 	});
 
 export const POST: APIRoute = async ({ request }) => {
-	const secret = import.meta.env.PUBLIC_SITE_GATE_PASSWORD?.trim();
+	// Prefer a server-only secret — never rely on PUBLIC_SITE_GATE_PASSWORD (ships to the browser).
+	const secret =
+		import.meta.env.TRAIN_SHEET_INIT_SECRET?.trim() ||
+		import.meta.env.SITE_ADMIN_SECRET?.trim();
 	const auth = request.headers.get("authorization");
 
 	if (!secret || auth !== `Bearer ${secret}`) {

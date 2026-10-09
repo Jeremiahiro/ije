@@ -2,7 +2,6 @@
 export const siteTitleSuffix = "Jane & Jeremiah";
 export const bride = "Jane Onuoha";
 export const groom = "Jeremiah Iromaka-Amajọ";
-export const defaultPageDescription = `${siteTitleSuffix} · Wedding details coming soon.`;
 
 export const registryHref =
 	"https://www.zola.com/wedding/jeremiahandjane2026/registry";
@@ -83,7 +82,3 @@ export const navItems: NavTopLink[] = [
 		target: "_self",
 	},
 ];
-
-export function navHref(path: string, slug: string): string {
-	return `${path.replace(/\/$/, "")}/${slug}`;
-}

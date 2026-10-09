@@ -75,6 +75,36 @@ const sectionNav = [
 		padding-bottom: clamp(5rem, 10vw, 7rem);
 	}
 
+	/* Fixed backgrounds force expensive per-frame paints while scrolling. */
+	:global(.travel-page.hero-page .hero-page__bg) {
+		background-attachment: scroll;
+	}
+
+	/*
+	 * Large frosted shells (thousands of px tall) re-blur every scroll frame and
+	 * make the whole page shimmer. Solid fills keep the look without live filters.
+	 */
+	:global(.travel-page .content-card--secondary),
+	:global(.travel-page .content-card--default) {
+		-webkit-backdrop-filter: none;
+		backdrop-filter: none;
+	}
+
+	:global(.travel-page .content-card--secondary) {
+		background: rgb(255 252 247 / 0.92);
+	}
+
+	:global(.travel-page .content-card--default) {
+		background: rgb(255 255 255 / 0.88);
+	}
+
+	/* Skip scroll-reveal fade-ins — they read as flicker on this long page. */
+	:global(.travel-page [data-reveal]) {
+		opacity: 1;
+		translate: 0 0;
+		transition: none;
+	}
+
 	:global(.travel-page.hero-page .travel-page-intro) {
 		margin: 0 auto clamp(2rem, 5vw, 3rem);
 	}
@@ -125,34 +155,52 @@ const sectionNav = [
 		document.fonts.ready.then(() => requestAnimationFrame(lockHeight));
 		window.addEventListener("resize", () => requestAnimationFrame(lockHeight), { passive: true });
 
-		// Pin / unpin based on wrapper position
-		const pinObserver = new IntersectionObserver(
-			(entries) => {
-				for (const entry of entries) {
-					if (!entry.isIntersecting && entry.boundingClientRect.top < 0) {
-						nav.dataset.pinnedBottom = "";
-					} else if (entry.isIntersecting) {
-						delete nav.dataset.pinnedBottom;
-					}
-				}
-			},
-			{ threshold: 0 },
-		);
-		pinObserver.observe(wrapper);
+		// Hysteresis avoids pin/unpin chatter at the threshold (was restarting enter animation).
+		let pinned = false;
+		let hidden = false;
+		let frame = 0;
 
-		// Hide when the shell bottom is within the viewport (footer starting to reveal)
-		const updateHidden = () => {
+		const syncNav = () => {
+			const top = wrapper.getBoundingClientRect().top;
+			const nextPinned = pinned ? top < 12 : top < -8;
+			if (nextPinned !== pinned) {
+				pinned = nextPinned;
+				if (pinned) {
+					nav.dataset.pinnedBottom = "";
+				} else {
+					delete nav.dataset.pinnedBottom;
+					lockHeight();
+				}
+			}
+
 			if (!shell) return;
 			const shellBottom = shell.getBoundingClientRect().bottom;
-			if (shellBottom < window.innerHeight + 80) {
-				nav.dataset.navHidden = "";
-			} else {
-				delete nav.dataset.navHidden;
+			const hideLine = window.innerHeight + 40;
+			const showLine = window.innerHeight + 140;
+			const nextHidden = hidden
+				? shellBottom < showLine
+				: shellBottom < hideLine;
+			if (nextHidden !== hidden) {
+				hidden = nextHidden;
+				if (hidden) {
+					nav.dataset.navHidden = "";
+				} else {
+					delete nav.dataset.navHidden;
+				}
 			}
 		};
-		window.addEventListener("scroll", updateHidden, { passive: true });
-		window.addEventListener("resize", updateHidden, { passive: true });
-		updateHidden();
+
+		const onScrollOrResize = () => {
+			if (frame) return;
+			frame = requestAnimationFrame(() => {
+				frame = 0;
+				syncNav();
+			});
+		};
+
+		window.addEventListener("scroll", onScrollOrResize, { passive: true });
+		window.addEventListener("resize", onScrollOrResize, { passive: true });
+		syncNav();
 	}
 
 	if (document.readyState === "loading") {

@@ -5,12 +5,22 @@ export function initScrollReveal(): void {
 
 	const elements = document.querySelectorAll<HTMLElement>("[data-reveal]");
 
-	if (prefersReducedMotion) {
+	if (prefersReducedMotion || elements.length === 0) {
 		elements.forEach((el) => {
 			el.dataset.visible = "";
 		});
 		return;
 	}
+
+	// Reveal anything already in view before enabling hide styles (avoids blank FOUC).
+	const viewportBottom = window.innerHeight * 0.92;
+	elements.forEach((el) => {
+		if (el.getBoundingClientRect().top < viewportBottom) {
+			el.dataset.visible = "";
+		}
+	});
+
+	document.documentElement.classList.add("reveal-enabled");
 
 	const observer = new IntersectionObserver(
 		(entries) => {
@@ -25,5 +35,9 @@ export function initScrollReveal(): void {
 		{ threshold: 0.12 },
 	);
 
-	elements.forEach((el) => observer.observe(el));
+	elements.forEach((el) => {
+		if (!el.hasAttribute("data-visible")) {
+			observer.observe(el);
+		}
+	});
 }

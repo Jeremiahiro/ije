@@ -1,7 +1,6 @@
 ---
 import { navItems, siteTitleSuffix } from "@/data/site-nav";
 
-const year = 2027;
 const brandMiddle = siteTitleSuffix.slice(1);
 const footerNavLinks = navItems.filter((n) => n.target === "_self")
 ---
@@ -38,7 +37,7 @@ const footerNavLinks = navItems.filter((n) => n.target === "_self")
 
     <p class="site-footer__countdown" aria-live="polite"></p>
 
-    <p class="site-footer__meta">&copy; {year} · With love</p>
+    <p class="site-footer__meta">January 2027 · With love</p>
   </div>
 </footer>
 
@@ -65,7 +64,7 @@ const footerNavLinks = navItems.filter((n) => n.target === "_self")
         rgb(18 10 4 / 0.38) 55%,
         rgb(18 10 4 / 0.62) 100%
       ),
-      url("/assets/for-footer.webp");
+      url("/assets/for-footer.jpg");
     background-size: cover;
     background-position: top center;
     background-repeat: no-repeat;

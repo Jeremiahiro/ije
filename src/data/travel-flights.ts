@@ -134,6 +134,3 @@ export const travelFlightsPage: TravelFlightsPageData = {
 		],
 	},
 };
-
-export const internationalFlightStepCards = travelFlightsPage.international.steps;
-export const domesticFlightStepCards = travelFlightsPage?.domestic.steps;
