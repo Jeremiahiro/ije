@@ -51,9 +51,3 @@ export const formatAsoebiPrice = (
 		maximumFractionDigits: 0,
 	}).format(amount);
 };
-
-export const asoebiCurrencyLabel = (currency: AsoEbiCurrency): string => {
-	if (currency === "NGN") return "Naira";
-	if (currency === "GBP") return "Pounds";
-	return "US Dollars";
-};
