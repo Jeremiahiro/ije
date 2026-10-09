@@ -9,6 +9,7 @@ export type HomeEventPreview = {
 	title: string;
 	dateLabel: string;
 	location: string;
+	addon?: string;
 	href: string;
 };
 
@@ -24,13 +25,16 @@ export const homePageContent = {
 			title: "Traditional Marriage (Ịgba Nkwụ)",
 			dateLabel: "January 2, 2027",
 			location:
-				"Onuoha's Country Home, Okai-Item, Bende Local Government Area in Abia State, Nigeria.",
+				"Archbishop Sunday Onuoha's country home, Okai-Item, Bende Local Government Area in Abia State, Nigeria.",
 			href: "/schedule#traditional-marriage",
 		},
 		{
 			title: "Church Wedding",
 			dateLabel: "January 4, 2027",
-			location: "Methodist Theological Institute (MTI), Michael Okpara Boulevard, Umuahia, Abia State.",
+			location:
+				"Methodist Theological Institute (MTI), Michael Okpara Boulevard, Umuahia, Abia State.",
+			addon:
+				"Reception follows at International Conference Centre (ICC), Umuahia, Abia State.",
 			href: "/schedule#church-wedding",
 		},
 	] as HomeEventPreview[],

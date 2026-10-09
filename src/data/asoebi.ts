@@ -52,7 +52,6 @@ export const asoEbiEvents: AsoEbiEvent[] = [
 	},
 ];
 
-/** Shared men note — shown once, not per event. */
 export const asoebiMenNote = "We trust you to look your best.";
 
 export const asoebiCapPriceNgn = 5500;

@@ -338,7 +338,6 @@ import { formatAsoebiPrice } from "@/lib/asoebiCurrency";
 		list-style: none;
 		display: flex;
 		flex-direction: column;
-		/* gap driven by script via margins so opening pushes following content */
 		gap: 0;
 	}
 
@@ -358,7 +357,6 @@ import { formatAsoebiPrice } from "@/lib/asoebiCurrency";
 			0 12px 32px rgb(110 82 60 / 0.14),
 			inset 0 1px 0 rgb(255 255 255 / 0.85);
 		transform-origin: center top;
-		/* Collapsed deck until JS runs */
 		margin-top: calc(
 			var(--stack-index) * var(--stack-peek) - var(--stack-index) * 3.15rem
 		);
@@ -489,7 +487,6 @@ import { formatAsoebiPrice } from "@/lib/asoebiCurrency";
 		return from + (to - from) * t;
 	}
 
-	/** Opens as the stack moves through the upper half of the viewport — no fake runway. */
 	function progressForStack() {
 		if (!stack) return 1;
 		const rect = stack.getBoundingClientRect();

@@ -32,7 +32,6 @@ const quickLinks = navItems
 <BaseLayout title={title} description={description}>
   <main class="home-page">
 
-    <!-- 1. Full-viewport hero -->
     <section class="home-hero" aria-labelledby="home-title">
       <div class="home-hero__bg" aria-hidden="true"></div>
       <div class="home-hero__scrim" aria-hidden="true"></div>
@@ -55,7 +54,6 @@ const quickLinks = navItems
       </a>
     </section>
 
-    <!-- 2. Editorial photo marquee -->
     <section class="home-marquee" aria-label="Couple portraits">
       <div class="home-marquee__viewport">
         <ul class="home-marquee__track">
@@ -81,7 +79,6 @@ const quickLinks = navItems
       </div>
     </section>
 
-    <!-- 3. Celebration events -->
     <section
       class="home-events wrapper"
       id="events"
@@ -98,6 +95,9 @@ const quickLinks = navItems
               <p class="home-event-card__date">{event.dateLabel}</p>
               <h3>{event.title}</h3>
               <p class="home-event-card__location">{event.location}</p>
+              {event.addon ? (
+                <p class="home-event-card__addon">{event.addon}</p>
+              ) : null}
               <a class="home-event-card__link" href={event.href}>
                 View schedule
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
@@ -110,7 +110,6 @@ const quickLinks = navItems
       </div>
     </section>
 
-    <!-- 4. Explore quick-links -->
     <section class="home-explore wrapper" aria-labelledby="explore-title">
       <p class="home-explore__eyebrow" data-reveal id="explore-title">Explore the Details</p>
       <div class="home-explore__grid">
@@ -193,7 +192,7 @@ const quickLinks = navItems
   }
 
   .home-hero__eyebrow {
-    margin: 0 0 1.5rem;
+    margin: clamp(1.15rem, 2.8vw, 1.85rem) 0 1.5rem;
     font-size: clamp(0.62rem, 1.8vw, 0.78rem);
     font-weight: 700;
     letter-spacing: 0.22em;
@@ -424,6 +423,17 @@ const quickLinks = navItems
     font-size: 0.9rem;
     line-height: 1.7;
     color: rgb(58 46 38 / 0.82);
+  }
+
+  .home-event-card__addon {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: rgb(58 46 38 / 0.82);
+    flex: 1;
+  }
+
+  .home-event-card:not(:has(.home-event-card__addon)) .home-event-card__location {
     flex: 1;
   }
 

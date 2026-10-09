@@ -115,9 +115,9 @@ export const travelFlightsPage: TravelFlightsPageData = {
 				tag: "January 2, 2027",
 				title: "Traditional Marriage",
 				visual: "/assets/item.webp",
-				footer: "Onuoha's Country Home, Okai-Item, Bende LGA, Abia State",
+				footer: "Archbishop Sunday Onuoha's country home, Okai-Item, Bende LGA, Abia State",
 				detailDescription:
-					"The traditional marriage ceremony takes place at Onuoha's Country Home in Okai Item, Bende LGA, Abia State.",
+					"The traditional marriage ceremony takes place at Archbishop Sunday Onuoha's country home in Okai Item, Bende LGA, Abia State.",
 				actionLabel: "View map",
 				actionHref: "https://maps.app.goo.gl/a5tYqVVXab4BL5tE9",
 			},
